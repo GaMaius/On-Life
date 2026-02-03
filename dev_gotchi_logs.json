@@ -1,716 +1,2196 @@
 [
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T15:56:24.964727",
-    "session": "sess_1770101779",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:17:25.450150",
+    "session": "sess_1770131842",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:56:26.428036",
-    "hp": 100,
-    "posture_score": 0.307,
+    "ts": "2026-02-04T00:17:26.491928",
+    "hp": 96.0,
+    "posture_score": 0.334,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:56:26.984552",
-    "hp": 97.5,
-    "posture_score": 0.331,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:17:27.481149",
+    "hp": 96.0,
+    "posture_score": 0.399,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:56:28.130547",
-    "hp": 95.0,
-    "posture_score": 0.335,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:17:28.529051",
+    "hp": 96.0,
+    "posture_score": 0.409,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:17:29.477199",
+    "hp": 96.0,
+    "posture_score": 0.391,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:17:30.472494",
+    "hp": 96.0,
+    "posture_score": 0.389,
+    "is_drowsy": false
   },
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:27.598299",
-    "session": "sess_1770101844",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:17:46.302990",
+    "session": "sess_1770131863",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:28.788771",
-    "hp": 97.5,
-    "posture_score": 0.185,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:29.600900",
-    "hp": 95.0,
-    "posture_score": 0.179,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:30.597505",
+    "ts": "2026-02-04T00:17:47.331586",
     "hp": 100,
-    "posture_score": 0.356,
+    "posture_score": 0.42,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:31.593784",
-    "hp": 97.5,
-    "posture_score": 0.405,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:32.597480",
-    "hp": 95.0,
-    "posture_score": 0.398,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:33.594200",
-    "hp": 92.5,
-    "posture_score": 0.389,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:34.592527",
-    "hp": 90.0,
-    "posture_score": 0.39,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:35.595634",
-    "hp": 87.5,
-    "posture_score": 0.397,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:36.597286",
-    "hp": 92.5,
-    "posture_score": 0.405,
-    "is_drowsy": false
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:37.596313",
-    "hp": 97.5,
-    "posture_score": 0.406,
-    "is_drowsy": false
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:38.608597",
-    "hp": 95.0,
-    "posture_score": 0.405,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:39.607945",
-    "hp": 92.5,
-    "posture_score": 0.397,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:40.605919",
-    "hp": 97.5,
-    "posture_score": 0.401,
-    "is_drowsy": false
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:41.597219",
+    "ts": "2026-02-04T00:17:48.313925",
     "hp": 100,
-    "posture_score": 0.384,
+    "posture_score": 0.349,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:42.599967",
-    "hp": 97.5,
-    "posture_score": 0.381,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:43.597890",
+    "ts": "2026-02-04T00:17:49.322546",
     "hp": 100,
-    "posture_score": 0.38,
+    "posture_score": 0.343,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:44.591337",
-    "hp": 97.5,
-    "posture_score": 0.391,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:17:50.321587",
+    "hp": 100,
+    "posture_score": 0.355,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:45.610561",
-    "hp": 95.0,
-    "posture_score": 0.38,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:17:51.337472",
+    "hp": 100,
+    "posture_score": 0.352,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:46.604846",
-    "hp": 92.5,
-    "posture_score": 0.378,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:17:52.344226",
+    "hp": 100,
+    "posture_score": 0.354,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:47.635986",
-    "hp": 90.0,
+    "ts": "2026-02-04T00:17:53.338782",
+    "hp": 100,
+    "posture_score": 0.343,
+    "is_drowsy": false
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-04T00:17:54.362643",
+    "session": "sess_1770131863",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Shutdown"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:17:54.415106",
+    "hp": 100,
+    "posture_score": 0.35,
+    "is_drowsy": false
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-04T00:18:58.066769",
+    "session": "sess_1770131935",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:18:59.315956",
+    "hp": 100,
+    "posture_score": 0.258,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:00.090195",
+    "hp": 100,
+    "posture_score": 0.33,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:01.088994",
+    "hp": 98.0,
     "posture_score": 0.394,
     "is_drowsy": true
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:57:48.604655",
-    "hp": 87.5,
-    "posture_score": 0.387,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:49.625202",
-    "hp": 85.0,
-    "posture_score": 0.388,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:49.755714",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:50.621049",
-    "hp": 82.5,
-    "posture_score": 0.379,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:51.632471",
-    "hp": 80.0,
-    "posture_score": 0.39,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:52.115533",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:150"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:52.630339",
-    "hp": 77.5,
-    "posture_score": 0.387,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:52.823631",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:150"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:53.258912",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:150"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:53.444482",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:150"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:53.628942",
-    "hp": 75.0,
-    "posture_score": 0.392,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:53.640240",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:150"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:54.418189",
-    "session": "sess_1770101844",
-    "event": "Level_Up",
-    "detail": "New_Level:2"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:54.430459",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:54.544479",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:54.649844",
-    "hp": 72.5,
-    "posture_score": 0.385,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:54.832665",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:55.359384",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:55.545713",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:55.637517",
-    "hp": 70.0,
-    "posture_score": 0.386,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:55.730817",
-    "session": "sess_1770101844",
-    "event": "Level_Up",
-    "detail": "New_Level:3"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:55.742776",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:55.887375",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.061189",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.264241",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.410892",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.601394",
-    "session": "sess_1770101844",
-    "event": "Level_Up",
-    "detail": "New_Level:4"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.614389",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:56.661696",
-    "hp": 67.5,
-    "posture_score": 0.389,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.777339",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:56.965408",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.171729",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.336690",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.526220",
-    "session": "sess_1770101844",
-    "event": "Level_Up",
-    "detail": "New_Level:5"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.538224",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:57.648893",
-    "hp": 65.0,
-    "posture_score": 0.377,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.708673",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:57.852341",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.047249",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.185986",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.342485",
-    "session": "sess_1770101844",
-    "event": "Level_Up",
-    "detail": "New_Level:6"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.356509",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.523740",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:58.648801",
-    "hp": 62.5,
-    "posture_score": 0.388,
-    "is_drowsy": true
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.694493",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "A_Interaction",
-    "ts": "2026-02-03T15:57:58.854506",
-    "session": "sess_1770101844",
-    "event": "Quest_Complete",
-    "detail": "Reward:200"
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:57:59.643524",
-    "hp": 60.0,
-    "posture_score": 0.368,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:00.642471",
-    "hp": 57.5,
-    "posture_score": 0.343,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:01.643178",
-    "hp": 55.0,
-    "posture_score": 0.346,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:02.644136",
-    "hp": 52.5,
-    "posture_score": 0.354,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:03.644632",
-    "hp": 50.0,
-    "posture_score": 0.347,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:04.640890",
-    "hp": 47.5,
-    "posture_score": 0.333,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:05.662355",
-    "hp": 45.0,
-    "posture_score": 0.333,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:06.671925",
-    "hp": 42.5,
-    "posture_score": 0.322,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:07.660094",
-    "hp": 40.0,
-    "posture_score": 0.324,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:08.657304",
-    "hp": 37.5,
-    "posture_score": 0.326,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:09.656466",
-    "hp": 42.5,
-    "posture_score": 0.368,
+    "ts": "2026-02-04T00:19:02.098807",
+    "hp": 98.0,
+    "posture_score": 0.396,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:10.678126",
-    "hp": 47.5,
+    "ts": "2026-02-04T00:19:03.086151",
+    "hp": 98.0,
+    "posture_score": 0.396,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:04.087590",
+    "hp": 98.0,
+    "posture_score": 0.369,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:05.102874",
+    "hp": 98.0,
+    "posture_score": 0.352,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:06.103100",
+    "hp": 98.0,
+    "posture_score": 0.354,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:07.098004",
+    "hp": 98.0,
+    "posture_score": 0.351,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:08.099907",
+    "hp": 98.0,
+    "posture_score": 0.345,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:09.098128",
+    "hp": 98.0,
+    "posture_score": 0.351,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:10.123830",
+    "hp": 98.0,
+    "posture_score": 0.348,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:11.096999",
+    "hp": 98.0,
+    "posture_score": 0.355,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:12.097882",
+    "hp": 98.0,
+    "posture_score": 0.363,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:13.122304",
+    "hp": 98.0,
+    "posture_score": 0.336,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:14.110620",
+    "hp": 98.0,
+    "posture_score": 0.32,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:19:15.119588",
+    "hp": 98.0,
+    "posture_score": 0.37,
+    "is_drowsy": false
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-04T00:23:36.740475",
+    "session": "sess_1770132213",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:38.762640",
+    "hp": 100,
+    "posture_score": 0.33,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:39.759211",
+    "hp": 100,
+    "posture_score": 0.367,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:40.757805",
+    "hp": 100,
+    "posture_score": 0.39,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:41.759105",
+    "hp": 100,
     "posture_score": 0.361,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:11.674622",
-    "hp": 52.5,
-    "posture_score": 0.366,
+    "ts": "2026-02-04T00:23:42.757429",
+    "hp": 100,
+    "posture_score": 0.362,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:12.677353",
-    "hp": 50.0,
-    "posture_score": 0.357,
+    "ts": "2026-02-04T00:23:43.758098",
+    "hp": 100,
+    "posture_score": 0.349,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:44.771085",
+    "hp": 100,
+    "posture_score": 0.348,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:45.753936",
+    "hp": 100,
+    "posture_score": 0.32,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:46.765986",
+    "hp": 100,
+    "posture_score": 0.271,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:47.770109",
+    "hp": 100,
+    "posture_score": 0.207,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:48.763679",
+    "hp": 100,
+    "posture_score": 0.178,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:49.758177",
+    "hp": 100,
+    "posture_score": 0.381,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:50.758093",
+    "hp": 100,
+    "posture_score": 0.397,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:51.774708",
+    "hp": 98.0,
+    "posture_score": 0.409,
     "is_drowsy": true
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:13.673313",
-    "hp": 47.5,
+    "ts": "2026-02-04T00:23:52.772530",
+    "hp": 98.0,
+    "posture_score": 0.383,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:53.774813",
+    "hp": 96.0,
+    "posture_score": 0.372,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:54.758369",
+    "hp": 94.0,
     "posture_score": 0.374,
     "is_drowsy": true
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:14.670340",
-    "hp": 45.0,
-    "posture_score": 0.347,
+    "ts": "2026-02-04T00:23:55.758997",
+    "hp": 92.0,
+    "posture_score": 0.372,
     "is_drowsy": true
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:15.685375",
-    "hp": 50.0,
-    "posture_score": 0.356,
+    "ts": "2026-02-04T00:23:56.761286",
+    "hp": 90.0,
+    "posture_score": 0.369,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:57.756455",
+    "hp": 88.0,
+    "posture_score": 0.37,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:23:58.767446",
+    "hp": 88.0,
+    "posture_score": 0.427,
     "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:16.686603",
-    "hp": 47.5,
+    "ts": "2026-02-04T00:23:59.782376",
+    "hp": 88.0,
+    "posture_score": 0.369,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:00.787540",
+    "hp": 88.0,
+    "posture_score": 0.38,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:01.760280",
+    "hp": 88.0,
+    "posture_score": 0.385,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:02.766545",
+    "hp": 88.0,
+    "posture_score": 0.358,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:03.770649",
+    "hp": 88.0,
+    "posture_score": 0.371,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:04.755917",
+    "hp": 88.0,
+    "posture_score": 0.374,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:05.774890",
+    "hp": 88.0,
+    "posture_score": 0.375,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:06.752452",
+    "hp": 88.0,
+    "posture_score": 0.427,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:07.751446",
+    "hp": 88.0,
+    "posture_score": 0.41,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:08.760672",
+    "hp": 88.0,
+    "posture_score": 0.375,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:09.763636",
+    "hp": 88.0,
+    "posture_score": 0.36,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:10.760337",
+    "hp": 88.0,
+    "posture_score": 0.36,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:11.755289",
+    "hp": 88.0,
+    "posture_score": 0.357,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:12.764902",
+    "hp": 88.0,
+    "posture_score": 0.357,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:13.759645",
+    "hp": 88.0,
     "posture_score": 0.364,
-    "is_drowsy": true
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:17.682633",
-    "hp": 45.0,
-    "posture_score": 0.352,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:24:14.782015",
+    "hp": 88.0,
+    "posture_score": 0.369,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:18.682986",
-    "hp": 42.5,
-    "posture_score": 0.342,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:24:15.769369",
+    "hp": 88.0,
+    "posture_score": 0.362,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:19.703369",
-    "hp": 40.0,
-    "posture_score": 0.328,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:20.683364",
-    "hp": 37.5,
+    "ts": "2026-02-04T00:24:16.756749",
+    "hp": 88.0,
     "posture_score": 0.355,
-    "is_drowsy": true
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:21.711139",
-    "hp": 35.0,
-    "posture_score": 0.35,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:24:17.769991",
+    "hp": 88.0,
+    "posture_score": 0.388,
+    "is_drowsy": false
   },
   {
     "type": "B_Context",
-    "ts": "2026-02-03T15:58:22.701285",
-    "hp": 32.5,
-    "posture_score": 0.347,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:23.706921",
-    "hp": 30.0,
-    "posture_score": 0.35,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:24.729361",
-    "hp": 27.5,
-    "posture_score": 0.344,
-    "is_drowsy": true
-  },
-  {
-    "type": "B_Context",
-    "ts": "2026-02-03T15:58:25.751376",
-    "hp": 25.0,
-    "posture_score": 0.341,
-    "is_drowsy": true
+    "ts": "2026-02-04T00:24:18.758618",
+    "hp": 88.0,
+    "posture_score": 0.395,
+    "is_drowsy": false
   },
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T16:12:16.704419",
-    "session": "sess_1770102733",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:24:19.927697",
+    "session": "sess_1770132213",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Shutdown"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:24:19.973915",
+    "hp": 88.0,
+    "posture_score": 0.389,
+    "is_drowsy": false
   },
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T16:22:40.362800",
-    "session": "sess_1770103355",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:28:59.062848",
+    "session": "sess_1770132536",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:00.284461",
+    "hp": 88.0,
+    "posture_score": -0.131,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:01.093414",
+    "hp": 88.0,
+    "posture_score": -0.234,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:02.093509",
+    "hp": 88.0,
+    "posture_score": 0.17,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:03.092118",
+    "hp": 88.0,
+    "posture_score": 0.265,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:04.085568",
+    "hp": 88.0,
+    "posture_score": 0.218,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:05.100496",
+    "hp": 88.0,
+    "posture_score": 0.2,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:06.082416",
+    "hp": 88.0,
+    "posture_score": 0.207,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:07.097302",
+    "hp": 88.0,
+    "posture_score": 0.357,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:08.107779",
+    "hp": 88.0,
+    "posture_score": 0.533,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:09.090687",
+    "hp": 88.0,
+    "posture_score": 0.477,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:10.088340",
+    "hp": 88.0,
+    "posture_score": 0.531,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:11.102962",
+    "hp": 88.0,
+    "posture_score": 0.193,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:12.090979",
+    "hp": 88.0,
+    "posture_score": -0.023,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:13.088895",
+    "hp": 86.0,
+    "posture_score": -0.276,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:14.100892",
+    "hp": 84.0,
+    "posture_score": -0.262,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:15.110092",
+    "hp": 84.0,
+    "posture_score": -0.271,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:16.096355",
+    "hp": 82.0,
+    "posture_score": -0.221,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:17.094114",
+    "hp": 80.0,
+    "posture_score": -0.258,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:18.091911",
+    "hp": 78.0,
+    "posture_score": -0.276,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:19.090173",
+    "hp": 76.0,
+    "posture_score": -0.24,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:20.087777",
+    "hp": 74.0,
+    "posture_score": -0.238,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:21.082974",
+    "hp": 74.0,
+    "posture_score": -0.26,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:22.096725",
+    "hp": 74.0,
+    "posture_score": -0.214,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:23.082241",
+    "hp": 74.0,
+    "posture_score": -0.239,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:24.092091",
+    "hp": 74.0,
+    "posture_score": -0.224,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:25.099629",
+    "hp": 74.0,
+    "posture_score": -0.217,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:26.097577",
+    "hp": 74.0,
+    "posture_score": -0.221,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:27.107790",
+    "hp": 74.0,
+    "posture_score": -0.258,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:28.106181",
+    "hp": 74.0,
+    "posture_score": -0.253,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:29.110691",
+    "hp": 74.0,
+    "posture_score": -0.253,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:30.100139",
+    "hp": 74.0,
+    "posture_score": -0.253,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:31.101404",
+    "hp": 74.0,
+    "posture_score": -0.306,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:32.103509",
+    "hp": 74.0,
+    "posture_score": -0.273,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:33.108096",
+    "hp": 74.0,
+    "posture_score": -0.224,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:34.113525",
+    "hp": 74.0,
+    "posture_score": -0.174,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:35.112062",
+    "hp": 74.0,
+    "posture_score": -0.138,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:36.121294",
+    "hp": 74.0,
+    "posture_score": -0.124,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:37.124792",
+    "hp": 74.0,
+    "posture_score": -0.153,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:38.109655",
+    "hp": 74.0,
+    "posture_score": -0.094,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:39.121457",
+    "hp": 72.0,
+    "posture_score": -0.05,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:40.114745",
+    "hp": 72.0,
+    "posture_score": -0.06,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:41.128212",
+    "hp": 72.0,
+    "posture_score": -0.08,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:42.123620",
+    "hp": 72.0,
+    "posture_score": -0.014,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:43.121920",
+    "hp": 72.0,
+    "posture_score": 0.09,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:44.121656",
+    "hp": 72.0,
+    "posture_score": -0.203,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:45.139535",
+    "hp": 72.0,
+    "posture_score": -0.171,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:46.133399",
+    "hp": 72.0,
+    "posture_score": 0.064,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:47.129061",
+    "hp": 72.0,
+    "posture_score": -0.083,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:48.131667",
+    "hp": 72.0,
+    "posture_score": 0.032,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:49.145115",
+    "hp": 72.0,
+    "posture_score": 0.01,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:50.160507",
+    "hp": 72.0,
+    "posture_score": -0.102,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:51.160257",
+    "hp": 72.0,
+    "posture_score": -0.249,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:52.142367",
+    "hp": 70.1,
+    "posture_score": -0.026,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:53.135006",
+    "hp": 70.1,
+    "posture_score": -0.085,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:54.130330",
+    "hp": 70.1,
+    "posture_score": -0.058,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:55.127230",
+    "hp": 70.1,
+    "posture_score": -0.008,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:56.138809",
+    "hp": 70.1,
+    "posture_score": -0.107,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:57.157487",
+    "hp": 70.1,
+    "posture_score": -0.074,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:58.138697",
+    "hp": 70.1,
+    "posture_score": -0.209,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:29:59.154282",
+    "hp": 70.1,
+    "posture_score": 0.061,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:00.136659",
+    "hp": 70.1,
+    "posture_score": 0.083,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:01.149826",
+    "hp": 70.1,
+    "posture_score": -0.145,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:02.132012",
+    "hp": 70.1,
+    "posture_score": -0.204,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:03.145954",
+    "hp": 70.1,
+    "posture_score": -0.216,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:04.132808",
+    "hp": 70.1,
+    "posture_score": 0.025,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:05.135618",
+    "hp": 70.1,
+    "posture_score": -0.096,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:06.140242",
+    "hp": 70.1,
+    "posture_score": 0.091,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:07.145617",
+    "hp": 68.1,
+    "posture_score": 0.119,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:08.139149",
+    "hp": 68.1,
+    "posture_score": -0.141,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:09.155153",
+    "hp": 68.1,
+    "posture_score": 0.175,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:10.146200",
+    "hp": 68.1,
+    "posture_score": 0.043,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:11.159529",
+    "hp": 68.1,
+    "posture_score": -0.217,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:12.155918",
+    "hp": 68.1,
+    "posture_score": -0.148,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:13.168038",
+    "hp": 68.1,
+    "posture_score": -0.127,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:14.157617",
+    "hp": 68.1,
+    "posture_score": -0.314,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:15.163423",
+    "hp": 68.1,
+    "posture_score": -0.303,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:16.164108",
+    "hp": 68.1,
+    "posture_score": -0.294,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:17.163711",
+    "hp": 68.1,
+    "posture_score": -0.287,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:18.158527",
+    "hp": 68.1,
+    "posture_score": -0.271,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:19.167429",
+    "hp": 68.1,
+    "posture_score": -0.285,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:20.162158",
+    "hp": 68.1,
+    "posture_score": -0.303,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:21.163159",
+    "hp": 68.1,
+    "posture_score": -0.315,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:22.160298",
+    "hp": 68.1,
+    "posture_score": -0.312,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:23.160260",
+    "hp": 68.1,
+    "posture_score": -0.308,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:24.185598",
+    "hp": 68.1,
+    "posture_score": -0.36,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:30:25.160260",
+    "hp": 68.1,
+    "posture_score": -0.358,
+    "is_drowsy": false
   },
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T16:43:54.508924",
-    "session": "sess_1770104631",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:37:50.540840",
+    "session": "sess_1770133067",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:51.815395",
+    "hp": 74.0,
+    "posture_score": -0.253,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:52.573782",
+    "hp": 74.0,
+    "posture_score": -0.076,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:53.575497",
+    "hp": 74.0,
+    "posture_score": -0.264,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:54.593114",
+    "hp": 74.0,
+    "posture_score": -0.358,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:55.587834",
+    "hp": 74.0,
+    "posture_score": -0.328,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:56.582842",
+    "hp": 74.0,
+    "posture_score": -0.292,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:57.592961",
+    "hp": 74.0,
+    "posture_score": -0.324,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:58.583551",
+    "hp": 74.0,
+    "posture_score": -0.287,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:37:59.583121",
+    "hp": 74.0,
+    "posture_score": -0.294,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:00.581732",
+    "hp": 74.0,
+    "posture_score": -0.366,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:01.596534",
+    "hp": 74.0,
+    "posture_score": -0.361,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:02.580785",
+    "hp": 74.0,
+    "posture_score": -0.301,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:03.592766",
+    "hp": 74.0,
+    "posture_score": -0.322,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:04.592132",
+    "hp": 74.0,
+    "posture_score": -0.105,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:05.590823",
+    "hp": 74.0,
+    "posture_score": 0.005,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:06.587575",
+    "hp": 74.0,
+    "posture_score": 0.473,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:07.585417",
+    "hp": 74.0,
+    "posture_score": 0.306,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:08.583156",
+    "hp": 74.0,
+    "posture_score": -0.262,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:09.585529",
+    "hp": 74.0,
+    "posture_score": -0.332,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:10.586456",
+    "hp": 74.0,
+    "posture_score": -0.333,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:11.584833",
+    "hp": 74.0,
+    "posture_score": -0.21,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:12.584874",
+    "hp": 74.0,
+    "posture_score": -0.247,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:13.594755",
+    "hp": 74.0,
+    "posture_score": -0.071,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:14.580308",
+    "hp": 74.0,
+    "posture_score": -0.175,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:15.593750",
+    "hp": 74.0,
+    "posture_score": 0.036,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:16.593922",
+    "hp": 74.0,
+    "posture_score": -0.06,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:17.595410",
+    "hp": 74.0,
+    "posture_score": 0.004,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:18.610173",
+    "hp": 74.0,
+    "posture_score": -0.153,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:19.592044",
+    "hp": 74.0,
+    "posture_score": 0.002,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:20.589528",
+    "hp": 74.0,
+    "posture_score": -0.231,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:21.583172",
+    "hp": 74.0,
+    "posture_score": -0.213,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:38:22.584686",
+    "hp": 74.0,
+    "posture_score": -0.251,
+    "is_drowsy": false
   },
   {
     "type": "A_Interaction",
-    "ts": "2026-02-03T16:44:59.614680",
-    "session": "sess_1770104696",
-    "event": "System",
-    "detail": "Boot_Complete"
+    "ts": "2026-02-04T00:38:23.456253",
+    "session": "sess_1770133067",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Shutdown"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-04T00:39:57.192626",
+    "session": "sess_1770133194",
+    "device_id": "mirror_prototype_01",
+    "event_name": "System",
+    "metadata": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:39:58.420526",
+    "hp": 74.0,
+    "posture_score": -0.205,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:39:59.216543",
+    "hp": 74.0,
+    "posture_score": -0.134,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:00.226988",
+    "hp": 74.0,
+    "posture_score": -0.14,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:01.209653",
+    "hp": 74.0,
+    "posture_score": -0.155,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:02.208425",
+    "hp": 74.0,
+    "posture_score": -0.11,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:03.210550",
+    "hp": 74.0,
+    "posture_score": -0.138,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:04.235673",
+    "hp": 74.0,
+    "posture_score": -0.147,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:05.233631",
+    "hp": 74.0,
+    "posture_score": -0.175,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:06.238097",
+    "hp": 74.0,
+    "posture_score": -0.224,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:07.291976",
+    "hp": 74.0,
+    "posture_score": -0.208,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:08.245041",
+    "hp": 74.0,
+    "posture_score": -0.221,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:09.242843",
+    "hp": 74.0,
+    "posture_score": -0.272,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:10.260198",
+    "hp": 74.0,
+    "posture_score": -0.174,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:11.254602",
+    "hp": 74.0,
+    "posture_score": -0.186,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:12.268572",
+    "hp": 74.0,
+    "posture_score": -0.133,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:13.256782",
+    "hp": 74.0,
+    "posture_score": -0.12,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:14.258958",
+    "hp": 74.0,
+    "posture_score": 0.114,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:15.259236",
+    "hp": 74.0,
+    "posture_score": 0.078,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:16.269545",
+    "hp": 74.0,
+    "posture_score": -0.137,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:17.251043",
+    "hp": 74.0,
+    "posture_score": -0.148,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:18.270498",
+    "hp": 74.0,
+    "posture_score": -0.165,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:19.273594",
+    "hp": 74.0,
+    "posture_score": -0.238,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:20.254679",
+    "hp": 74.0,
+    "posture_score": -0.078,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:21.255860",
+    "hp": 74.0,
+    "posture_score": -0.119,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:22.252021",
+    "hp": 74.0,
+    "posture_score": -0.114,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:23.265314",
+    "hp": 74.0,
+    "posture_score": -0.076,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:24.266583",
+    "hp": 74.0,
+    "posture_score": -0.02,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:25.260685",
+    "hp": 74.0,
+    "posture_score": -0.04,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:26.259896",
+    "hp": 74.0,
+    "posture_score": 0.126,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:27.253946",
+    "hp": 74.0,
+    "posture_score": -0.035,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:28.254942",
+    "hp": 74.0,
+    "posture_score": 0.154,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:29.266954",
+    "hp": 74.0,
+    "posture_score": 0.104,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:30.263707",
+    "hp": 74.0,
+    "posture_score": 0.061,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:31.263709",
+    "hp": 74.0,
+    "posture_score": 0.118,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:32.266711",
+    "hp": 74.0,
+    "posture_score": -0.043,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:33.279180",
+    "hp": 74.0,
+    "posture_score": -0.026,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:34.251505",
+    "hp": 74.0,
+    "posture_score": -0.271,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:35.260678",
+    "hp": 74.0,
+    "posture_score": -0.181,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:36.253704",
+    "hp": 74.0,
+    "posture_score": -0.176,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:37.258965",
+    "hp": 74.0,
+    "posture_score": -0.234,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:38.258601",
+    "hp": 74.0,
+    "posture_score": -0.134,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:39.258919",
+    "hp": 74.0,
+    "posture_score": -0.156,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:40.255915",
+    "hp": 74.0,
+    "posture_score": -0.041,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:41.274805",
+    "hp": 74.0,
+    "posture_score": 0.104,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:42.268158",
+    "hp": 74.0,
+    "posture_score": -0.051,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:43.269530",
+    "hp": 74.0,
+    "posture_score": -0.053,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:44.255468",
+    "hp": 74.0,
+    "posture_score": -0.146,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:45.266108",
+    "hp": 74.0,
+    "posture_score": -0.072,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:46.267036",
+    "hp": 74.0,
+    "posture_score": -0.044,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:47.290877",
+    "hp": 74.0,
+    "posture_score": -0.096,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:48.264206",
+    "hp": 74.0,
+    "posture_score": -0.054,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:49.278366",
+    "hp": 74.0,
+    "posture_score": 0.191,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:50.262419",
+    "hp": 74.0,
+    "posture_score": 0.038,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:51.279205",
+    "hp": 74.0,
+    "posture_score": 0.055,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:52.259285",
+    "hp": 74.0,
+    "posture_score": -0.026,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:53.271591",
+    "hp": 74.0,
+    "posture_score": -0.199,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:54.262719",
+    "hp": 74.0,
+    "posture_score": -0.224,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:55.265516",
+    "hp": 74.0,
+    "posture_score": -0.221,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:56.260930",
+    "hp": 74.0,
+    "posture_score": -0.202,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:57.260183",
+    "hp": 74.0,
+    "posture_score": -0.116,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:58.254990",
+    "hp": 74.0,
+    "posture_score": -0.097,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:40:59.252003",
+    "hp": 74.0,
+    "posture_score": -0.109,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:00.258414",
+    "hp": 74.0,
+    "posture_score": -0.112,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:01.252504",
+    "hp": 74.0,
+    "posture_score": -0.074,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:02.256375",
+    "hp": 74.0,
+    "posture_score": -0.008,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:03.263453",
+    "hp": 74.0,
+    "posture_score": -0.088,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:04.262122",
+    "hp": 74.0,
+    "posture_score": -0.096,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:05.255327",
+    "hp": 74.0,
+    "posture_score": -0.096,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:06.254701",
+    "hp": 74.0,
+    "posture_score": -0.081,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:07.273070",
+    "hp": 74.0,
+    "posture_score": -0.077,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:08.280225",
+    "hp": 74.0,
+    "posture_score": -0.089,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:09.279234",
+    "hp": 74.0,
+    "posture_score": -0.102,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:10.290423",
+    "hp": 74.0,
+    "posture_score": -0.059,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:11.290960",
+    "hp": 74.0,
+    "posture_score": -0.09,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:12.305090",
+    "hp": 74.0,
+    "posture_score": -0.049,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:13.291135",
+    "hp": 74.0,
+    "posture_score": -0.022,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:14.293844",
+    "hp": 74.0,
+    "posture_score": 0.019,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:15.290369",
+    "hp": 74.0,
+    "posture_score": 0.027,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:16.284108",
+    "hp": 74.0,
+    "posture_score": -0.037,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:17.288658",
+    "hp": 74.0,
+    "posture_score": -0.176,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:18.283680",
+    "hp": 74.0,
+    "posture_score": -0.196,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:19.289276",
+    "hp": 74.0,
+    "posture_score": -0.218,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:20.285722",
+    "hp": 74.0,
+    "posture_score": -0.228,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:21.288298",
+    "hp": 74.0,
+    "posture_score": -0.227,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:22.306701",
+    "hp": 74.0,
+    "posture_score": -0.221,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:23.303254",
+    "hp": 74.0,
+    "posture_score": -0.204,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:24.303939",
+    "hp": 74.0,
+    "posture_score": -0.196,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:25.308402",
+    "hp": 74.0,
+    "posture_score": -0.213,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:26.304971",
+    "hp": 74.0,
+    "posture_score": -0.219,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:27.314988",
+    "hp": 72.0,
+    "posture_score": -0.238,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:28.315264",
+    "hp": 70.0,
+    "posture_score": -0.322,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:29.308749",
+    "hp": 70.0,
+    "posture_score": -0.341,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:30.310496",
+    "hp": 70.0,
+    "posture_score": -0.32,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:31.321410",
+    "hp": 70.0,
+    "posture_score": -0.325,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:32.304813",
+    "hp": 70.0,
+    "posture_score": 0.04,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:33.305073",
+    "hp": 70.0,
+    "posture_score": 0.142,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:34.320091",
+    "hp": 70.0,
+    "posture_score": 0.466,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:35.319657",
+    "hp": 70.0,
+    "posture_score": 0.554,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:36.315362",
+    "hp": 70.0,
+    "posture_score": 0.416,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:37.315288",
+    "hp": 70.0,
+    "posture_score": 0.406,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:38.320578",
+    "hp": 70.0,
+    "posture_score": 0.502,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:39.323342",
+    "hp": 70.0,
+    "posture_score": 0.175,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:40.319220",
+    "hp": 70.0,
+    "posture_score": 0.568,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:41.321547",
+    "hp": 70.0,
+    "posture_score": -0.338,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:42.326051",
+    "hp": 70.0,
+    "posture_score": 0.071,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:43.328122",
+    "hp": 70.0,
+    "posture_score": 0.201,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:44.322092",
+    "hp": 70.0,
+    "posture_score": 0.087,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:45.321123",
+    "hp": 70.0,
+    "posture_score": 0.745,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:46.322030",
+    "hp": 70.0,
+    "posture_score": 0.636,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:47.316743",
+    "hp": 70.0,
+    "posture_score": -0.04,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:48.314803",
+    "hp": 70.0,
+    "posture_score": -0.081,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-04T00:41:49.343918",
+    "hp": 70.0,
+    "posture_score": -0.405,
+    "is_drowsy": false
   }
 ]

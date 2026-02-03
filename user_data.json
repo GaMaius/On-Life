@@ -1,0 +1,19 @@
+{
+  "hp": 74.03915357589722,
+  "xp": 60,
+  "level": 1,
+  "quests": [
+    {
+      "name": "스트레칭 (3분)",
+      "type": "stretch",
+      "target_duration": 180,
+      "reward_xp": 60,
+      "difficulty": "Normal",
+      "description": "3분 동안 카메라 앞에서 활발하게 움직이세요.",
+      "clear_condition": "카메라가 큰 움직임을 3분간 감지",
+      "progress": 180.22840332984924,
+      "is_completed": true
+    }
+  ],
+  "quest_streak": 1
+}

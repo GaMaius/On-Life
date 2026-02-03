@@ -35,13 +35,14 @@ class DataManager:
             print(f"[Data Error] {e}")
 
     # --- Type A: Interaction ---
-    def log_interaction(self, event, detail):
+    def log_interaction(self, event, metadata=None):
         self._save({
             "type": "A_Interaction",
             "ts": datetime.now().isoformat(),
             "session": self.session_id,
-            "event": event,
-            "detail": detail
+            "device_id": "mirror_prototype_01", # Fixed ID for prototype
+            "event_name": event,
+            "metadata": metadata or {}
         })
 
     # --- Type B: Context ---
@@ -87,3 +88,23 @@ class DataManager:
             return {"quests": quests, "avg_latency": avg_latency}
         except:
             return {"quests": 0, "avg_latency": 0}
+
+    # --- User Data Persistence ---
+    def save_user_data(self, data):
+        """사용자 데이터(레벨, 경험치, 퀘스트 기록 등) 저장"""
+        try:
+            with open("user_data.json", 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"[Save Error] {e}")
+
+    def load_user_data(self):
+        """사용자 데이터 불러오기"""
+        if not os.path.exists("user_data.json"):
+            return None
+        try:
+            with open("user_data.json", 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"[Load Error] {e}")
+            return None

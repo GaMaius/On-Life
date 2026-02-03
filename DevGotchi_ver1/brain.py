@@ -35,17 +35,26 @@ class BrainWorker(QThread):
             full_prompt = f"""
             {self.system_prompt}
             
-            [사용자 입력]: "{self.user_input}"
+            [Context]
+            User Input: "{self.user_input}"
             
-            사용자가 일정/할일을 등록하려 하면 JSON으로 출력해. 아니면 그냥 대답해.
-            JSON 형식: {{"type": "schedule", "content": "일정내용", "time": "시간"}}
-            일정이 아니면 JSON 형식을 쓰지 말고 평범하게 한국어로 대답해.
+            [Strict Output Rules]
+            1. If User requests a schedule/task -> Return ONLY JSON.
+            JSON Format: {{"type": "schedule", "content": "...", "time": "...", "location": "..."}}
+            
+            2. If General Chat -> Return ONLY the response text. 
+            - Do NOT include reasoning (e.g., "I will answer like this...").
+            - Do NOT include the JSON structure if it's not a task.
+            - Just say the response naturally.
             """
 
             # API 호출
             response = self.client.chat.completions.create(
                 model=MODEL,
-                messages=[{"role": "system", "content": full_prompt}],
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": full_prompt}
+                ],
                 temperature=0.7
             )
             
@@ -81,12 +90,9 @@ class BrainWorker(QThread):
 
 class BrainHandler:
     def chat(self, user_input, level, callback):
-        persona = "당신은 사용자의 업무를 돕는 AI 병아리 비서입니다."
-        if level == 1:
-            persona += " 갓 태어난 병아리처럼 '삐약'을 붙이며 귀엽게 말하세요."
-        elif level >= 5:
-            persona += " 늠름한 닭처럼 든든하고 전문적으로 말하세요."
-
+        # 기본 페르소나 설정
+        persona = "너는 사용자의 성장을 돕는 스마트 미러 AI야. 긍정적이고 활기찬 톤으로 짧게 대답해."
+        
         self.worker = BrainWorker(user_input, persona)
         self.worker.response_received.connect(callback)
         self.worker.start()
