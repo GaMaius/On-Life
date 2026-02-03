@@ -1,0 +1,702 @@
+[
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:56:24.964727",
+    "session": "sess_1770101779",
+    "event": "System",
+    "detail": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:56:26.428036",
+    "hp": 100,
+    "posture_score": 0.307,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:56:26.984552",
+    "hp": 97.5,
+    "posture_score": 0.331,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:56:28.130547",
+    "hp": 95.0,
+    "posture_score": 0.335,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:27.598299",
+    "session": "sess_1770101844",
+    "event": "System",
+    "detail": "Boot_Complete"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:28.788771",
+    "hp": 97.5,
+    "posture_score": 0.185,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:29.600900",
+    "hp": 95.0,
+    "posture_score": 0.179,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:30.597505",
+    "hp": 100,
+    "posture_score": 0.356,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:31.593784",
+    "hp": 97.5,
+    "posture_score": 0.405,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:32.597480",
+    "hp": 95.0,
+    "posture_score": 0.398,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:33.594200",
+    "hp": 92.5,
+    "posture_score": 0.389,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:34.592527",
+    "hp": 90.0,
+    "posture_score": 0.39,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:35.595634",
+    "hp": 87.5,
+    "posture_score": 0.397,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:36.597286",
+    "hp": 92.5,
+    "posture_score": 0.405,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:37.596313",
+    "hp": 97.5,
+    "posture_score": 0.406,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:38.608597",
+    "hp": 95.0,
+    "posture_score": 0.405,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:39.607945",
+    "hp": 92.5,
+    "posture_score": 0.397,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:40.605919",
+    "hp": 97.5,
+    "posture_score": 0.401,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:41.597219",
+    "hp": 100,
+    "posture_score": 0.384,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:42.599967",
+    "hp": 97.5,
+    "posture_score": 0.381,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:43.597890",
+    "hp": 100,
+    "posture_score": 0.38,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:44.591337",
+    "hp": 97.5,
+    "posture_score": 0.391,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:45.610561",
+    "hp": 95.0,
+    "posture_score": 0.38,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:46.604846",
+    "hp": 92.5,
+    "posture_score": 0.378,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:47.635986",
+    "hp": 90.0,
+    "posture_score": 0.394,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:48.604655",
+    "hp": 87.5,
+    "posture_score": 0.387,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:49.625202",
+    "hp": 85.0,
+    "posture_score": 0.388,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:49.755714",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:50.621049",
+    "hp": 82.5,
+    "posture_score": 0.379,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:51.632471",
+    "hp": 80.0,
+    "posture_score": 0.39,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:52.115533",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:150"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:52.630339",
+    "hp": 77.5,
+    "posture_score": 0.387,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:52.823631",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:150"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:53.258912",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:150"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:53.444482",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:150"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:53.628942",
+    "hp": 75.0,
+    "posture_score": 0.392,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:53.640240",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:150"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:54.418189",
+    "session": "sess_1770101844",
+    "event": "Level_Up",
+    "detail": "New_Level:2"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:54.430459",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:54.544479",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:54.649844",
+    "hp": 72.5,
+    "posture_score": 0.385,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:54.832665",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:55.359384",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:55.545713",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:55.637517",
+    "hp": 70.0,
+    "posture_score": 0.386,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:55.730817",
+    "session": "sess_1770101844",
+    "event": "Level_Up",
+    "detail": "New_Level:3"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:55.742776",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:55.887375",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.061189",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.264241",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.410892",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.601394",
+    "session": "sess_1770101844",
+    "event": "Level_Up",
+    "detail": "New_Level:4"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.614389",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:56.661696",
+    "hp": 67.5,
+    "posture_score": 0.389,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.777339",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:56.965408",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.171729",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.336690",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.526220",
+    "session": "sess_1770101844",
+    "event": "Level_Up",
+    "detail": "New_Level:5"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.538224",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:57.648893",
+    "hp": 65.0,
+    "posture_score": 0.377,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.708673",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:57.852341",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.047249",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.185986",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.342485",
+    "session": "sess_1770101844",
+    "event": "Level_Up",
+    "detail": "New_Level:6"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.356509",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.523740",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:58.648801",
+    "hp": 62.5,
+    "posture_score": 0.388,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.694493",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T15:57:58.854506",
+    "session": "sess_1770101844",
+    "event": "Quest_Complete",
+    "detail": "Reward:200"
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:57:59.643524",
+    "hp": 60.0,
+    "posture_score": 0.368,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:00.642471",
+    "hp": 57.5,
+    "posture_score": 0.343,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:01.643178",
+    "hp": 55.0,
+    "posture_score": 0.346,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:02.644136",
+    "hp": 52.5,
+    "posture_score": 0.354,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:03.644632",
+    "hp": 50.0,
+    "posture_score": 0.347,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:04.640890",
+    "hp": 47.5,
+    "posture_score": 0.333,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:05.662355",
+    "hp": 45.0,
+    "posture_score": 0.333,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:06.671925",
+    "hp": 42.5,
+    "posture_score": 0.322,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:07.660094",
+    "hp": 40.0,
+    "posture_score": 0.324,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:08.657304",
+    "hp": 37.5,
+    "posture_score": 0.326,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:09.656466",
+    "hp": 42.5,
+    "posture_score": 0.368,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:10.678126",
+    "hp": 47.5,
+    "posture_score": 0.361,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:11.674622",
+    "hp": 52.5,
+    "posture_score": 0.366,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:12.677353",
+    "hp": 50.0,
+    "posture_score": 0.357,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:13.673313",
+    "hp": 47.5,
+    "posture_score": 0.374,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:14.670340",
+    "hp": 45.0,
+    "posture_score": 0.347,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:15.685375",
+    "hp": 50.0,
+    "posture_score": 0.356,
+    "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:16.686603",
+    "hp": 47.5,
+    "posture_score": 0.364,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:17.682633",
+    "hp": 45.0,
+    "posture_score": 0.352,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:18.682986",
+    "hp": 42.5,
+    "posture_score": 0.342,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:19.703369",
+    "hp": 40.0,
+    "posture_score": 0.328,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:20.683364",
+    "hp": 37.5,
+    "posture_score": 0.355,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:21.711139",
+    "hp": 35.0,
+    "posture_score": 0.35,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:22.701285",
+    "hp": 32.5,
+    "posture_score": 0.347,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:23.706921",
+    "hp": 30.0,
+    "posture_score": 0.35,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:24.729361",
+    "hp": 27.5,
+    "posture_score": 0.344,
+    "is_drowsy": true
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-03T15:58:25.751376",
+    "hp": 25.0,
+    "posture_score": 0.341,
+    "is_drowsy": true
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T16:12:16.704419",
+    "session": "sess_1770102733",
+    "event": "System",
+    "detail": "Boot_Complete"
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-03T16:22:40.362800",
+    "session": "sess_1770103355",
+    "event": "System",
+    "detail": "Boot_Complete"
+  }
+]
