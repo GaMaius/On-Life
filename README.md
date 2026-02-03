@@ -15,7 +15,9 @@
   - ![이미지명](URL) 형식
 -->
 
-(백엔드, 프론트, 협업에 사용한 툴, 라이브러리, 프레임워크)
+(협업에 사용한 툴, 라이브러리, 프레임워크)
+
+라즈베리파이, 젯슨 나노 등등 추가해야됨
 
 ![intellij](https://img.shields.io/badge/intellij_idea-000000?style=for-the-badge&logo=intellijidea&logoColor=white)
 ![vscode](https://img.shields.io/badge/vscode-000000?style=for-the-badge&logo=vscode&logoColor=white)
