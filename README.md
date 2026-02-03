@@ -84,6 +84,11 @@ ex) FEAT/35 (#40)
 
 </br>
 
+## 파일을 실행하는 방법
+- pip install opencv-python mediapipe PyQt5 openai requests
+
+</br>
+
  ## 🧑‍💻 팀원
 | <img width="100" src="https://github.com/freaksemicolon.png"> | <img width="100" src="https://github.com/joajeong1012.png"> | <img width="100" src="https://github.com/GaMaius.png"> |
 |:----------------------:|:----------------------:|:----------------------:|
