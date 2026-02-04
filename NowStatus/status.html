@@ -17,14 +17,13 @@
             align-items: center;
             justify-content: space-between;
             overflow: hidden;
-            cursor: none; /* 스마트 거울용 커서 숨김 */
+            cursor: none; 
         }
 
-        /* === 홈 버튼 스타일: 오른쪽 위로 변경 === */
         .home-link {
             position: absolute;
             top: 40px;
-            right: 40px; /* left: 40px에서 right: 40px로 수정 */
+            right: 40px; 
             text-decoration: none;
             font-size: 2.5rem;
             color: rgba(255, 255, 255, 0.4);
@@ -87,7 +86,7 @@
 </head>
 <body>
 
-    <a href="index.html" class="home-link">🏠</a>
+    <a href="home.html" class="home-link">🏠</a>
 
     <div id="clock">00:00:00</div>
     <div id="status-display">상태를 선택하세요</div>
@@ -97,7 +96,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Firebase 설정 유지
         const firebaseConfig = {
             apiKey: "AIzaSyCr3TFLtacU-MvXz2d2FB6SUAa_tlPKE70",
             authDomain: "status-ef996.firebaseapp.com",
@@ -146,7 +144,15 @@
             displayEl.style.color = color || "white";
         }
 
+        // 초기 실행 시 지맘대로 바뀌는 것을 막는 변수
+        let isFirstLoad = true;
+
         onValue(statusRef, (snapshot) => {
+            // 처음 켰을 때 Firebase에서 가져오는 값은 무시함
+            if (isFirstLoad) {
+                isFirstLoad = false;
+                return;
+            }
             const currentStatus = snapshot.val();
             if (currentStatus && statusData[currentStatus]) {
                 updateUI(currentStatus, statusData[currentStatus]);
