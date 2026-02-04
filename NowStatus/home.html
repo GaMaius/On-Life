@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mirror Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Noto Sans KR', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        /* 중앙 메인 시계 */
+        .main-clock-container {
+            text-align: center;
+        }
+        #main-date { font-size: 1.5rem; color: #888; margin-bottom: 10px; }
+        #main-clock { font-size: 8rem; font-weight: 300; }
+
+        /* 기능 선택 메뉴 (그리드 레이아웃) */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3열 배치 */
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .menu-item:active { transform: scale(0.9); }
+
+        /* 아이콘 역할을 할 원형 도형 */
+        .icon-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            border: 2px solid #444;
+        }
+
+        .menu-label { font-size: 1.5rem; font-weight: 700; }
+
+        /* 각 기능별 테마 색상 */
+        .status .icon-circle { border-color: #00D166; color: #00D166; }
+        .timer .icon-circle { border-color: #FFD700; color: #FFD700; }
+        .schedule .icon-circle { border-color: #1E90FF; color: #1E90FF; }
+    </style>
+</head>
+<body>
+
+    <div class="main-clock-container">
+        <div id="main-date">2026년 2월 4일 수요일</div>
+        <div id="main-clock">00:00</div>
+    </div>
+
+    <div class="menu-grid">
+        <a href="status.html" class="menu-item status">
+            <div class="icon-circle">👤</div>
+            <div class="menu-label">내 상태</div>
+        </a>
+
+        <a href="timer.html" class="menu-item timer">
+            <div class="icon-circle">⏱</div>
+            <div class="menu-label">타이머</div>
+        </a>
+
+        <a href="scheduler.html" class="menu-item schedule">
+            <div class="icon-circle">📅</div>
+            <div class="menu-label">일정 관리</div>
+        </a>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('main-clock').textContent = `${hours}:${minutes}`;
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('main-date').textContent = now.toLocaleDateString('ko-KR', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
