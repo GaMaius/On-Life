@@ -17,14 +17,14 @@
             align-items: center;
             justify-content: space-between;
             overflow: hidden;
-            cursor: none; /* 거울용 마우스 숨김 */
+            cursor: none; 
         }
 
-        /* 홈 버튼 스타일 (상태 페이지와 통일) */
+        /* === 홈 버튼 스타일: 오른쪽 위로 변경 === */
         .home-link {
             position: absolute;
             top: 40px;
-            left: 40px;
+            right: 40px; /* left: 40px에서 right: 40px로 수정 */
             text-decoration: none;
             font-size: 2.5rem;
             color: rgba(255, 255, 255, 0.4);
@@ -88,7 +88,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-        // Firebase 설정 유지
         const firebaseConfig = {
             apiKey: "AIzaSyCr3TFLtacU-MvXz2d2FB6SUAa_tlPKE70",
             authDomain: "status-ef996.firebaseapp.com",
