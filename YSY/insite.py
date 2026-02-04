@@ -1,45 +1,43 @@
-# pandas 패키지 깔아야 함
+# pandas 패키지 깔아야함
 
-import math
 import pandas as pd
+import os
 import matplotlib.pyplot as plt
-import numpy as np
 
-# 1. 사선 각도 계산 함수
-def calculate_side_angles(ear, shoulder, hip):
-    # 수직선(Vertical) 대비 목과 등의 기울기 계산
-    # ear, shoulder, hip은 각각 [x, y] 좌표
-    neck_angle = math.degrees(math.atan2(abs(ear[0] - shoulder[0]), abs(ear[1] - shoulder[1])))
-    back_angle = math.degrees(math.atan2(abs(shoulder[0] - hip[0]), abs(shoulder[1] - hip[1])))
-    return neck_angle, back_angle
+# 1. 데이터 로그 초기화
+LOG_FILE = 'user_posture_log.csv'
 
-# 2. 데이터 수집 시뮬레이션 (최근 7회차 기록)
-data = {
-    'Session': ['1회', '2회', '3회', '4회', '5회', '6회', '오늘'],
-    'Neck_Angle': [15, 18, 25, 30, 28, 35, 42], # 높을수록 거북목 심화
-    'Back_Angle': [10, 12, 15, 20, 22, 25, 30]  # 높을수록 등이 굽음
-}
-df = pd.DataFrame(data)
-
-# 3. 인사이트 제공용 인포그래픽 생성
-def generate_infographic(df):
-    plt.style.use('dark_background')
-    fig, ax1 = plt.subplots(figsize=(10, 5))
-
-    # 목 각도 추이 (Line Chart)
-    ax1.plot(df['Session'], df['Neck_Angle'], color='#00ffcc', marker='o', label='Neck Angle (Turtle)')
-    ax1.set_ylabel('Angle (Degrees)', color='white')
-    ax1.tick_params(axis='y', labelcolor='#00ffcc')
-
-    # 등 굽음 추이 (Bar Chart)
-    ax2 = ax1.twinx()
-    ax2.bar(df['Session'], df['Back_Angle'], color='#ff3366', alpha=0.3, label='Back Angle (Slumped)')
-    ax2.set_ylim(0, 50)
+def save_current_posture(neck_angle, back_angle):
+    """실시간으로 수집된 좌표/각도를 CSV에 한 줄씩 추가"""
+    new_data = pd.DataFrame([{
+        'timestamp': pd.Timestamp.now(),
+        'neck_angle': neck_angle,
+        'back_angle': back_angle
+    }])
     
-    plt.title("Side-view Posture Trend Analysis", color='white', size=15)
-    fig.tight_layout()
-    plt.savefig('posture_insight.png', transparent=True)
-    return df.iloc[-1].to_dict() # 오늘의 데이터 반환
+    # 파일이 없으면 새로 만들고, 있으면 한 줄 추가(append)
+    if not os.path.isfile(LOG_FILE):
+        new_data.to_csv(LOG_FILE, index=False)
+    else:
+        new_data.to_csv(LOG_FILE, mode='a', header=False, index=False)
 
-current_stat = generate_infographic(df)
-print(current_stat)
+# 2. 분석 및 그래프 생성 로직 (데이터가 있을 때만 실행)
+def generate_dynamic_report():
+    if not os.path.isfile(LOG_FILE):
+        return None, "데이터가 아직 부족합니다. 수집을 시작하세요!"
+    
+    df = pd.read_csv(LOG_FILE)
+    
+    # 데이터가 최소 5개는 쌓여야 그래프를 그림
+    if len(df) < 5:
+        return None, f"데이터 수집 중... (현재 {len(df)}개 / 최소 5개 필요)"
+    
+    # 그래프 생성
+    plt.figure(figsize=(8, 4))
+    plt.plot(df['neck_angle'], label='Neck', color='#00ffcc')
+    plt.plot(df['back_angle'], label='Back', color='#ff3366')
+    plt.title("Real-time Posture Log")
+    plt.savefig('real_posture_report.png')
+    plt.close()
+    
+    return df.iloc[-1].to_dict(), "분석 리포트가 갱신되었습니다."
