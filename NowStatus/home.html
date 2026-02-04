@@ -8,81 +8,93 @@
     <style>
         body {
             margin: 0;
-            /* 윈도우 11 특유의 다크 블루 그라데이션 (거울 효과를 위해 매우 어둡게 설정) */
             background: linear-gradient(135deg, #000000 0%, #050510 50%, #000000 100%);
             color: white;
             font-family: 'Noto Sans KR', sans-serif;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            /* 가로 배치로 변경 */
+            flex-direction: row; 
+            /* 양 끝으로 배치 */
+            justify-content: space-between; 
+            /* 상단 정렬 */
+            align-items: flex-start; 
+            padding: 80px; /* 화면 끝 여백 */
+            box-sizing: border-box;
             overflow: hidden;
             cursor: none;
         }
 
-        /* 중앙 시계: 윈도우 잠금화면 스타일 */
+        /* 왼쪽 시계 영역: 텍스트 왼쪽 정렬 및 위치 조정 */
         .clock-section {
-            text-align: center;
-            margin-bottom: 50px;
+            text-align: left;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
         }
-        #main-date { font-size: 1.8rem; font-weight: 300; opacity: 0.8; }
-        #main-clock { font-size: 10rem; font-weight: 700; margin-top: -10px; }
+        #main-date { 
+            font-size: 2rem; 
+            font-weight: 300; 
+            opacity: 0.8; 
+            margin-left: 5px; /* 시계 숫자와 라인 맞춤 */
+        }
+        #main-clock { 
+            font-size: 9rem; 
+            font-weight: 700; 
+            line-height: 1;
+            margin-top: 10px;
+        }
 
-        /* 앱 그리드: 윈도우 시작 메뉴 스타일 */
+        /* 오른쪽 앱 그리드 영역 */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            background: rgba(255, 255, 255, 0.03); /* 아주 옅은 투명도 */
-            padding: 40px;
+            /* 세로로 길게 배치하거나 2열로 배치 가능 (여기선 1열 세로 배치 추천) */
+            grid-template-columns: 1fr; 
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
             border-radius: 30px;
-            /* 유리 효과의 핵심: 배경 블러 */
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            align-self: center; /* 아이콘 뭉치는 세로 중앙에 배치 */
         }
 
-        /* 앱 아이콘 컨테이너 수정 */
         .app-item {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* 아이콘과 글자를 가로로 배치 (세로 공간 절약) */
             align-items: center;
-            justify-content: flex-start; /* 상단부터 배치 시작 */
-            width: 160px;
-            height: 160px;
+            width: 280px; /* 가로형 버튼에 맞춰 너비 조절 */
+            height: 100px;
             text-decoration: none;
             color: white;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-top: 25px; /* 상단 패딩으로 전체적인 위치 조절 */
-            box-sizing: border-box; /* 패딩이 전체 크기에 포함되도록 설정 */
+            padding: 0 25px;
+            box-sizing: border-box;
         }
 
-        /* 이모티콘 영역 수정 */
+        .app-item:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .app-icon { 
-            font-size: 3.5rem; 
-            line-height: 1; /* 이모티콘 폰트의 기본 상하 여백 제거 */
+            font-size: 2.5rem; 
             display: flex; 
             align-items: center; 
             justify-content: center;
-            height: 60px; /* 이모티콘이 들어갈 공간의 높이를 고정 */
-            width: 60px; /* 너비도 고정하여 완전한 중앙 정렬 유도 */
-            margin-bottom: 10px; /* 텍스트와의 간격 */
+            width: 50px;
+            margin-right: 20px; /* 글자와의 간격 */
         }
 
-        /* 라벨 텍스트 수정 */
         .app-label { 
-            font-size: 1.2rem; 
-            font-weight: 500; 
-            text-align: center;
-            width: 100%; /* 텍스트가 가로로 꽉 차게 */
+            font-size: 1.5rem; 
+            font-weight: 500;
         }
 
-        /* 아이콘별 포인트 컬러 (옅은 빛망울 효과) */
+        /* 아이콘별 포인트 컬러 */
         .status .app-icon { filter: drop-shadow(0 0 10px #00D166); }
         .timer .app-icon { filter: drop-shadow(0 0 10px #FFD700); }
         .schedule .app-icon { filter: drop-shadow(0 0 10px #1E90FF); }
@@ -92,18 +104,18 @@
 <body>
 
     <div class="clock-section">
-        <div id="main-date">2026년 2월 4일 수요일</div>
+        <div id="main-date">2월 4일 수요일</div>
         <div id="main-clock">10:47</div>
     </div>
 
     <div class="app-grid">
         <a href="status.html" class="app-item status">
             <div class="app-icon">👤</div>
-            <div class="app-label">내 상태</div>
+            <div class="app-label">내 상태 설정</div>
         </a>
         <a href="timer.html" class="app-item timer">
             <div class="app-icon">⏱</div>
-            <div class="app-label">타이머</div>
+            <div class="app-label">집중 타이머</div>
         </a>
         <a href="scheduler.html" class="app-item schedule">
             <div class="app-icon">📅</div>
