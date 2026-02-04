@@ -69,6 +69,7 @@ class VisionEngine:
         face_results = self.face_mesh.process(rgb)
         is_drowsy = False
         is_smiling = False
+        is_eye_closed = False
         
         face_landmarks_draw = None
 
@@ -98,8 +99,10 @@ class VisionEngine:
             avg_ear = (ear_l + ear_r) / 2.0
             
             # Config.EAR_THRESHOLD (0.18) 보다 작으면 눈 감음
-            if avg_ear < Config.EAR_THRESHOLD:
-                is_drowsy = True
+            is_eye_closed = avg_ear < Config.EAR_THRESHOLD
+            
+            if is_eye_closed:
+                is_drowsy = True # In this simple logic, closed = drowsy frame. Game logic handles duration.
             
             # 미소 (입꼬리 61, 291과 입술 위아래 거리 비율)
             mouth_w = abs(lms[61].x - lms[291].x)
@@ -107,7 +110,7 @@ class VisionEngine:
             if mouth_w > 0 and (mouth_h / mouth_w) < 0.3: # 입이 옆으로 길어짐
                 is_smiling = True
 
-        return posture_score, is_drowsy, is_smiling, face_landmarks_draw
+        return posture_score, is_drowsy, is_smiling, is_eye_closed
 
     def check_action_movement(self, frame):
         """스트레칭/일어서기 감지 (어깨 위로 손을 올리거나, 일어서기)"""

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevGotchi: Logic Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar: Character & Stats -->
+        <aside class="sidebar neumorphic-panel">
+            <div class="profile-section">
+                <div class="level-badge neumorphic-inset">
+                    <span id="level-text">Lv.1</span>
+                </div>
+                <div class="character-frame neumorphic-outset">
+                    <!-- Character Image or Emoji -->
+                    <img src="/static/assets/chick_default.png" id="char-img" alt="Character"
+                        onerror="this.style.display='none'; document.getElementById('char-emoji').style.display='block'">
+                    <div id="char-emoji" style="display:none; font-size: 80px;">🐣</div>
+                </div>
+                <h2 id="user-title">주니어 병아리</h2>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-group">
+                    <label>Health (HP)</label>
+                    <div class="progress-track neumorphic-inset">
+                        <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <label>Experience (XP)</label>
+                    <div class="progress-track neumorphic-inset">
+                        <div class="progress-fill xp-fill" id="xp-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button class="neumorphic-btn active"><i class="fas fa-home"></i> 홈</button>
+                <button class="neumorphic-btn" onclick="alert('준비중입니다.')"><i class="fas fa-calendar"></i> 일정</button>
+                <button class="neumorphic-btn" onclick="alert('준비중입니다.')"><i class="fas fa-chart-pie"></i> 통계</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header / Status -->
+            <header class="top-bar neumorphic-panel">
+                <div class="status-indicator">
+                    <div class="status-dot" id="posture-dot"></div>
+                    <span id="posture-text">바른 자세 유지중</span>
+                </div>
+                <div class="notification-area">
+                    <i class="fas fa-bell"></i>
+                </div>
+            </header>
+
+            <!-- Video Feed Area -->
+            <section class="video-section neumorphic-panel">
+                <div class="video-frame neumorphic-inset">
+                    <!-- Camera Hidden, showing Character -->
+                    <img src="/video_feed" alt="Live Feed" id="video-feed" style="display:none;">
+
+                    <div id="main-char-display">🐣</div>
+
+                    <div class="overlay-alert" id="damage-overlay">⚠️ HP 감소!</div>
+                </div>
+            </section>
+
+            <!-- Chat / Input -->
+            <section class="chat-section neumorphic-panel">
+                <div class="chat-history neumorphic-inset" id="chat-history">
+                    <div class="message system">
+                        DevGotchi 시스템이 가동되었습니다.
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" class="neumorphic-input" placeholder="오늘 할 일을 입력하세요...">
+                    <button class="neumorphic-btn-small" onclick="sendMessage()"><i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Panel: Quests -->
+        <aside class="right-panel neumorphic-panel">
+            <h3>🔥 퀘스트</h3>
+
+            <!-- Active Quest -->
+            <div id="active-quest-container">
+                <!-- Javascript will populate this -->
+                <div class="empty-state">진행중인 퀘스트 없음</div>
+            </div>
+
+            <hr class="divider">
+
+            <h3>🎯 퀘스트 선택</h3>
+            <div id="available-quest-list" class="quest-list">
+                <!-- Javascript will populate this -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Alarm / Popup Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal neumorphic-panel">
+            <h2 id="modal-title">알림</h2>
+            <div id="modal-content" style="text-align: left; margin: 20px 0; color: var(--text-sub);">
+                <p id="modal-message">본문</p>
+                <!-- Extra details for quests -->
+                <div id="quest-details"
+                    style="display:none; margin-top:15px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
+                    <p><strong>🎯 성공 조건:</strong> <span id="q-condition"></span></p>
+                    <p><strong>⏳ 진행 상황:</strong> <span id="q-progress"></span></p>
+                </div>
+            </div>
+            <button class="neumorphic-btn" onclick="closeModal()" style="margin: 0 auto;">확인</button>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

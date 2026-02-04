@@ -13,6 +13,17 @@
       "clear_condition": "카메라가 큰 움직임을 3분간 감지",
       "progress": 180.22840332984924,
       "is_completed": true
+    },
+    {
+      "name": "회복 퀘스트: 5분 휴식",
+      "type": "recovery",
+      "target_duration": 300,
+      "reward_xp": 40,
+      "difficulty": "Easy",
+      "description": "5분간 화면을 보지 말고 휴식하세요.",
+      "clear_condition": "입력 없음/부재 5분",
+      "progress": 0,
+      "is_completed": false
     }
   ],
   "quest_streak": 1

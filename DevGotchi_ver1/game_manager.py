@@ -91,6 +91,7 @@ class GameManager:
         }
         self.dm.save_user_data(data)
 
+
     def update(self, is_bad_posture, is_drowsy, has_user_input, is_active_movement=False):
         now = time.time()
         dt = now - self.last_update_time
@@ -100,9 +101,7 @@ class GameManager:
         active_quests = [q for q in self.quests if not q.is_completed]
         
         # Check if we are in a "protected" mode (Stretch/Rest quest active)
-        # User requested: No HP reduction during 'Stretch' (Stress) type quests.
-        # Focus/Posture quests SHOULD have HP reduction.
-        is_protected_mode = any(q.type in ['stretch', 'rest'] for q in active_quests)
+        is_protected_mode = any(q.type in ['stretch', 'rest', 'recovery'] for q in active_quests)
 
         # --- 1. HP Penalty Logic ---
         if not is_protected_mode:
@@ -111,8 +110,10 @@ class GameManager:
                 self.bad_posture_duration += dt
                 self.good_posture_duration = 0 # Reset good streak
                 
+                # 심각한 거북목 (7분 이상)
                 if self.bad_posture_duration > 420: # 7 min
                     self.hp -= (Config.HP_PENALTY_POSTURE_7MIN / 60) * dt
+                # 거북목 지속 (3분 이상)
                 elif self.bad_posture_duration > 180: # 3 min
                     self.hp -= (Config.HP_PENALTY_POSTURE_3MIN / 60) * dt
             else:
@@ -139,141 +140,89 @@ class GameManager:
             if self.continuous_work_duration > 5400: # 90 min
                 self.hp -= Config.HP_PENALTY_OVERWORK_90MIN
                 self.continuous_work_duration = 0 
-            
-            # 1.4 Sleep (Drowsy) - Sleep might still be penalized? 
-            # Assuming 'Rest' allows sleep, but 'Stretch' implies activity. 
-            # For now, disable sleep penalty too if protected.
-            if is_drowsy:
-                self.hp -= Config.HP_PENALTY_SLEEP * dt
         else:
-            # In protected mode, reset bad counters to prevent instant penalty upon finishing quest
+            # In protected mode, reset bad counters
             self.bad_posture_duration = 0
             self.idle_duration = 0
         
-        # Generate quest options if no active quest and no available options
-        if len(active_quests) == 0 and len(self.available_quests) == 0:
+        # Generator quest options if needed
+        capacity = self.get_quest_capacity()
+        if len(active_quests) < capacity and len(self.available_quests) == 0:
             self.generate_quest_options()
 
         for q in active_quests:
             if q.type == 'focus':
+                # Rule: "25분 집중 유지하기"
                 if not is_bad_posture and not is_drowsy:
                     q.progress += dt
             elif q.type == 'posture':
+                # Rule: "10분간 바른 자세 유지"
                 if not is_bad_posture:
                     q.progress += dt
+                else:
+                    # Reset progress for "continuous" quests
+                    if "연속" in q.name or "Consectuive" in q.name:
+                        q.progress = 0
             elif q.type == 'rest':
-                # Rest quest: User should be away/idle or MOVING (stretching)
                 if self.idle_duration > 10 or is_active_movement: 
                     q.progress += dt
-            elif q.type == 'stretch':
-                # Active movement needed
-                if is_active_movement:
-                    q.progress += dt 
-                    # Bonus speed for stretching
-                    q.progress += dt * 2 
+            elif q.type == 'recovery': # Stretch or Rest
+                 if is_active_movement or self.idle_duration > 10:
+                    q.progress += dt
+
             if q.progress >= q.target_duration:
                 self.complete_quest(q)
 
-        # Level Up Check
         self.check_level_up()
-
-        # Clamp HP
         self.hp = max(0, min(Config.MAX_HP, self.hp))
 
     def get_quest_capacity(self):
         return 2 if self.level >= 3 else 1
 
     def generate_quest_options(self):
-        """Generate 3 random quest options for user to choose from"""
-        # Quest Types
-        # 1. Focus: 25m (Normal), 50m (Hard)
-        # 2. Posture: 10m (Easy), 30m (Normal)
-        # 3. Recovery: Rest 5m (Normal)
-        # 4. Stretch: Active movement (Normal)
-        
+        """Generate 3 random quest options (1 Focus, 1 Posture, 1 Recovery)"""
         # Difficulty Adjustment
-        difficulty_mod = self.quest_streak # +2 (Harder), -2 (Easier)
+        difficulty_mod = self.quest_streak 
+        is_hard = difficulty_mod >= 2
+        is_easy = difficulty_mod < -1
         
-        pool = []
+        pool_focus = []
+        pool_posture = []
+        pool_recovery = []
         
-        # Focus Quests
-        pool.append(Quest(
-            "집중 세션 (25분)", 
-            "focus", 
-            25*60, 
-            50, 
-            "Normal",
-            "25분 동안 집중 작업을 수행하세요.",
-            "바른 자세 유지 + 졸음 없이 25분 작업"
-        ))
-        if difficulty_mod > 2:
-            pool.append(Quest(
-                "딥 워크 (50분)", 
-                "focus", 
-                50*60, 
-                120, 
-                "Hard",
-                "50분 동안 중단 없이 깊은 집중 작업을 수행하세요.",
-                "바른 자세 + 졸음 없이 50분 연속 작업"
-            ))
-        
-        # Posture Quests
-        pool.append(Quest(
-            "바른 자세 (10분)", 
-            "posture", 
-            10*60, 
-            30, 
-            "Easy",
-            "10분 동안 바른 자세를 유지하세요.",
-            "거북목 없이 10분 유지"
-        ))
-        if difficulty_mod > 1:
-            pool.append(Quest(
-                "거북목 금지 (30분)", 
-                "posture", 
-                30*60, 
-                80, 
-                "Normal",
-                "30분 동안 거북목 없이 작업하세요.",
-                "거북목 자세 없이 30분 유지"
-            ))
-            
-        # Recovery Quests
-        pool.append(Quest(
-            "잠시 휴식 (5분)", 
-            "rest", 
-            5*60, 
-            40, 
-            "Normal",
-            "5분간 자리를 비우거나 스트레칭하며 휴식을 취하세요.",
-            "5분간 입력 없음 또는 움직임 감지"
-        ))
-        
-        # Stretch Quest
-        pool.append(Quest(
-            "스트레칭 (3분)",
-            "stretch",
-            3*60,
-            60,
-            "Normal",
-            "3분 동안 카메라 앞에서 활발하게 움직이세요.",
-            "카메라가 큰 움직임을 3분간 감지"
-        ))
+        # 1. Focus Quests
+        pool_focus.append(Quest("집중 퀘스트: 25분 집중 유지", "focus", 25*60, 50, "Normal", "25분 동안 집중 상태(바른 자세)를 유지하세요.", "바른 자세 + 졸음 없음 25분"))
+        if is_hard:
+             pool_focus.append(Quest("집중 퀘스트: 50분 딥워크", "focus", 50*60, 100, "Hard", "50분 동안 집중하세요.", "바른 자세 + 졸음 없음 50분"))
 
-        # Select 3 unique quests
-        if len(pool) >= 3:
-            self.available_quests = random.sample(pool, 3)
-        else:
-            self.available_quests = pool
-            
+        # 2. Posture Quests
+        pool_posture.append(Quest("자세 퀘스트: 10분 바른 자세", "posture", 10*60, 30, "Easy", "10분간 바른 자세를 연속 유지하세요.", "바른 자세 10분"))
+        if not is_easy:
+             pool_posture.append(Quest("자세 퀘스트: 1시간 거북목 없이", "posture", 60*60, 80, "Hard", "1시간 동안 거북목 경고 없이 작업하세요.", "거북목 감지 없음 1시간"))
+
+        # 3. Recovery Quests
+        pool_recovery.append(Quest("회복 퀘스트: 5분 휴식", "recovery", 5*60, 40, "Easy", "5분간 화면을 보지 말고 휴식하세요.", "입력 없음/부재 5분"))
+        pool_recovery.append(Quest("회복 퀘스트: 스트레칭 1회", "recovery", 60, 60, "Normal", "1분간 스트레칭 가이드를 따라하세요.", "스트레칭 동작 감지"))
+
+        # Select one from each category if possible
+        q1 = random.choice(pool_focus)
+        q2 = random.choice(pool_posture)
+        q3 = random.choice(pool_recovery)
+        
+        self.available_quests = [q1, q2, q3]
+
     def accept_quest(self, quest_index):
         """User accepts one of the available quests"""
+        capacity = self.get_quest_capacity()
+        active_count = len([q for q in self.quests if not q.is_completed])
+        
+        if active_count >= capacity:
+            return False 
+            
         if 0 <= quest_index < len(self.available_quests):
             selected_quest = self.available_quests[quest_index]
-            # Clear current active quests and add the selected one
-            self.quests = [selected_quest]
-            # Clear available options
-            self.available_quests = []
+            self.quests.append(selected_quest)
+            self.available_quests.pop(quest_index)
             self.save_game()
             return True
         return False
@@ -283,14 +232,13 @@ class GameManager:
         self.gain_xp(quest.reward_xp)
         self.quest_streak += 1
         
-        # HP Rewards
         if quest.type == 'focus':
             self.gain_hp(Config.HP_HEAL_FOCUS_25MIN)
         elif quest.type == 'posture':
             self.gain_hp(Config.HP_HEAL_POSTURE_10MIN)
         elif quest.type == 'rest':
             self.gain_hp(Config.HP_HEAL_REST_5MIN)
-            self.continuous_work_duration = 0 # Reset overwork timer
+            self.continuous_work_duration = 0 
             
         self.save_game()
 
@@ -298,7 +246,11 @@ class GameManager:
         self.alarm_ignore_count += 1
         if self.alarm_ignore_count >= 2:
             self.hp -= Config.HP_PENALTY_IGNORE_ALARM
+            # Do NOT reset count immediately if we want to punish every subsequent ignore, 
+            # Or reset to 0 to punish every 2nd time. User said "2 consecutively -> -5". 
+            # Implies every pair. 
             self.alarm_ignore_count = 0 
+ 
 
     def fail_quest(self, quest):
         # Manually fail or timeout logic (not implemented yet, but for streak)
