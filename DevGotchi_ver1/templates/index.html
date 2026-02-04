@@ -46,8 +46,10 @@
 
             <div class="menu-section">
                 <button class="neumorphic-btn active"><i class="fas fa-home"></i> 홈</button>
-                <button class="neumorphic-btn" onclick="alert('준비중입니다.')"><i class="fas fa-calendar"></i> 일정</button>
-                <button class="neumorphic-btn" onclick="alert('준비중입니다.')"><i class="fas fa-chart-pie"></i> 통계</button>
+                <button class="neumorphic-btn"
+                    onclick="document.querySelector('.right-panel').scrollIntoView({behavior: 'smooth'})"><i
+                        class="fas fa-calendar"></i> 일정</button>
+                <button class="neumorphic-btn" onclick="showStats()"><i class="fas fa-chart-pie"></i> 통계</button>
             </div>
         </aside>
 
@@ -70,7 +72,8 @@
                     <!-- Camera Hidden, showing Character -->
                     <img src="/video_feed" alt="Live Feed" id="video-feed" style="display:none;">
 
-                    <div id="main-char-display">🐣</div>
+                    <img src="/static/assets/pixel_chick.png" id="main-char-display" class="pixel-char"
+                        style="width:150px; image-rendering:pixelated; display:block;">
 
                     <div class="overlay-alert" id="damage-overlay">⚠️ HP 감소!</div>
                 </div>
@@ -107,6 +110,14 @@
             <div id="available-quest-list" class="quest-list">
                 <!-- Javascript will populate this -->
             </div>
+
+            <hr class="divider" style="margin: 20px 0;">
+
+            <h3>📅 오늘의 일정</h3>
+            <div id="schedule-list" class="neumorphic-inset"
+                style="padding: 10px; min-height: 100px; font-size: 0.9rem; color: var(--text-sub);">
+                <div style="text-align:center; padding: 20px;">등록된 일정이 없습니다.</div>
+            </div>
         </aside>
     </div>
 
@@ -127,6 +138,26 @@
         </div>
     </div>
 
+    <!-- Stats Modal -->
+    <div id="stats-modal-overlay" class="modal-overlay">
+        <div class="modal neumorphic-panel" style="width: 800px; max-width: 95%;">
+            <h3>📊 성장 분석</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+                <div class="neumorphic-inset" style="padding:15px;">
+                    <h4>🧘 자세 점수 추이</h4>
+                    <canvas id="postureChart"></canvas>
+                </div>
+                <div class="neumorphic-inset" style="padding:15px;">
+                    <h4>🧠 집중 vs 휴식</h4>
+                    <canvas id="focusChart"></canvas>
+                </div>
+            </div>
+            <button class="neumorphic-btn" onclick="closeStatsModal()"
+                style="margin-top: 20px; width: 100%;">닫기</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/app.js"></script>
 </body>
 

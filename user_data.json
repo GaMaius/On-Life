@@ -1,7 +1,7 @@
 {
   "hp": 74.03915357589722,
-  "xp": 60,
-  "level": 1,
+  "xp": 100,
+  "level": 2,
   "quests": [
     {
       "name": "스트레칭 (3분)",
@@ -22,9 +22,9 @@
       "difficulty": "Easy",
       "description": "5분간 화면을 보지 말고 휴식하세요.",
       "clear_condition": "입력 없음/부재 5분",
-      "progress": 0,
-      "is_completed": false
+      "progress": 300.06230998039246,
+      "is_completed": true
     }
   ],
-  "quest_streak": 1
+  "quest_streak": 2
 }

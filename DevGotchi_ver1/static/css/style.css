@@ -1,14 +1,26 @@
 :root {
-    --bg-color: #E0E5EC;
-    --shadow-light: #ffffff;
-    --shadow-dark: #a3b1c6;
-    --text-main: #4A5568;
-    --text-sub: #A0AEC0;
-    --accent: #6D5DFC;
-    --accent-hover: #5A4BDB;
-    --danger: #FF6B6B;
-    --success: #48BB78;
-    --warning: #ECC94B;
+    /* Dark & Light Blue Theme */
+    --bg-color: #1a202c;
+    /* Deep Dark Blue-Black */
+    --text-main: #e2e8f0;
+    /* Light Gray Text */
+    --text-sub: #a0aec0;
+    --surface-color: #2d3748;
+    /* Component Background */
+
+    --accent: #63b3ed;
+    /* Light Blue Point */
+    --accent-hover: #4299e1;
+    --danger: #fc8181;
+    /* Soft Red */
+    --success: #68d391;
+    /* Soft Green */
+    --warning: #f6ad55;
+    /* Soft Orange */
+
+    /* Dark Neumorphism Shadows */
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.4);
 
     --radius-main: 20px;
     --radius-small: 12px;
@@ -25,14 +37,11 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     min-height: 100vh;
-    /* Changed from height to min-height */
     display: flex;
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
-    /* Prevent horizontal scroll */
     padding: 20px;
-    /* Add padding for smaller screens */
 }
 
 .app-container {

@@ -121,7 +121,7 @@ def get_status():
         is_taking_damage = True
     
     return jsonify({
-        "hp": round(game.hp, 1), # Round for cleaner UI
+        "hp": game.hp, # Send full precision for smooth bar
         "max_hp": Config.MAX_HP,
         "xp": game.xp,
         "level": game.level,
@@ -153,32 +153,45 @@ def accept_quest():
     success = game.accept_quest(index)
     return jsonify({"success": success})
 
+# Chat History (In-Memory for now)
+CHAT_HISTORY = []
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
+    global CHAT_HISTORY
     data = request.json
     user_msg = data.get('message')
     
-    # Process AI Chat
-    # This might be slow, so ideally async, but for now synchronous
-    def on_response(text, task_info):
-        # We can't easily return this in the immediate HTTP response if it relies on callback
-        # But BrainHandler.chat calls callback. We need to wrap it.
-        pass
-        
-    # Hack for synchronous response from brain (assuming brain is sync or we wait)
-    # The current BrainHandler uses a callback. We will just capture it.
-    response_container = {"text": "", "task": None}
+    # Add User Message to History
+    CHAT_HISTORY.append({"role": "user", "content": user_msg})
+    # Keep last 10 turns (20 messages) to manage context window
+    if len(CHAT_HISTORY) > 20:
+        CHAT_HISTORY = CHAT_HISTORY[-20:]
     
-    def callback(text, task_info):
-        response_container["text"] = text
-        response_container["task"] = task_info
-        
-    brain.chat(user_msg, game.level, callback)
+    # Process AI Chat synchronously for the API response
+    result_queue = queue.Queue()
     
-    return jsonify({
-        "response": response_container["text"],
-        "task": response_container["task"]
-    })
+    def callback(text, task_info, thought=""):
+        # Add AI Message to History
+        CHAT_HISTORY.append({"role": "assistant", "content": text})
+        result_queue.put({"text": text, "task": task_info, "thought": thought})
+        
+    brain.chat(CHAT_HISTORY, game.level, callback)
+    
+    # Wait for response with timeout
+    try:
+        result = result_queue.get(timeout=30) # Increased timeout for ReAct
+        return jsonify({
+            "response": result["text"],
+            "task": result["task"],
+            "thought": result["thought"]
+        })
+    except queue.Empty:
+        return jsonify({
+            "response": "AI 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.",
+            "task": None,
+            "thought": "시간 초과"
+        })
 
 if __name__ == '__main__':
     # Start Game Loop Thread
