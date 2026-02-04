@@ -20,6 +20,32 @@
             cursor: none; /* 스마트 거울용 커서 숨김 */
         }
 
+        /* 홈 버튼 스타일 (윈도우 스타일 반영) */
+        .home-link {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            text-decoration: none;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .home-link:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
         #clock {
             font-size: 4rem;
             margin-top: 80px;
@@ -50,25 +76,28 @@
             border-radius: 15px;
             cursor: pointer;
             transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         button:active {
             transform: scale(0.9);
+            background-color: #333;
         }
     </style>
 </head>
 <body>
+
+    <a href="index.html" class="home-link">🏠</a>
 
     <div id="clock">00:00:00</div>
     <div id="status-display">상태를 선택하세요</div>
     <div class="btn-container" id="button-list"></div>
 
     <script type="module">
-        // Firebase SDK 로드
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // 보내주신 이미지 기반 Firebase 설정
+        // Firebase 설정 (원정님의 데이터 반영)
         const firebaseConfig = {
             apiKey: "AIzaSyCr3TFLtacU-MvXz2d2FB6SUAa_tlPKE70",
             authDomain: "status-ef996.firebaseapp.com",
@@ -84,7 +113,6 @@
         const db = getDatabase(app);
         const statusRef = ref(db, 'current_status');
 
-        // 상태 데이터 정의
         const statusData = {
             "업무 중": "#00D166",
             "회의 중": "#FF4B2B",
@@ -96,7 +124,6 @@
         const displayEl = document.getElementById('status-display');
         const btnContainer = document.getElementById('button-list');
 
-        // 1초마다 시계 업데이트
         function updateClock() {
             const now = new Date();
             clockEl.textContent = now.toLocaleTimeString('ko-KR', { hour12: false });
@@ -104,24 +131,21 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 버튼 생성 및 클릭 이벤트
         Object.entries(statusData).forEach(([label, color]) => {
             const btn = document.createElement('button');
             btn.textContent = label;
             btn.onclick = () => {
-                set(statusRef, label); // Firebase 업데이트
-                updateUI(label, color); // 화면 즉시 업데이트
+                set(statusRef, label); 
+                updateUI(label, color);
             };
             btnContainer.appendChild(btn);
         });
 
-        // UI 업데이트 함수
         function updateUI(status, color) {
             displayEl.textContent = status;
             displayEl.style.color = color || "white";
         }
 
-        // 실시간 리스너 (외부 기기 변경 대응)
         onValue(statusRef, (snapshot) => {
             const currentStatus = snapshot.val();
             if (currentStatus && statusData[currentStatus]) {
