@@ -3,92 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Mirror Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;700&display=swap" rel="stylesheet">
+    <title>Smart Mirror OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            background-color: black;
+            /* 윈도우 11 특유의 다크 블루 그라데이션 (거울 효과를 위해 매우 어둡게 설정) */
+            background: linear-gradient(135deg, #000000 0%, #050510 50%, #000000 100%);
             color: white;
             font-family: 'Noto Sans KR', sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
             overflow: hidden;
             cursor: none;
         }
 
-        /* 중앙 메인 시계 */
-        .main-clock-container {
+        /* 중앙 시계: 윈도우 잠금화면 스타일 */
+        .clock-section {
             text-align: center;
+            margin-bottom: 50px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-        #main-date { font-size: 1.5rem; color: #888; margin-bottom: 10px; }
-        #main-clock { font-size: 8rem; font-weight: 300; }
+        #main-date { font-size: 1.8rem; font-weight: 300; opacity: 0.8; }
+        #main-clock { font-size: 10rem; font-weight: 700; margin-top: -10px; }
 
-        /* 기능 선택 메뉴 (그리드 레이아웃) */
-        .menu-grid {
+        /* 앱 그리드: 윈도우 시작 메뉴 스타일 */
+        .app-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3열 배치 */
-            gap: 40px;
-            padding: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            background: rgba(255, 255, 255, 0.03); /* 아주 옅은 투명도 */
+            padding: 40px;
+            border-radius: 30px;
+            /* 유리 효과의 핵심: 배경 블러 */
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
-        .menu-item {
+        /* 앱 아이콘 컨테이너 수정 */
+        .app-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start; /* 상단부터 배치 시작 */
+            width: 160px;
+            height: 160px;
             text-decoration: none;
             color: white;
-            transition: transform 0.2s;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-top: 25px; /* 상단 패딩으로 전체적인 위치 조절 */
+            box-sizing: border-box; /* 패딩이 전체 크기에 포함되도록 설정 */
         }
 
-        .menu-item:active { transform: scale(0.9); }
-
-        /* 아이콘 역할을 할 원형 도형 */
-        .icon-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #222;
-            display: flex;
-            align-items: center;
+        /* 이모티콘 영역 수정 */
+        .app-icon { 
+            font-size: 3.5rem; 
+            line-height: 1; /* 이모티콘 폰트의 기본 상하 여백 제거 */
+            display: flex; 
+            align-items: center; 
             justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            border: 2px solid #444;
+            height: 60px; /* 이모티콘이 들어갈 공간의 높이를 고정 */
+            width: 60px; /* 너비도 고정하여 완전한 중앙 정렬 유도 */
+            margin-bottom: 10px; /* 텍스트와의 간격 */
         }
 
-        .menu-label { font-size: 1.5rem; font-weight: 700; }
+        /* 라벨 텍스트 수정 */
+        .app-label { 
+            font-size: 1.2rem; 
+            font-weight: 500; 
+            text-align: center;
+            width: 100%; /* 텍스트가 가로로 꽉 차게 */
+        }
 
-        /* 각 기능별 테마 색상 */
-        .status .icon-circle { border-color: #00D166; color: #00D166; }
-        .timer .icon-circle { border-color: #FFD700; color: #FFD700; }
-        .schedule .icon-circle { border-color: #1E90FF; color: #1E90FF; }
+        /* 아이콘별 포인트 컬러 (옅은 빛망울 효과) */
+        .status .app-icon { filter: drop-shadow(0 0 10px #00D166); }
+        .timer .app-icon { filter: drop-shadow(0 0 10px #FFD700); }
+        .schedule .app-icon { filter: drop-shadow(0 0 10px #1E90FF); }
+
     </style>
 </head>
 <body>
 
-    <div class="main-clock-container">
+    <div class="clock-section">
         <div id="main-date">2026년 2월 4일 수요일</div>
-        <div id="main-clock">00:00</div>
+        <div id="main-clock">10:47</div>
     </div>
 
-    <div class="menu-grid">
-        <a href="status.html" class="menu-item status">
-            <div class="icon-circle">👤</div>
-            <div class="menu-label">내 상태</div>
+    <div class="app-grid">
+        <a href="status.html" class="app-item status">
+            <div class="app-icon">👤</div>
+            <div class="app-label">내 상태</div>
         </a>
-
-        <a href="timer.html" class="menu-item timer">
-            <div class="icon-circle">⏱</div>
-            <div class="menu-label">타이머</div>
+        <a href="timer.html" class="app-item timer">
+            <div class="app-icon">⏱</div>
+            <div class="app-label">타이머</div>
         </a>
-
-        <a href="scheduler.html" class="menu-item schedule">
-            <div class="icon-circle">📅</div>
-            <div class="menu-label">일정 관리</div>
+        <a href="scheduler.html" class="app-item schedule">
+            <div class="app-icon">📅</div>
+            <div class="app-label">일정 관리</div>
         </a>
     </div>
 
@@ -99,7 +118,7 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('main-clock').textContent = `${hours}:${minutes}`;
             
-            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const options = { month: 'long', day: 'numeric', weekday: 'long' };
             document.getElementById('main-date').textContent = now.toLocaleDateString('ko-KR', options);
         }
         setInterval(updateClock, 1000);
