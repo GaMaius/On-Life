@@ -1,6 +1,6 @@
 {
-  "hp": 80.53160750865936,
-  "xp": 0,
+  "hp": 91.58974921703339,
+  "xp": 80,
   "level": 1,
   "quests": [
     {
@@ -11,9 +11,9 @@
       "difficulty": "Hard",
       "description": "1시간 동안 거북목 경고 없이 작업하세요.",
       "clear_condition": "거북목 감지 없음 1시간",
-      "progress": 95.90869641304016,
-      "is_completed": false
+      "progress": 3600.007776260376,
+      "is_completed": true
     }
   ],
-  "quest_streak": 0
+  "quest_streak": 1
 }
