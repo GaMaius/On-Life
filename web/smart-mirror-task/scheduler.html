@@ -28,7 +28,7 @@
             user-select: none;
         }
 
-        /* === 홈 버튼 스타일: 오른쪽 상단 === */
+        /* === [추가] 홈 버튼 스타일: 오른쪽 상단 === */
         .home-link {
             position: fixed;
             top: 30px;
@@ -55,7 +55,7 @@
             color: white;
         }
 
-        /* === 메뉴 버튼 위치: 왼쪽 상단 === */
+        /* === [수정] 메뉴 버튼 위치: 왼쪽 상단 정렬 === */
         .menu-btn {
             position: fixed;
             top: 35px;
@@ -70,9 +70,12 @@
             transition: opacity 0.3s;
         }
 
+        .menu-btn:hover { opacity: 1; }
+
         .mirror-container {
             width: 100vw;
             height: 100vh;
+            /* 홈 버튼과 겹치지 않도록 상단 패딩 확보 */
             padding: 100px 50px 50px 50px;
             box-sizing: border-box;
             display: grid;
@@ -81,28 +84,53 @@
             gap: 30px;
         }
 
-        /* 나머지 스타일 요소들 (생략 가능하나 유지) */
+        /* 좌측 상단: 시간 및 날씨 */
         .top-left { grid-column: 1 / 2; display: flex; flex-direction: column; gap: 10px; }
         .time-widget { font-size: 5rem; font-weight: 200; line-height: 1; }
         .date-widget { font-size: 1.5rem; color: var(--mirror-dim); }
         .weather-widget { margin-top: 20px; display: flex; align-items: center; gap: 15px; }
+        .weather-temp { font-size: 3rem; font-weight: 300; }
+        .weather-desc { font-size: 1.2rem; color: var(--mirror-accent); }
+
+        /* 우측: 업무 목록 */
         .task-sidebar { grid-column: 2 / 3; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 30px; }
         .section-title { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--mirror-dim); margin-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 5px; }
         .task-list { display: flex; flex-direction: column; gap: 15px; }
-        .task-item { background: rgba(255, 255, 255, 0.03); border-left: 2px solid rgba(255, 255, 255, 0.2); padding: 15px 20px; position: relative; animation: fadeIn 0.5s ease-out; }
+        .task-item { background: rgba(255, 255, 255, 0.03); border-left: 2px solid rgba(255, 255, 255, 0.2); padding: 15px 20px; position: relative; transition: all 0.3s; animation: fadeIn 0.5s ease-out; }
         .task-item.completed { opacity: 0.5; border-left: 3px solid #2ecc71; }
         .task-item.pinned { border-left-color: var(--mirror-accent); background: rgba(0, 255, 204, 0.05); }
+        .task-actions { position: absolute; right: 15px; top: 15px; display: flex; gap: 10px; opacity: 0; transition: opacity 0.3s; }
+        .task-item:hover .task-actions { opacity: 1; }
+        .action-btn { background: none; border: none; color: var(--mirror-dim); cursor: pointer; padding: 5px; font-size: 1rem; }
+        .task-time { font-size: 0.8rem; color: var(--mirror-accent); margin-bottom: 5px; }
+        .task-title { font-size: 1.1rem; }
+
+        /* 하단: 업무 추가 폼 */
         .add-task-form { grid-column: 1 / 2; grid-row: 3 / 4; display: flex; gap: 15px; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; }
         .add-input { background: none; border: none; border-bottom: 1px solid var(--mirror-dim); color: var(--mirror-text); padding: 10px; font-size: 1rem; outline: none; flex-grow: 1; }
         .add-btn { background: var(--mirror-accent); color: var(--mirror-bg); border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* 알림 및 사이드바 */
+        /* 완료 목록 */
+        .completed-section { grid-column: 2 / 3; grid-row: 3 / 4; opacity: 0.6; }
+        .completed-item { font-size: 0.9rem; color: var(--mirror-dim); text-decoration: line-through; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* 긴급 알림 모달 */
+        .urgent-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; animation: pulseBg 2s infinite; }
+        .urgent-alert-text { font-size: 1.2rem; color: var(--mirror-warn); letter-spacing: 10px; margin-bottom: 30px; }
+        .urgent-title { font-size: 6rem; font-weight: 800; margin-bottom: 50px; text-shadow: 0 0 30px rgba(255, 255, 255, 0.2); }
+        .resolve-btn { background: none; border: 2px solid var(--mirror-text); color: var(--mirror-text); padding: 20px 80px; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+
+        /* 사이드바 */
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(2px); }
         .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
         .sidebar { position: fixed; top: 0; left: 0; width: 350px; height: 100vh; background: rgba(10, 10, 10, 0.95); border-right: 1px solid rgba(255, 255, 255, 0.1); z-index: 950; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; }
         .sidebar.open { transform: translateX(0); }
-        
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; }
+        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .history-item { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 8px; border-left: 2px solid var(--mirror-dim); display: flex; flex-direction: column; gap: 5px; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseBg { 0%, 100% { background: rgba(0, 0, 0, 0.95); } 50% { background: rgba(139, 0, 0, 0.2); } }
     </style>
 </head>
 
@@ -131,7 +159,15 @@
             <div class="weather-widget" id="weatherWidget" style="display: none;">
                 <img id="weatherIcon" src="" alt="w" style="width: 80px; height: 80px;">
                 <div class="weather-temp" id="weatherTemp">--°C</div>
-                <div id="weatherDesc" class="weather-desc">--</div>
+                <div class="weather-desc">
+                    <div id="cityDisplay" style="font-size: 0.8rem; opacity: 0.6; cursor: pointer;">
+                        <span id="cityName">Seoul</span> ✎
+                    </div>
+                    <form id="cityForm" style="display: none;">
+                        <input id="cityInput" class="add-input" style="font-size: 0.8rem; width: 80px;">
+                    </form>
+                    <div id="weatherDesc">--</div>
+                </div>
             </div>
         </div>
 
@@ -151,64 +187,94 @@
             <input type="time" id="newTaskTime" class="add-input" style="flex-grow: 0; width: 150px;">
             <button type="submit" class="add-btn">ADD</button>
         </form>
+
+        <div class="urgent-overlay" id="urgentOverlay" style="display: none;">
+            <div class="urgent-content">
+                <div class="urgent-alert-text">UPCOMING TASK</div>
+                <div class="urgent-title" id="urgentTitle">Task Title</div>
+                <button class="resolve-btn" id="resolveBtn">RESOLVED</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        /* 기존 JavaScript 로직 유지 */
         const OPENWEATHER_API_KEY = '7dab3a62c1333706b079f5df61431c3f';
         let state = { tasks: [], targetCity: 'Seoul', urgentTask: null, weather: null, isMenuOpen: false };
 
         function init() {
             loadState(); render(); updateTime(); setInterval(updateTime, 1000);
-            fetchWeather(); setInterval(fetchWeather, 600000); setupEventListeners();
+            fetchWeather(); setInterval(fetchWeather, 600000);
+            setInterval(checkUrgentTasks, 1000); setupEventListeners();
         }
 
         function loadState() {
             const savedTasks = localStorage.getItem('tasks');
+            const savedCity = localStorage.getItem('targetCity');
             if (savedTasks) state.tasks = JSON.parse(savedTasks);
+            if (savedCity) state.targetCity = savedCity;
         }
 
         function saveState() {
             localStorage.setItem('tasks', JSON.stringify(state.tasks));
+            localStorage.setItem('targetCity', state.targetCity);
         }
 
-        function render() { renderTasks(); renderHistory(); renderWeather(); renderSidebar(); }
+        function render() { renderTasks(); renderHistory(); renderWeather(); renderSidebar(); renderUrgentOverlay(); }
 
         function renderTasks() {
             const taskListEl = document.getElementById('taskList');
+            const completedSectionEl = document.getElementById('completedSection');
+            const recentCompletedListEl = document.getElementById('recentCompletedList');
+            taskListEl.innerHTML = ''; recentCompletedListEl.innerHTML = '';
+            
             const activeTasks = state.tasks.filter(t => !t.completedAt).sort((a, b) => a.time.localeCompare(b.time));
-            taskListEl.innerHTML = activeTasks.length === 0 ? '<div style="opacity: 0.3;">할 일을 모두 완료했습니다.</div>' : '';
-            activeTasks.forEach(task => {
-                const el = document.createElement('div');
-                el.className = `task-item ${task.isPinned ? 'pinned' : ''}`;
-                el.innerHTML = `<div class="task-time">${task.time}</div><div class="task-title">${task.title}</div>`;
-                taskListEl.appendChild(el);
-            });
+            const completedTasks = state.tasks.filter(t => t.completedAt).sort((a, b) => b.completedAt - a.completedAt);
+
+            if (activeTasks.length === 0) {
+                taskListEl.innerHTML = '<div style="opacity: 0.3; font-size: 0.9rem;">할 일을 모두 완료했습니다.</div>';
+            } else {
+                activeTasks.forEach(task => {
+                    const el = document.createElement('div');
+                    el.className = `task-item ${task.isPinned ? 'pinned' : ''}`;
+                    el.innerHTML = `
+                        <div class="task-actions">
+                            <button class="action-btn" onclick="togglePin('${task.id}')">📌</button>
+                            <button class="action-btn" onclick="completeTask('${task.id}')">✓</button>
+                            <button class="action-btn" onclick="deleteTask('${task.id}')">✕</button>
+                        </div>
+                        <div class="task-time">${task.time}</div>
+                        <div class="task-title">${task.title}</div>
+                    `;
+                    taskListEl.appendChild(el);
+                });
+            }
+
+            if (completedTasks.length > 0) {
+                completedSectionEl.style.display = 'block';
+                completedTasks.slice(0, 5).forEach(task => {
+                    const el = document.createElement('div');
+                    el.className = 'completed-item';
+                    el.innerHTML = `<span>${task.title}</span><button class="action-btn" onclick="undoTask('${task.id}')">↩</button>`;
+                    recentCompletedListEl.appendChild(el);
+                });
+            } else { completedSectionEl.style.display = 'none'; }
         }
 
-        function renderWeather() {
-            if (!state.weather) return;
-            document.getElementById('weatherWidget').style.display = 'flex';
-            document.getElementById('weatherIcon').src = state.weather.icon;
-            document.getElementById('weatherTemp').textContent = `${state.weather.temp}°C`;
-            document.getElementById('weatherDesc').textContent = state.weather.desc;
-        }
-
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('timeWidget').textContent = now.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' });
-            document.getElementById('dateWidget').textContent = now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
-        }
-
-        async function fetchWeather() {
-            try {
-                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${state.targetCity}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`);
-                const data = await res.json();
-                if (data.cod === 200) {
-                    state.weather = { temp: Math.round(data.main.temp), desc: data.weather[0].description, icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png` };
-                    renderWeather();
-                }
-            } catch (e) { console.error(e); }
+        function renderHistory() {
+            const historyListEl = document.getElementById('historyList');
+            historyListEl.innerHTML = '';
+            const completedTasks = state.tasks.filter(t => t.completedAt).sort((a, b) => b.completedAt - a.completedAt);
+            if (completedTasks.length === 0) {
+                historyListEl.innerHTML = '<div class="empty-history">기록된 완료 업무가 없습니다.</div>';
+            } else {
+                completedTasks.forEach(task => {
+                    const date = new Date(task.completedAt);
+                    const el = document.createElement('div');
+                    el.className = 'history-item';
+                    el.innerHTML = `<div class="history-date">${date.toLocaleString()}</div><div class="history-title">${task.title}</div><button class="restore-btn" onclick="undoTask('${task.id}')">복구</button>`;
+                    historyListEl.appendChild(el);
+                });
+            }
         }
 
         function renderSidebar() {
@@ -218,9 +284,52 @@
             else { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
         }
 
+        function renderUrgentOverlay() {
+            const overlay = document.getElementById('urgentOverlay');
+            const titleEl = document.getElementById('urgentTitle');
+            if (state.urgentTask) { overlay.style.display = 'flex'; titleEl.textContent = state.urgentTask.title; }
+            else { overlay.style.display = 'none'; }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('timeWidget').textContent = now.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            document.getElementById('dateWidget').textContent = now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
+        }
+
+        function checkUrgentTasks() {
+            const now = new Date();
+            const nowStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const found = state.tasks.filter(t => !t.completedAt).find(t => t.time === nowStr);
+            if (found && !state.urgentTask) { state.urgentTask = found; renderUrgentOverlay(); }
+        }
+
+        async function fetchWeather() {
+            try {
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${state.targetCity}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`);
+                const data = await res.json();
+                if (data.cod === 200) {
+                    state.weather = { temp: Math.round(data.main.temp), desc: data.weather[0].description, icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`, city: data.name };
+                    renderWeather();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function renderWeather() {
+            if (!state.weather) return;
+            document.getElementById('weatherWidget').style.display = 'flex';
+            document.getElementById('weatherIcon').src = state.weather.icon;
+            document.getElementById('weatherTemp').textContent = `${state.weather.temp}°C`;
+            document.getElementById('cityName').textContent = state.weather.city;
+            document.getElementById('weatherDesc').textContent = state.weather.desc;
+        }
+
+        window.togglePin = (id) => { state.tasks = state.tasks.map(t => t.id === id ? { ...t, isPinned: !t.isPinned } : t); saveState(); renderTasks(); };
+        window.completeTask = (id) => { state.tasks = state.tasks.map(t => t.id === id ? { ...t, completedAt: Date.now() } : t); state.urgentTask = null; saveState(); render(); };
+        window.undoTask = (id) => { state.tasks = state.tasks.map(t => t.id === id ? { ...t, completedAt: null } : t); saveState(); render(); };
+        window.deleteTask = (id) => { state.tasks = state.tasks.filter(t => t.id !== id); saveState(); renderTasks(); };
+
         function setupEventListeners() {
-            document.getElementById('menuBtn').addEventListener('click', () => { state.isMenuOpen = true; renderSidebar(); });
-            document.getElementById('closeSidebarBtn').addEventListener('click', () => { state.isMenuOpen = false; renderSidebar(); });
             document.getElementById('addTaskForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const title = document.getElementById('newTaskTitle').value;
@@ -230,6 +339,16 @@
                 saveState(); renderTasks();
                 document.getElementById('newTaskTitle').value = ''; document.getElementById('newTaskTime').value = '';
             });
+            document.getElementById('menuBtn').addEventListener('click', () => { state.isMenuOpen = true; renderSidebar(); });
+            document.getElementById('closeSidebarBtn').addEventListener('click', () => { state.isMenuOpen = false; renderSidebar(); });
+            document.getElementById('sidebarOverlay').addEventListener('click', () => { state.isMenuOpen = false; renderSidebar(); });
+            document.getElementById('resolveBtn').addEventListener('click', () => { if (state.urgentTask) window.completeTask(state.urgentTask.id); });
+            
+            const cityDisplay = document.getElementById('cityDisplay');
+            const cityForm = document.getElementById('cityForm');
+            const cityInput = document.getElementById('cityInput');
+            cityDisplay.addEventListener('click', () => { cityDisplay.style.display = 'none'; cityForm.style.display = 'block'; cityInput.focus(); });
+            cityForm.addEventListener('submit', (e) => { e.preventDefault(); if (cityInput.value) { state.targetCity = cityInput.value; saveState(); fetchWeather(); } cityForm.style.display = 'none'; cityDisplay.style.display = 'block'; });
         }
         init();
     </script>
