@@ -19,8 +19,9 @@ async function updateStatus() {
 
         // 1. Update Profile & Stats
         document.getElementById('hp-bar').style.width = (data.hp / data.max_hp * 100) + '%';
-        if (document.getElementById('hp-text')) document.getElementById('hp-text').innerText = data.hp.toFixed(1) + ' / ' + data.max_hp;
+        if (document.getElementById('hp-text')) document.getElementById('hp-text').innerText = Math.floor(data.hp) + ' / ' + data.max_hp;
         document.getElementById('xp-bar').style.width = data.level_progress + '%';
+        if (document.getElementById('xp-text')) document.getElementById('xp-text').innerText = Math.floor(data.xp) + ' / ' + data.next_level_xp;
         document.getElementById('level-text').innerText = 'Lv.' + data.level;
 
         let title = "알 🐣";
@@ -43,9 +44,8 @@ async function updateStatus() {
             } else if (data.is_bad_posture) {
                 emoji = "🐢";
             }
+            if (document.getElementById('char-emoji')) document.getElementById('char-emoji').innerText = emoji;
         }
-        mainChar.innerText = emoji;
-        if (document.getElementById('char-emoji')) document.getElementById('char-emoji').innerText = emoji;
 
 
         // 2. Posture Status & Damage
@@ -258,8 +258,10 @@ function addSchedule(task) {
 
 function renderSchedule() {
     const list = document.getElementById('schedule-list');
+    if (!list) return;
+
     if (scheduleData.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding: 20px;">등록된 일정이 없습니다.</div>';
+        list.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-sub);">등록된 일정이 없습니다.</div>';
         return;
     }
 
@@ -272,6 +274,16 @@ function renderSchedule() {
             </div>
         </div>
     `).join('');
+}
+
+// --- Schedule Modal ---
+function showScheduleModal() {
+    document.getElementById('schedule-modal-overlay').style.display = 'flex';
+    renderSchedule();
+}
+
+function closeScheduleModal() {
+    document.getElementById('schedule-modal-overlay').style.display = 'none';
 }
 
 // --- Voice Interaction ---
@@ -348,23 +360,7 @@ function speak(text) {
     window.speechSynthesis.speak(utterance);
 }
 
-function renderSchedule() {
-    const list = document.getElementById('schedule-list');
-    if (scheduleData.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding: 20px;">등록된 일정이 없습니다.</div>';
-        return;
-    }
 
-    list.innerHTML = scheduleData.map(t => `
-        <div class="quest-card" style="margin-bottom: 10px; padding: 10px;">
-            <div style="font-weight:bold; color:var(--text-main);">${t.content}</div>
-            <div style="font-size:0.8rem; color:var(--accent);">
-                <i class="fas fa-clock"></i> ${t.time || "시간 미정"} 
-                <span style="margin-left:5px;"><i class="fas fa-map-marker-alt"></i> ${t.location || "장소 미정"}</span>
-            </div>
-        </div>
-    `).join('');
-}
 
 // --- Stats & Charts ---
 let postureChart, focusChart;

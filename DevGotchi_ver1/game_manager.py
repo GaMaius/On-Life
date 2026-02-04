@@ -144,6 +144,13 @@ class GameManager:
             # In protected mode, reset bad counters
             self.bad_posture_duration = 0
             self.idle_duration = 0
+            
+        # Check for Level Down (HP Depleted)
+        if self.hp <= 0:
+            print(f"[Game] HP Depleted! Level Down from {self.level} -> {max(1, self.level - 1)}")
+            self.level = max(1, self.level - 1)
+            self.hp = Config.MAX_HP / 2
+            self.xp = 0 # Reset XP for penalty
         
         # Generator quest options if needed
         capacity = self.get_quest_capacity()

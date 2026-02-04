@@ -35,20 +35,24 @@
                     <div class="progress-track neumorphic-inset">
                         <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
                     </div>
+                    <div id="hp-text" class="bar-text"
+                        style="text-align: right; font-size: 0.8rem; color: var(--text-sub); margin-top: 4px;">100 / 100
+                    </div>
                 </div>
                 <div class="stat-group">
                     <label>Experience (XP)</label>
                     <div class="progress-track neumorphic-inset">
                         <div class="progress-fill xp-fill" id="xp-bar" style="width: 0%;"></div>
                     </div>
+                    <div id="xp-text" class="bar-text"
+                        style="text-align: right; font-size: 0.8rem; color: var(--text-sub); margin-top: 4px;">0 / 100
+                    </div>
                 </div>
             </div>
 
             <div class="menu-section">
                 <button class="neumorphic-btn active"><i class="fas fa-home"></i> 홈</button>
-                <button class="neumorphic-btn"
-                    onclick="document.querySelector('.right-panel').scrollIntoView({behavior: 'smooth'})"><i
-                        class="fas fa-calendar"></i> 일정</button>
+                <button class="neumorphic-btn" onclick="showScheduleModal()"><i class="fas fa-calendar"></i> 일정</button>
                 <button class="neumorphic-btn" onclick="showStats()"><i class="fas fa-chart-pie"></i> 통계</button>
             </div>
         </aside>
@@ -113,12 +117,21 @@
 
             <hr class="divider" style="margin: 20px 0;">
 
+
+        </aside>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="schedule-modal-overlay" class="modal-overlay">
+        <div class="modal neumorphic-panel" style="width: 500px; max-width: 95%;">
             <h3>📅 오늘의 일정</h3>
             <div id="schedule-list" class="neumorphic-inset"
-                style="padding: 10px; min-height: 100px; font-size: 0.9rem; color: var(--text-sub);">
-                <div style="text-align:center; padding: 20px;">등록된 일정이 없습니다.</div>
+                style="padding: 10px; min-height: 200px; max-height: 400px; overflow-y: auto; text-align: left;">
+                <div style="text-align:center; padding: 20px; color: var(--text-sub);">등록된 일정이 없습니다.</div>
             </div>
-        </aside>
+            <button class="neumorphic-btn" onclick="closeScheduleModal()"
+                style="margin-top: 20px; width: 100%;">닫기</button>
+        </div>
     </div>
 
     <!-- Alarm / Popup Modal -->
