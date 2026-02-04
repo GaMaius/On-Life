@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mirror Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Noto Sans KR', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+            cursor: none; /* 스마트 거울용 커서 숨김 */
+        }
+
+        #clock {
+            font-size: 4rem;
+            margin-top: 80px;
+            font-weight: 400;
+        }
+
+        #status-display {
+            font-size: 7rem;
+            font-weight: 700;
+            text-align: center;
+            margin: auto 0;
+            transition: color 0.3s ease;
+        }
+
+        .btn-container {
+            margin-bottom: 80px;
+            display: flex;
+            gap: 25px;
+        }
+
+        button {
+            padding: 25px 45px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock">00:00:00</div>
+    <div id="status-display">상태를 선택하세요</div>
+    <div class="btn-container" id="button-list"></div>
+
+    <script type="module">
+        // Firebase SDK 로드
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // 보내주신 이미지 기반 Firebase 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyCr3TFLtacU-MvXz2d2FB6SUAa_tlPKE70",
+            authDomain: "status-ef996.firebaseapp.com",
+            databaseURL: "https://status-ef996-default-rtdb.firebaseio.com",
+            projectId: "status-ef996",
+            storageBucket: "status-ef996.appspot.com",
+            messagingSenderId: "675167661957",
+            appId: "1:675167661957:web:eb862fad09696074285eec",
+            measurementId: "G-J7WEHB83K6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const statusRef = ref(db, 'current_status');
+
+        // 상태 데이터 정의
+        const statusData = {
+            "업무 중": "#00D166",
+            "회의 중": "#FF4B2B",
+            "잠시 자리 비움": "#FFD700",
+            "퇴근": "#1E90FF"
+        };
+
+        const clockEl = document.getElementById('clock');
+        const displayEl = document.getElementById('status-display');
+        const btnContainer = document.getElementById('button-list');
+
+        // 1초마다 시계 업데이트
+        function updateClock() {
+            const now = new Date();
+            clockEl.textContent = now.toLocaleTimeString('ko-KR', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 버튼 생성 및 클릭 이벤트
+        Object.entries(statusData).forEach(([label, color]) => {
+            const btn = document.createElement('button');
+            btn.textContent = label;
+            btn.onclick = () => {
+                set(statusRef, label); // Firebase 업데이트
+                updateUI(label, color); // 화면 즉시 업데이트
+            };
+            btnContainer.appendChild(btn);
+        });
+
+        // UI 업데이트 함수
+        function updateUI(status, color) {
+            displayEl.textContent = status;
+            displayEl.style.color = color || "white";
+        }
+
+        // 실시간 리스너 (외부 기기 변경 대응)
+        onValue(statusRef, (snapshot) => {
+            const currentStatus = snapshot.val();
+            if (currentStatus && statusData[currentStatus]) {
+                updateUI(currentStatus, statusData[currentStatus]);
+            }
+        });
+    </script>
+</body>
+</html>
