@@ -104,20 +104,44 @@ class GameManager:
         is_protected_mode = any(q.type in ['stretch', 'rest', 'recovery'] for q in active_quests)
 
         # --- 1. HP Penalty Logic ---
+        # Debug: Check why penalty might be skipped
+        if is_bad_posture and self.bad_posture_duration == 0:
+             # print(f"[Game Check] Bad Posture Start! Protected? {is_protected_mode} | Quests: {len(active_quests)}")
+             pass
+
         if not is_protected_mode:
-            # 1.1 Posture (3min / 7min)
+            # 1.1 Posture Penalty (Debounced)
+            # Initialize buffer if not exists (handling dynamic attribute addition)
+            if not hasattr(self, 'good_posture_buffer'):
+                self.good_posture_buffer = 0
+
             if is_bad_posture:
                 self.bad_posture_duration += dt
-                self.good_posture_duration = 0 # Reset good streak
+                self.good_posture_buffer = 0 # Reset grace period
                 
-                # 심각한 거북목 (7분 이상)
-                if self.bad_posture_duration > 420: # 7 min
-                    self.hp -= (Config.HP_PENALTY_POSTURE_7MIN / 60) * dt
-                # 거북목 지속 (3분 이상)
-                elif self.bad_posture_duration > 180: # 3 min
+                # Instant penalty (after 3s)
+                if self.bad_posture_duration > 3:
+                    damage = Config.HP_PENALTY_POSTURE_INSTANT * dt
+                    self.hp -= damage
+                    # Debug Print (Throttle to avoid spam)
+                    if int(self.bad_posture_duration) % 2 == 0: 
+                        # print(f"[Game] 💔 Bad Posture! HP Decreasing... (-{damage:.2f})")
+                        pass
+                    
+                # Additional penalty: 3min+
+                if self.bad_posture_duration > 180:
                     self.hp -= (Config.HP_PENALTY_POSTURE_3MIN / 60) * dt
+                    
+                # Additional penalty: 7min+
+                if self.bad_posture_duration > 420:
+                    self.hp -= (Config.HP_PENALTY_POSTURE_7MIN / 60) * dt
+                    
             else:
-                self.bad_posture_duration = 0
+                # 1.2 Good Posture (Debounce Reset)
+                self.good_posture_buffer += dt
+                if self.good_posture_buffer > 1.0: # 1 second grace period
+                     self.bad_posture_duration = 0
+                
                 self.good_posture_duration += dt
                 
                 # Posture Recovery (10 min good posture)

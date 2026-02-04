@@ -9,6 +9,7 @@ from config import Config
 from game_manager import GameManager
 from vision_engine import VisionEngine
 from brain import BrainHandler
+from analytics import Analytics
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ app = Flask(__name__)
 game = GameManager()
 vision = VisionEngine()
 brain = BrainHandler()
+analytics = Analytics()
 
 # Global State
 current_frame = None
@@ -42,10 +44,15 @@ def game_loop():
             continue
             
         # 1. Vision Analysis
-        posture_score, is_drowsy, is_smiling, is_eye_closed = vision.analyze_frame(frame)
+        posture_score, is_drowsy, is_smiling, is_eye_closed, _ = vision.analyze_frame(frame)
         is_active_movement = vision.check_action_movement(frame)
         
         is_bad_posture = posture_score > Config.POSTURE_THRESHOLD
+        
+        # Debug Vision Output (Every ~1s)
+        if int(time.time()) > getattr(game_loop, 'last_log', 0):
+            # print(f"[Server] Score: {posture_score:.2f} (Thresh: {Config.POSTURE_THRESHOLD}) | Bad? {is_bad_posture}")
+            game_loop.last_log = int(time.time())
         
         # Update shared state
         vision_state = {
@@ -64,7 +71,16 @@ def game_loop():
         # Let's say: if is_active_movement or recent API call -> has_input.
         has_input = (time.time() - last_api_interaction) < 2.0 
         
+        # Analytics Logging
+        posture_state = "bad" if is_bad_posture else "good"
+        analytics.log_context(posture_state, game.hp, game.level)
+        
         game.update(is_bad_posture, is_drowsy, has_input, is_active_movement)
+        
+        # Auto-Save (Every 30s)
+        if time.time() - getattr(game_loop, 'last_save', 0) > 30:
+            game.save_game()
+            game_loop.last_save = time.time()
         
         # 3. Draw Debug Info on Frame (Optional, for video feed)
         if is_bad_posture:
@@ -192,6 +208,14 @@ def chat():
             "task": None,
             "thought": "시간 초과"
         })
+
+@app.route('/api/analytics', methods=['GET'])
+def get_analytics():
+    """분석 데이터 API (인포그래픽용)"""
+    # Log this API call
+    analytics.log_event("view_analytics")
+    
+    return jsonify(analytics.to_json())
 
 if __name__ == '__main__':
     # Start Game Loop Thread

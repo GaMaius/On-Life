@@ -374,35 +374,94 @@ function closeStatsModal() {
     document.getElementById('stats-modal-overlay').style.display = 'none';
 }
 
-function renderCharts() {
-    // Mock Data for Demo (Real data would come from server/db)
+// --- Camera Modal ---
+function showCamera() {
+    document.getElementById('camera-modal-overlay').style.display = 'flex';
+}
+
+function closeCamera() {
+    document.getElementById('camera-modal-overlay').style.display = 'none';
+}
+
+
+async function renderCharts() {
+    // Fetch Real Analytics Data
+    let analyticsData;
+    try {
+        const response = await fetch('/api/analytics');
+        analyticsData = await response.json();
+    } catch (e) {
+        console.error("Failed to fetch analytics", e);
+        analyticsData = {
+            posture_timeline: {},
+            event_counts: {},
+            session_duration_minutes: 0,
+            api_stats: { avg_latency: 0, success_rate: 1.0, total_calls: 0 }
+        };
+    }
+
     const ctx1 = document.getElementById('postureChart').getContext('2d');
     const ctx2 = document.getElementById('focusChart').getContext('2d');
 
     if (postureChart) postureChart.destroy();
     if (focusChart) focusChart.destroy();
 
+    // 1. Posture Timeline Chart (Last hour, 10-min buckets)
+    const timeline = analyticsData.posture_timeline;
+    const timeLabels = Object.keys(timeline).sort((a, b) => parseInt(a) - parseInt(b)).map(k => `${k}0분전`);
+    const goodData = Object.keys(timeline).sort((a, b) => parseInt(a) - parseInt(b)).map(k => timeline[k].good || 0);
+    const badData = Object.keys(timeline).sort((a, b) => parseInt(a) - parseInt(b)).map(k => timeline[k].bad || 0);
+
     postureChart = new Chart(ctx1, {
         type: 'line',
         data: {
-            labels: ['10분전', '8분전', '6분전', '4분전', '2분전', '현재'],
-            datasets: [{
-                label: '자세 점수 (낮을수록 좋음)',
-                data: [0.1, 0.12, 0.08, 0.15, 0.14, 0.1],
-                borderColor: '#63b3ed',
-                tension: 0.4
-            }]
+            labels: timeLabels.length > 0 ? timeLabels : ['최근 데이터 없음'],
+            datasets: [
+                {
+                    label: '바른 자세',
+                    data: goodData.length > 0 ? goodData : [0],
+                    borderColor: '#68d391',
+                    backgroundColor: 'rgba(104, 211, 145, 0.1)',
+                    tension: 0.4
+                },
+                {
+                    label: '거북목',
+                    data: badData.length > 0 ? badData : [0],
+                    borderColor: '#fc8181',
+                    backgroundColor: 'rgba(252, 129, 129, 0.1)',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: '자세 타임라인 (최근 1시간)' }
+            }
         }
     });
+
+    // 2. Session Breakdown (Event Counts Doughnut)
+    const events = analyticsData.event_counts;
+    const eventLabels = Object.keys(events);
+    const eventData = Object.values(events);
 
     focusChart = new Chart(ctx2, {
         type: 'doughnut',
         data: {
-            labels: ['집중', '휴식', '딴짓'],
+            labels: eventLabels.length > 0 ? eventLabels : ['데이터 없음'],
             datasets: [{
-                data: [65, 20, 15],
-                backgroundColor: ['#68d391', '#63b3ed', '#fc8181']
+                data: eventData.length > 0 ? eventData : [1],
+                backgroundColor: ['#68d391', '#63b3ed', '#fc8181', '#fbd38d', '#b794f4']
             }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: '이벤트 분포' }
+            }
         }
     });
 }

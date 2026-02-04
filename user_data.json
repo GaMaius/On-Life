@@ -1,30 +1,19 @@
 {
-  "hp": 74.03915357589722,
-  "xp": 100,
-  "level": 2,
+  "hp": 80.53160750865936,
+  "xp": 0,
+  "level": 1,
   "quests": [
     {
-      "name": "스트레칭 (3분)",
-      "type": "stretch",
-      "target_duration": 180,
-      "reward_xp": 60,
-      "difficulty": "Normal",
-      "description": "3분 동안 카메라 앞에서 활발하게 움직이세요.",
-      "clear_condition": "카메라가 큰 움직임을 3분간 감지",
-      "progress": 180.22840332984924,
-      "is_completed": true
-    },
-    {
-      "name": "회복 퀘스트: 5분 휴식",
-      "type": "recovery",
-      "target_duration": 300,
-      "reward_xp": 40,
-      "difficulty": "Easy",
-      "description": "5분간 화면을 보지 말고 휴식하세요.",
-      "clear_condition": "입력 없음/부재 5분",
-      "progress": 300.06230998039246,
-      "is_completed": true
+      "name": "자세 퀘스트: 1시간 거북목 없이",
+      "type": "posture",
+      "target_duration": 3600,
+      "reward_xp": 80,
+      "difficulty": "Hard",
+      "description": "1시간 동안 거북목 경고 없이 작업하세요.",
+      "clear_condition": "거북목 감지 없음 1시간",
+      "progress": 95.90869641304016,
+      "is_completed": false
     }
   ],
-  "quest_streak": 2
+  "quest_streak": 0
 }

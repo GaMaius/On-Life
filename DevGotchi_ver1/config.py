@@ -3,7 +3,7 @@
 class Config:
     # --- Vision Thresholds ---
     EAR_THRESHOLD = 0.18        # 눈 감음 판정
-    POSTURE_THRESHOLD = 0.15    # 거북목 판정
+    POSTURE_THRESHOLD = 0.12     # 거북목 판정 (Lower = More Sensitive)
     POSTURE_OFFSET_Y = 0.05     # 대각선/측면 뷰 보정값
     SMILE_THRESHOLD = 0.04      
     
@@ -13,10 +13,12 @@ class Config:
     MAX_XP_TABLE = {1: 0, 2: 100, 3: 300, 4: 550, 5: 800, 6: 1050, 7: 1300, 8: 1550, 9: 1800, 10: 2000} 
     
     # HP 감소 조건 (패널티)
-    # 거북목 지속 3분 이상: -2 / 분
-    # 심각한 거북목 7분 이상: -5 / 분
-    HP_PENALTY_POSTURE_3MIN = 2.0  
-    HP_PENALTY_POSTURE_7MIN = 5.0  
+    # 거북목 즉시 패널티: -1.0/초 (3초 이상 지속시)
+    HP_PENALTY_POSTURE_INSTANT = 1.0  # Per second after threshold
+    # 거북목 지속 3분 이상: -4 / 분
+    # 심각한 거북목 7분 이상: -10 / 분
+    HP_PENALTY_POSTURE_3MIN = 4.0  
+    HP_PENALTY_POSTURE_7MIN = 10.0  
     
     # 몰컴 감지 (입력/집중 없음 5분): -3
     HP_PENALTY_IDLE_5MIN = 3.0     

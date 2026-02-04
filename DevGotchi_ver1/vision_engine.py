@@ -51,38 +51,19 @@ class VisionEngine:
             # X축: 머리가 어깨보다 앞에(카메라 방향으로) 나왔는지
             # Y축: 머리가 어깨보다 아래에 있는지 (화면에서 아래 = 얼굴이 카메라에 가까움)
             
-            # --- Advanced Zero-Shot Posture Analysis ---
-            # Using Z-coordinate (Depth) from MediaPipe
-            # Z is relative to hip center. Negative Z means closer to camera.
+            # 주요 지표: X축 차이 (머리가 어깨보다 얼마나 앞으로 나왔는지)
+            forward_distance = abs(nose.x - shoulder_center_x)
             
-            # 1. Depth Check (Forward Head)
-            # If Nose Z is significantly closer than Shoulder Z
-            shoulder_z = (shoulder_l.z + shoulder_r.z) / 2
-            nose_z = nose.z
+            # 보조 지표: Y축 차이 (값이 작을수록 거북목 - 머리가 어깨 높이에 가까움)
+            vertical_diff = shoulder_center_y - nose.y
             
-            # Normalize by shoulder width (scale invariant)
-            shoulder_width = abs(shoulder_l.x - shoulder_r.x)
-            if shoulder_width == 0: shoulder_width = 0.1
+            # 거북목 점수 계산
+            # forward_distance가 클수록 거북목 가능성 높음
+            # vertical_diff가 작을수록 거북목 가능성 높음
+            posture_score = (forward_distance * 2.0) + (0.15 - vertical_diff)
             
-            # Relative forward depth
-            depth_diff = (shoulder_z - nose_z) / shoulder_width 
-            
-            # 2. Vertical Alignment (Neck Shortening)
-            # Compare Nose Y to Shoulder Y
-            neck_length = abs(shoulder_center_y - nose.y) / shoulder_width
-            
-            # Scoring Rule:
-            # Depth Diff > 0.5 implies head is forward
-            # Neck Length < 0.3 implies slouching (shoulders up or head down)
-            
-            # Weighted Score (Higher = Bad)
-            posture_score = (depth_diff * 1.5) + (0.4 - neck_length)
-            
-            # Smooth result or offset
-            posture_score = max(0, posture_score) * 2.0 # Scale up for threshold
-            
-            # Debug (Optional print, removed for prod)
-            # print(f"Depth: {depth_diff:.2f}, Neck: {neck_length:.2f}, Score: {posture_score:.2f}") 
+            # 보정값 적용
+            posture_score -= Config.POSTURE_OFFSET_Y 
 
         # 2. Face Analysis (졸음/미소)
         face_results = self.face_mesh.process(rgb)
@@ -118,10 +99,9 @@ class VisionEngine:
             avg_ear = (ear_l + ear_r) / 2.0
             
             # Config.EAR_THRESHOLD (0.18) 보다 작으면 눈 감음
-            is_eye_closed = avg_ear < Config.EAR_THRESHOLD
-            
-            if is_eye_closed:
-                is_drowsy = True # In this simple logic, closed = drowsy frame. Game logic handles duration.
+            if avg_ear < Config.EAR_THRESHOLD:
+                is_drowsy = True
+                is_eye_closed = True # Compatibility for app.js
             
             # 미소 (입꼬리 61, 291과 입술 위아래 거리 비율)
             mouth_w = abs(lms[61].x - lms[291].x)
@@ -129,7 +109,20 @@ class VisionEngine:
             if mouth_w > 0 and (mouth_h / mouth_w) < 0.3: # 입이 옆으로 길어짐
                 is_smiling = True
 
-        return posture_score, is_drowsy, is_smiling, is_eye_closed
+        # Return format expected by server.py: 
+        # (posture_score, is_drowsy, is_smiling, is_eye_closed, face_landmarks_draw)
+        # Note: server.py expects 5 values? or 4?
+        # Let's check server.py call site.
+        # But wait, User provided code returns 4 values:
+        # return posture_score, is_drowsy, is_smiling, face_landmarks_draw
+        # I need to check if 'is_eye_closed' is expected by server. 
+        # Actually server calls it.
+        # Let's check server.py:
+        # score, is_drowsy, is_smiling, is_eye_closed, lms = vision.analyze_frame(frame)
+        # I MUST adapting the return statement to match server expectation OR update server.
+        # The user's code return 4. I will add is_eye_closed to return.
+        
+        return posture_score, is_drowsy, is_smiling, is_eye_closed, face_landmarks_draw
 
     def check_action_movement(self, frame):
         """스트레칭/일어서기 감지 (어깨 위로 손을 올리거나, 일어서기)"""
@@ -137,7 +130,7 @@ class VisionEngine:
         pose_results = self.pose.process(rgb)
         
         if not pose_results.pose_landmarks:
-            # 사람이 프레임에서 사라짐 (일어서서 나감 or 화면 밖으로 이동)
+            # 사람이 프레임에서 사라짐 (일어서기 감지용)
             return True
             
         landmarks = pose_results.pose_landmarks.landmark

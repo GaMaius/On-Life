@@ -22,7 +22,7 @@
                 </div>
                 <div class="character-frame neumorphic-outset">
                     <!-- Character Image or Emoji -->
-                    <img src="/static/assets/chick_default.png" id="char-img" alt="Character"
+                    <img src="../chick.jpg" id="char-img" alt="Character"
                         onerror="this.style.display='none'; document.getElementById('char-emoji').style.display='block'">
                     <div id="char-emoji" style="display:none; font-size: 80px;">🐣</div>
                 </div>
@@ -54,6 +54,7 @@
                 <button class="neumorphic-btn active"><i class="fas fa-home"></i> 홈</button>
                 <button class="neumorphic-btn" onclick="showScheduleModal()"><i class="fas fa-calendar"></i> 일정</button>
                 <button class="neumorphic-btn" onclick="showStats()"><i class="fas fa-chart-pie"></i> 통계</button>
+                <button class="neumorphic-btn" onclick="showCamera()"><i class="fas fa-camera"></i> 카메라</button>
             </div>
         </aside>
 
@@ -76,7 +77,7 @@
                     <!-- Camera Hidden, showing Character -->
                     <img src="/video_feed" alt="Live Feed" id="video-feed" style="display:none;">
 
-                    <img src="/static/assets/pixel_chick.png" id="main-char-display" class="pixel-char"
+                    <img src="../chick.jpg" id="main-char-display" class="pixel-char"
                         style="width:150px; image-rendering:pixelated; display:block;">
 
                     <div class="overlay-alert" id="damage-overlay">⚠️ HP 감소!</div>
@@ -131,6 +132,18 @@
             </div>
             <button class="neumorphic-btn" onclick="closeScheduleModal()"
                 style="margin-top: 20px; width: 100%;">닫기</button>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div id="camera-modal-overlay" class="modal-overlay">
+        <div class="modal neumorphic-panel" style="width: 640px; max-width: 95%;">
+            <h3>📷 카메라 확인</h3>
+            <p style="font-size: 0.8rem; color: var(--text-sub);">자세 인식에 사용되는 영상입니다. 머리가 어깨보다 앞으로 나오면 거북목으로 감지됩니다.</p>
+            <div class="neumorphic-inset" style="padding: 5px; margin-top: 10px;">
+                <img src="/video_feed" alt="Live Camera Feed" style="width: 100%; border-radius: 10px;">
+            </div>
+            <button class="neumorphic-btn" onclick="closeCamera()" style="margin-top: 20px; width: 100%;">닫기</button>
         </div>
     </div>
 
