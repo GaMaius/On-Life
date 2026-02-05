@@ -3,8 +3,8 @@ import time
 import io
 import uuid
 import requests
-import json  # 추가
-import re    # 추가
+import json
+import re
 import speech_recognition as sr
 from gtts import gTTS
 import pygame
@@ -22,11 +22,31 @@ load_dotenv(override=True)
 API_KEY = os.getenv("MINIMAX_API_KEY", "").replace('"', '').replace("'", "").strip()
 BASE_URL = os.getenv("MINIMAX_BASE_URL", "https://api.minimax.io/v1").strip()
 MODEL_NAME = os.getenv("MINIMAX_MODEL", "MiniMax-M2.1").strip()
+WEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", "").strip()
 
 console = Console()
 pygame.mixer.init()
 
 telemetry_logs = []
+
+# [추가] 날씨 정보 가져오기 함수
+def get_weather(city="Sacheon-si"):
+    if not WEATHER_API_KEY:
+        return "날씨 API 키가 설정되지 않았습니다."
+    
+    # 한국어 출력을 위해 lang=kr 사용
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric&lang=kr"
+    try:
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        if data.get("cod") == 200:
+            temp = data["main"]["temp"]
+            desc = data["weather"][0]["description"]
+            return f"현재 {city}의 기온은 {temp}도이며, {desc} 상태입니다."
+        else:
+            return "도시 이름을 찾을 수 없거나 날씨 정보를 가져오지 못했습니다."
+    except Exception as e:
+        return f"날씨 서버 연결 중 오류가 발생했습니다: {e}"
 
 def speak(text):
     if not text.strip(): return
@@ -56,15 +76,13 @@ def listen(r, source, mode="WAKE"):
     except:
         return ""
 
-# [추가] UI에 타이머/알림을 추가하기 위한 브릿지 함수
 def update_ui_function(task_type, content, target_time):
-    """
-    이 함수는 나중에 메인 UI의 리스트나 타이머 객체에 데이터를 전달하는 역할을 합니다.
-    """
     if task_type == "TIMER":
         console.print(f"[bold magenta]⏳ [UI 연동] {target_time} 타이머 가동![/bold magenta]")
     elif task_type == "REMINDER":
         console.print(f"[bold blue]📌 [UI 연동] 업무 추가: {content} ({target_time})[/bold blue]")
+    elif task_type == "WEATHER":
+        console.print(f"[bold yellow]☀️ [UI 연동] 날씨 정보 업데이트 완료[/bold yellow]")
 
 def call_minimax_standard(user_input, history):
     url = f"{BASE_URL}/chat/completions"
@@ -73,10 +91,10 @@ def call_minimax_standard(user_input, history):
         "Content-Type": "application/json"
     }
     
-    # [수정] 시스템 프롬프트에 타이머/알림 추출 규칙 추가
+    # [수정] 날씨 추출 규칙 추가
     system_instruction = (
         "당신은 스마트 미러 비서 '데브고치'입니다. 사족 없이 한 문장으로 답변하세요. "
-        "사용자가 타이머나 업무(알림) 설정을 요청하면 답변 끝에 반드시 아래 형식을 포함하세요.\n"
+        "사용자가 날씨를 물어보면 답변 끝에 반드시 [COMMAND:WEATHER:도시명] 형식을 포함하세요. (도시명은 가급적 영어로 작성)\n"
         "타이머일 경우: [COMMAND:TIMER:시간]\n"
         "업무 알림일 경우: [COMMAND:REMINDER:시간:내용]"
     )
@@ -102,8 +120,7 @@ def call_minimax_standard(user_input, history):
             raw_content = res_json['choices'][0]['message']['content']
             tokens = res_json.get('usage', {}).get('total_tokens', 0)
             
-            # [추가] 명령어 패턴 파싱 로직
-            # 예: "5분 타이머 설정했습니다. [COMMAND:TIMER:5분]"
+            # 명령어 패턴 파싱 로직
             command_pattern = r"\[COMMAND:(\w+):(.*?)\]"
             match = re.search(command_pattern, raw_content)
             
@@ -115,22 +132,25 @@ def call_minimax_standard(user_input, history):
                 if cmd_type == "TIMER":
                     update_ui_function("TIMER", "", cmd_data[0])
                 elif cmd_type == "REMINDER":
-                    # cmd_data[0]은 시간, cmd_data[1]은 내용
                     time_val = cmd_data[0] if len(cmd_data) > 0 else "미정"
                     text_val = cmd_data[1] if len(cmd_data) > 1 else "업무"
                     update_ui_function("REMINDER", text_val, time_val)
+                elif cmd_type == "WEATHER":
+                    city_name = cmd_data[0] if cmd_data[0] else "Sacheon-si"
+                    weather_info = get_weather(city_name)
+                    # 음성 및 텍스트 답변에 날씨 정보를 결합
+                    clean_answer = f"{weather_info} {re.sub(command_pattern, '', raw_content).strip()}"
+                    update_ui_function("WEATHER", city_name, "")
                 
-                # 음성으로 읽어줄 때는 명령어 부분 제거
-                clean_answer = re.sub(command_pattern, "", raw_content).strip()
+                if cmd_type != "WEATHER":
+                    clean_answer = re.sub(command_pattern, "", raw_content).strip()
 
             return clean_answer, tokens
         else:
             error_msg = res_json.get('error', {}).get('message', 'Unknown API Error')
-            console.print(f"[bold red]❌ API 오류:[/bold red] {error_msg}")
             return f"오류가 발생했습니다: {error_msg}", 0
             
     except Exception as e:
-        console.print(f"[bold red]❌ 네트워크 에러:[/bold red] {e}")
         return "연결 실패", 0
 
 def main():
@@ -139,7 +159,7 @@ def main():
     r.dynamic_energy_threshold = True
 
     console.print(Panel("[bold cyan]👾 데브고치(MiniMax M2.1) 시스템 가동[/bold cyan]", 
-                        subtitle="Standard API Mode (Timer/Task Enabled)", border_style="cyan"))
+                        subtitle="Standard API Mode (Timer/Weather Enabled)", border_style="cyan"))
     
     chat_history = []
     
