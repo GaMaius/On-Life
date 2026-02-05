@@ -88,6 +88,7 @@ class GameManager:
         self.quests = [Quest.from_dict(q) for q in data.get("quests", [])]
         self.quest_streak = data.get("quest_streak", 0)
         self.happiness = data.get("happiness", 100)
+        self.calendar = data.get("calendar", {}) # Format: {"YYYY-MM-DD": [{"title": "t", "color": "c"}]}
         
         # Ensure HP is valid
         self.hp = max(0, min(Config.MAX_HP, self.hp))
@@ -99,9 +100,21 @@ class GameManager:
             "level": self.level,
             "quests": [q.to_dict() for q in self.quests],
             "quest_streak": self.quest_streak,
-            "happiness": self.happiness
+            "happiness": self.happiness,
+            "calendar": self.calendar
         }
         self.dm.save_user_data(data)
+
+    def add_calendar_event(self, date_str, title, color):
+        if date_str not in self.calendar:
+            self.calendar[date_str] = []
+        self.calendar[date_str].append({"title": title, "color": color})
+        self.save_game()
+
+    def get_todays_events(self):
+        import datetime
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        return self.calendar.get(today, [])
 
 
     def update(self, is_bad_posture, is_drowsy, has_user_input, is_active_movement=False):

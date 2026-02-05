@@ -11,6 +11,9 @@ from game_manager import GameManager
 from vision_engine import VisionEngine
 from brain import BrainHandler
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -85,7 +88,8 @@ def get_gamestate():
         "status": current_status,
         "weather": get_weather(),
         "posture_score": vision.last_posture if hasattr(vision, 'last_posture') else 0,
-        "bad_posture_duration": gm.bad_posture_duration
+        "bad_posture_duration": gm.bad_posture_duration,
+        "todays_events": gm.get_todays_events()
     })
 
 @app.route('/api/quest/accept', methods=['POST'])
@@ -95,6 +99,21 @@ def accept_quest():
     if gm.accept_quest(idx):
         return jsonify({"success": True, "message": "Quest accepted"})
     return jsonify({"success": False, "message": "Could not accept quest"})
+
+@app.route('/api/calendar/add', methods=['POST'])
+def add_calendar_event():
+    data = request.json
+    date = data.get('date')
+    title = data.get('title')
+    color = data.get('color', '#bb86fc')
+    if date and title:
+        gm.add_calendar_event(date, title, color)
+        return jsonify({"success": True})
+    return jsonify({"success": False})
+
+@app.route('/api/calendar', methods=['GET'])
+def get_calendar():
+    return jsonify(gm.calendar)
 
 # AI Chat Endpoint
 @app.route('/api/chat', methods=['POST'])

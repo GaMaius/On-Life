@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
     fetchStatus();
     setInterval(fetchStatus, 5000);
+    checkTimerState(); // Init Timer Check
 
     const charContainer = document.getElementById('character-container');
     if (charContainer) {
@@ -29,14 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            const action = item.getAttribute('data-action');
+    document.addEventListener('click', (e) => {
+        if (isMenuOpen && !e.target.closest('.menu-item')) {
             closeMenu();
-            openApp(action);
-            e.stopPropagation();
-        });
+        }
     });
+
+    // Legacy listener removed: Links handle navigation via href
+
 
     const statusBtn = document.getElementById('status-btn');
     if (statusBtn) {
@@ -46,19 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let nextIdx = (statuses.indexOf(current) + 1) % statuses.length;
             let next = statuses[nextIdx];
 
-            statusBtn.textContent = next;
-
-            const overlay = document.getElementById('work-overlay');
-            if (next === "업무중") {
-                if (overlay) overlay.classList.remove('hidden');
-            } else {
-                if (overlay) overlay.classList.add('hidden');
-            }
-
             fetch('/api/status/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: next })
+            }).then(() => {
+                // Reload to simulate navigation/refresh state
+                window.location.reload();
             });
         });
     }
@@ -90,7 +85,7 @@ let lastLevel = null;
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const app = params.get('app');
-    if(app) {
+    if (app) {
         openApp(app);
     }
 });
@@ -99,7 +94,7 @@ async function fetchStatus() {
     try {
         const res = await fetch('/api/gamestate');
         const data = await res.json();
-        
+
         // 1. Weather
         if (data.weather) {
             const tempEl = document.getElementById('weather-temp');
@@ -117,12 +112,12 @@ async function fetchStatus() {
         if (hpVal) hpVal.innerText = `${Math.floor(data.hp)}/${data.max_hp}`;
         const hpBar = document.getElementById('hp-bar');
         if (hpBar) hpBar.style.width = `${(data.hp / data.max_hp) * 100}%`;
-        
+
         document.getElementById('exp-val').innerText = `${Math.floor(data.xp)} XP`; // Show raw XP
         // EXP bar logic can be added if we know max per level. For now just show text.
-        
+
         // Level Up Check
-        if(lastLevel !== null && data.level > lastLevel) {
+        if (lastLevel !== null && data.level > lastLevel) {
             alert(`🎉 Level Up! Lv. ${data.level}`);
         }
         lastLevel = data.level;
@@ -130,18 +125,18 @@ async function fetchStatus() {
         // 3. Posture Alert
         const postureInd = document.getElementById('posture-indicator');
         const postureText = document.getElementById('posture-text');
-        
+
         // Using backend duration or score
-        if(data.bad_posture_duration > 0 || data.posture_score > 20) {
+        if (data.bad_posture_duration > 0 || data.posture_score > 20) {
             postureInd.classList.add('bad');
             postureInd.classList.remove('good');
             postureInd.style.borderColor = '#ff4b2b';
             postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
-            
+
             // Text Change
             postureText.innerText = `⚠️ 거북목 주의! (${Math.floor(data.bad_posture_duration)}s)`;
             postureText.style.color = '#ff4b2b';
-            
+
             // Screen Flash
             document.body.style.boxShadow = "inset 0 0 50px rgba(255,0,0,0.5)";
         } else {
@@ -157,6 +152,33 @@ async function fetchStatus() {
         // 4. Quest Rendering
         renderQuests(data.quests, data.available_quests);
 
+        // 5. Home Dashboard Rendering (Timer & Schedule)
+        const db = document.getElementById('home-dashboard');
+        if (db) {
+            let html = '';
+
+            // Timer Check
+            const tState = getTimerState();
+            if (tState && timerInterval) { // Running
+                // We don't have direct access to 'timerSeconds' here easily unless global var is used. 
+                // Global 'timerSeconds' is updated by loop. 
+                // But loop runs every sec, fetchStatus runs every 5 sec.
+                // We can just show "Timer Active". Or read DOM.
+                const timeStr = document.getElementById('timer-display')?.textContent || "Running";
+                html += `<div style="display:inline-block; padding: 5px 15px; background: rgba(0,0,0,0.5); border-radius: 20px; color: #fff; margin: 5px;">⏱️ ${timeStr}</div>`;
+            }
+
+            // Schedule Check
+            if (data.todays_events && data.todays_events.length > 0) {
+                const count = data.todays_events.length;
+                const first = data.todays_events[0].title;
+                html += `<div style="display:inline-block; padding: 5px 15px; background: rgba(187, 134, 252, 0.3); border-radius: 20px; color: #bb86fc; border: 1px solid #bb86fc; margin: 5px;">📅 ${first} ${count > 1 ? `(+${count - 1})` : ''}</div>`;
+            } else {
+                // html += `<div style="color: #aaa; font-size: 0.8rem;">오늘 일정 없음</div>`;
+            }
+            db.innerHTML = html;
+        }
+
     } catch (e) {
         console.error(e);
     }
@@ -164,16 +186,16 @@ async function fetchStatus() {
 
 function renderQuests(activeQuests, availableQuests) {
     const list = document.getElementById('quest-list');
-    if(!list) return;
+    if (!list) return;
     list.innerHTML = ''; // Clear
-    
+
     // Active Quests
-    if(activeQuests.length > 0) {
+    if (activeQuests.length > 0) {
         activeQuests.forEach(q => {
             const item = document.createElement('div');
             item.className = 'quest-item';
             const pct = Math.min(100, (q.progress / q.target_duration) * 100);
-            
+
             // Detail click
             item.onclick = () => {
                 alert(`[${q.name}]\n난이도: ${q.difficulty}\n조건: ${q.clear_condition}\n설명: ${q.description}`);
@@ -182,7 +204,7 @@ function renderQuests(activeQuests, availableQuests) {
             item.innerHTML = `
                 <div style="display:flex; justify-content:space-between;">
                     <strong>${q.name}</strong>
-                    <small>${Math.floor(q.progress/60)}/${q.target_duration/60}m</small>
+                    <small>${Math.floor(q.progress / 60)}/${q.target_duration / 60}m</small>
                 </div>
                 <div class="progress-container" style="height: 5px; margin-top: 5px;">
                     <div class="progress-fill" style="width: ${pct}%; background: #bb86fc;"></div>
@@ -191,17 +213,17 @@ function renderQuests(activeQuests, availableQuests) {
             list.appendChild(item);
         });
     }
-    
+
     // Available Quests
     // Always show if any available, distinct section
-    if(availableQuests && availableQuests.length > 0) {
+    if (availableQuests && availableQuests.length > 0) {
         const title = document.createElement('h5');
         title.innerText = "📋 퀘스트 선택";
         title.style.margin = "15px 0 5px 0";
         title.style.borderTop = "1px solid rgba(255,255,255,0.1)";
         title.style.paddingTop = "10px";
         list.appendChild(title);
-        
+
         availableQuests.forEach((q, idx) => {
             const item = document.createElement('div');
             item.className = 'quest-item available';
@@ -215,15 +237,15 @@ function renderQuests(activeQuests, availableQuests) {
             `;
             item.onclick = (e) => {
                 e.stopPropagation();
-                if(confirm(`${q.name} 퀘스트를 수락하시겠습니까?\n보상: ${q.reward_xp} XP`)) {
+                if (confirm(`${q.name} 퀘스트를 수락하시겠습니까?\n보상: ${q.reward_xp} XP`)) {
                     acceptQuest(idx);
                 }
             };
             list.appendChild(item);
         });
     }
-    
-    if(activeQuests.length === 0 && (!availableQuests || availableQuests.length === 0)) {
+
+    if (activeQuests.length === 0 && (!availableQuests || availableQuests.length === 0)) {
         list.innerHTML = "<div style='color:#777; text-align:center;'>진행 중인 퀘스트 없음</div>";
     }
 }
@@ -282,8 +304,22 @@ window.closeApp = (appId) => {
     document.getElementById(appId).classList.add('hidden');
 };
 
-// Timer Logic
+// Timer Logic (Persistent)
+function getTimerState() {
+    const saved = localStorage.getItem('devgotchi_timer');
+    return saved ? JSON.parse(saved) : null;
+}
+
+function saveTimerState(state) {
+    localStorage.setItem('devgotchi_timer', JSON.stringify(state));
+}
+
+function clearTimerState() {
+    localStorage.removeItem('devgotchi_timer');
+}
+
 window.timerAdd = (mins) => {
+    if (timerRunning) return;
     timerSeconds += mins * 60;
     updateTimerDisplay();
 };
@@ -292,27 +328,74 @@ window.timerReset = () => {
     clearInterval(timerInterval);
     timerRunning = false;
     timerSeconds = 0;
+    clearTimerState();
     updateTimerDisplay();
 };
 
 window.timerStart = (mode) => {
     if (timerRunning) return;
+
     timerRunning = true;
+    const now = Date.now();
+    let state = { mode: mode, startAt: now, initialSeconds: timerSeconds };
+
+    if (mode === 'down') {
+        state.targetTime = now + (timerSeconds * 1000);
+    }
+
+    saveTimerState(state);
+    runTimerLoop();
+};
+
+function runTimerLoop() {
+    if (timerInterval) clearInterval(timerInterval);
 
     timerInterval = setInterval(() => {
-        if (mode === 'down') {
-            if (timerSeconds > 0) timerSeconds--;
-            else {
+        const state = getTimerState();
+        if (!state) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            return;
+        }
+
+        const now = Date.now();
+        if (state.mode === 'down') {
+            const remaining = Math.ceil((state.targetTime - now) / 1000);
+            if (remaining <= 0) {
+                timerSeconds = 0;
                 timerRunning = false;
                 clearInterval(timerInterval);
+                clearTimerState();
                 alert("Time Up!");
+                updateTimerDisplay();
+                return;
             }
+            timerSeconds = remaining;
         } else {
-            timerSeconds++;
+            // Count up
+            const elapsed = Math.floor((now - state.startAt) / 1000);
+            timerSeconds = state.initialSeconds + elapsed;
         }
         updateTimerDisplay();
     }, 1000);
-};
+}
+
+// Check on load
+function checkTimerState() {
+    const state = getTimerState();
+    if (state) {
+        timerRunning = true;
+        // fast forward
+        const now = Date.now();
+        if (state.mode === 'down') {
+            timerSeconds = Math.ceil((state.targetTime - now) / 1000);
+        } else {
+            timerSeconds = state.initialSeconds + Math.floor((now - state.startAt) / 1000);
+        }
+        updateTimerDisplay();
+        runTimerLoop();
+    }
+}
 
 function updateTimerDisplay() {
     const h = Math.floor(timerSeconds / 3600);
@@ -389,16 +472,21 @@ window.careAction = (type) => {
 // Scheduler Logic - Calendar Implementation
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
-let eventsData = [
-    { date: "2026-02-05", title: "가족 식사", type: 1 },
-    { date: "2026-02-14", title: "발렌타인 데이", type: 2 },
-    { date: "2026-02-20", title: "프로젝트 마감", type: 3 },
-    { date: "2026-03-01", title: "삼일절", type: 1 }
-];
+let eventsData = {}; // Object: "YYYY-MM-DD" -> [{title, color}]
 
-window.initCalendar = () => {
+window.initCalendar = async () => {
+    await fetchCalendarEvents();
     updateCalendar();
 };
+
+async function fetchCalendarEvents() {
+    try {
+        const res = await fetch('/api/calendar');
+        eventsData = await res.json();
+    } catch (e) {
+        console.error("Failed to load calendar", e);
+    }
+}
 
 window.changeMonth = (delta) => {
     currentMonth += delta;
@@ -441,13 +529,11 @@ function updateCalendar() {
         grid.appendChild(cell);
     }
 
-    // Next Month Filler (Fill to 35 or 42 cells)
+    // Next Month Filler
     const totalCells = firstDay + lastDate;
     const nextDays = (totalCells <= 35) ? 35 - totalCells : 42 - totalCells;
 
     for (let i = 1; i <= nextDays; i++) {
-        // const cell = createCell(i, true); // Optionally show next month days
-        // For blank look:
         const cell = document.createElement('div');
         cell.className = 'cal-cell other-month';
         grid.appendChild(cell);
@@ -459,7 +545,6 @@ function createCell(day, isOther) {
     cell.className = `cal-cell ${isOther ? 'other-month' : ''}`;
 
     const today = new Date();
-    // Check if showing previous month's date logic if needed, but here simple assumption for current month highlight
     if (!isOther && day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
         cell.classList.add('today');
     }
@@ -467,30 +552,40 @@ function createCell(day, isOther) {
     cell.innerHTML = `<div class="cal-date-num">${day}</div>`;
 
     if (!isOther) {
-        // Check Events
-        // Note: Months in JS are 0-indexed, but formatted often 01-12
         const monStr = String(currentMonth + 1).padStart(2, '0');
         const dayStr = String(day).padStart(2, '0');
         const dateKey = `${currentYear}-${monStr}-${dayStr}`;
 
-        const todaysEvents = eventsData.filter(e => e.date === dateKey);
+        const todaysEvents = eventsData[dateKey] || [];
         todaysEvents.forEach(evt => {
             const evEl = document.createElement('div');
-            evEl.className = `cal-event type-${evt.type}`;
+            evEl.className = `cal-event`;
+            evEl.style.backgroundColor = evt.color || '#bb86fc';
             evEl.textContent = evt.title;
             cell.appendChild(evEl);
         });
 
         // Add Logic
-        cell.addEventListener('click', () => {
+        cell.addEventListener('click', async () => {
             const title = prompt(`${currentMonth + 1}월 ${day}일 일정 추가:`);
             if (title) {
-                eventsData.push({
-                    date: dateKey,
-                    title: title,
-                    type: Math.floor(Math.random() * 3) + 1
-                });
-                updateCalendar();
+                const color = ["#bb86fc", "#03dac6", "#cf6679"][Math.floor(Math.random() * 3)];
+
+                try {
+                    await fetch('/api/calendar/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date: dateKey,
+                            title: title,
+                            color: color
+                        })
+                    });
+                    await fetchCalendarEvents(); // Reload
+                    updateCalendar();
+                } catch (e) {
+                    alert("Error adding event");
+                }
             }
         });
     }
