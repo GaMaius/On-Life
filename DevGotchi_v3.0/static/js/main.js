@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Legacy listener removed: Links handle navigation via href
-
+    // Menu click handling is now done via href links in HTML
 
     const statusBtn = document.getElementById('status-btn');
     if (statusBtn) {
@@ -47,13 +46,26 @@ document.addEventListener('DOMContentLoaded', () => {
             let nextIdx = (statuses.indexOf(current) + 1) % statuses.length;
             let next = statuses[nextIdx];
 
+            statusBtn.textContent = next;
+
+            // UI Toggle Logic
+            const idleInfo = document.getElementById('idle-info-section');
+            const workInfo = document.getElementById('work-info-section');
+
+            if (next === "업무중") {
+                if (idleInfo) idleInfo.classList.add('hidden');
+                if (workInfo) workInfo.classList.remove('hidden');
+            } else {
+                if (idleInfo) idleInfo.classList.remove('hidden');
+                if (workInfo) workInfo.classList.add('hidden');
+            }
+
             fetch('/api/status/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: next })
             }).then(() => {
-                // Reload to simulate navigation/refresh state
-                window.location.reload();
+                fetchStatus(); // Refresh data immediately
             });
         });
     }
@@ -107,14 +119,19 @@ async function fetchStatus() {
             if (feelsEl) feelsEl.innerText = `체감온도 ${data.weather.feels_like}°C`;
         }
 
+        // 1.5 Sync Status Button
+        const statusBtn = document.getElementById('status-btn');
+        if (statusBtn && data.status) {
+            statusBtn.textContent = data.status;
+        }
+
         // 2. HP / EXP / Level
         const hpVal = document.getElementById('hp-val');
         if (hpVal) hpVal.innerText = `${Math.floor(data.hp)}/${data.max_hp}`;
         const hpBar = document.getElementById('hp-bar');
         if (hpBar) hpBar.style.width = `${(data.hp / data.max_hp) * 100}%`;
 
-        document.getElementById('exp-val').innerText = `${Math.floor(data.xp)} XP`; // Show raw XP
-        // EXP bar logic can be added if we know max per level. For now just show text.
+        document.getElementById('exp-val').innerText = `${Math.floor(data.xp)} XP`;
 
         // Level Up Check
         if (lastLevel !== null && data.level > lastLevel) {
@@ -126,19 +143,22 @@ async function fetchStatus() {
         const postureInd = document.getElementById('posture-indicator');
         const postureText = document.getElementById('posture-text');
 
-        // Using backend duration or score
         if (data.bad_posture_duration > 0 || data.posture_score > 20) {
             postureInd.classList.add('bad');
             postureInd.classList.remove('good');
             postureInd.style.borderColor = '#ff4b2b';
             postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
-
-            // Text Change
             postureText.innerText = `⚠️ 거북목 주의! (${Math.floor(data.bad_posture_duration)}s)`;
             postureText.style.color = '#ff4b2b';
-
-            // Screen Flash
             document.body.style.boxShadow = "inset 0 0 50px rgba(255,0,0,0.5)";
+        } else if (data.drowsy_duration > 0) {
+            postureInd.classList.add('bad');
+            postureInd.classList.remove('good');
+            postureInd.style.borderColor = '#fdcb6e';
+            postureInd.style.backgroundColor = 'rgba(253, 203, 110, 0.2)';
+            postureText.innerText = `😴 졸음 감지! (${Math.floor(data.drowsy_duration)}s)`;
+            postureText.style.color = '#fdcb6e';
+            document.body.style.boxShadow = "inset 0 0 50px rgba(255,165,0,0.3)";
         } else {
             postureInd.classList.remove('bad');
             postureInd.classList.add('good');
@@ -149,32 +169,34 @@ async function fetchStatus() {
             document.body.style.boxShadow = "none";
         }
 
+        // Work Mode UI Toggle (Swappable Sections)
+        const idleInfo = document.getElementById('idle-info-section');
+        const workInfo = document.getElementById('work-info-section');
+
+        if (data.work_mode) {
+            if (idleInfo && !idleInfo.classList.contains('hidden')) idleInfo.classList.add('hidden');
+            if (workInfo && workInfo.classList.contains('hidden')) workInfo.classList.remove('hidden');
+        } else {
+            if (idleInfo && idleInfo.classList.contains('hidden')) idleInfo.classList.remove('hidden');
+            if (workInfo && !workInfo.classList.contains('hidden')) workInfo.classList.add('hidden');
+        }
+
         // 4. Quest Rendering
         renderQuests(data.quests, data.available_quests);
 
-        // 5. Home Dashboard Rendering (Timer & Schedule)
+        // 5. Home Dashboard Rendering
         const db = document.getElementById('home-dashboard');
         if (db) {
             let html = '';
-
-            // Timer Check
             const tState = getTimerState();
-            if (tState && timerInterval) { // Running
-                // We don't have direct access to 'timerSeconds' here easily unless global var is used. 
-                // Global 'timerSeconds' is updated by loop. 
-                // But loop runs every sec, fetchStatus runs every 5 sec.
-                // We can just show "Timer Active". Or read DOM.
+            if (tState && timerInterval) {
                 const timeStr = document.getElementById('timer-display')?.textContent || "Running";
                 html += `<div style="display:inline-block; padding: 5px 15px; background: rgba(0,0,0,0.5); border-radius: 20px; color: #fff; margin: 5px;">⏱️ ${timeStr}</div>`;
             }
-
-            // Schedule Check
             if (data.todays_events && data.todays_events.length > 0) {
                 const count = data.todays_events.length;
                 const first = data.todays_events[0].title;
                 html += `<div style="display:inline-block; padding: 5px 15px; background: rgba(187, 134, 252, 0.3); border-radius: 20px; color: #bb86fc; border: 1px solid #bb86fc; margin: 5px;">📅 ${first} ${count > 1 ? `(+${count - 1})` : ''}</div>`;
-            } else {
-                // html += `<div style="color: #aaa; font-size: 0.8rem;">오늘 일정 없음</div>`;
             }
             db.innerHTML = html;
         }

@@ -12,31 +12,69 @@
 
 <body>
 
-    <!-- Idle Screen -->
+    <!-- Main Screen Container -->
     <div id="home-screen">
-        <div class="top-bar">
-            <div class="clock-widget">
-                <div id="clock-time">00:00</div>
-                <div id="clock-date">2월 05일 (수)</div>
-            </div>
-            <div class="weather-section">
-                <div id="weather-temp">--°C</div>
-                <div id="weather-desc">날씨 정보 로딩중...</div>
-                <div class="weather-detail">
-                    <span id="temp-minmax">--/--</span>
-                    <span id="temp-feels">--</span>
+
+        <!-- Section A: Information Area (Swappable) -->
+        <div id="info-area-container" style="min-height: 350px;">
+
+            <!-- 1. Idle Info (Clock, Weather, Dashboard) -->
+            <div id="idle-info-section">
+                <div class="top-bar">
+                    <div class="clock-widget">
+                        <div id="clock-time">00:00</div>
+                        <div id="clock-date">2월 05일 (수)</div>
+                    </div>
+                    <div class="weather-section">
+                        <div id="weather-temp">--°C</div>
+                        <div id="weather-desc">날씨 로딩중...</div>
+                        <div class="weather-detail">
+                            <span id="temp-minmax">--/--</span>
+                            <span id="temp-feels">--</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Home Dashboard -->
+                <div id="home-dashboard" style="margin-top: 20px; text-align: center; min-height: 50px;">
+                    <!-- JS populated -->
                 </div>
             </div>
-        </div>
 
-        <!-- New: Home Dashboard (Timer / Schedule) -->
-        <div id="home-dashboard" style="margin-top: 20px; text-align: center; min-height: 50px;">
-            <!-- JS populated -->
+            <!-- 2. Work Info (HP, Posture, Quests) -->
+            <div id="work-info-section" class="hidden">
+                <div class="hp-exp-container">
+                    <div class="bar-label">
+                        <span>HP</span> <span id="hp-val">100/100</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
+                    </div>
+
+                    <div class="bar-label">
+                        <span>EXP</span> <span id="exp-val">2000/2000</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill exp-fill" id="exp-bar" style="width: 50%;"></div>
+                    </div>
+                </div>
+
+                <div class="posture-status" id="posture-indicator" style="margin: 20px 0;">
+                    <span class="status-dot">●</span>
+                    <span id="posture-text">바른 자세 유지중</span>
+                </div>
+
+                <div class="quest-panel">
+                    <h4>🔥 퀘스트</h4>
+                    <div id="quest-list">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="character-area" id="character-container">
             <img src="{{ url_for('static', filename='image/chick.png') }}" id="character-img" alt="Dev">
-
             <div class="circular-menu" id="circular-menu">
                 <a href="?app=timer" target="_self" class="menu-item"><i class="fas fa-hourglass-half"></i></a>
                 <a href="?app=ai" target="_self" class="menu-item"><i class="fas fa-robot"></i></a>
@@ -49,37 +87,6 @@
 
         <div class="status-bar">
             <button id="status-btn">자리비움</button>
-        </div>
-    </div>
-
-    <!-- Work Overlay -->
-    <div id="work-overlay" class="hidden">
-        <div class="hp-exp-container">
-            <div class="bar-label">
-                <span>HP</span> <span id="hp-val">100/100</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
-            </div>
-
-            <div class="bar-label">
-                <span>EXP</span> <span id="exp-val">2000/2000</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-fill exp-fill" id="exp-bar" style="width: 50%;"></div>
-            </div>
-        </div>
-
-        <div class="posture-status" id="posture-indicator">
-            <span class="status-dot">●</span>
-            <span id="posture-text">바른 자세 유지중</span>
-        </div>
-
-        <div class="quest-panel">
-            <h4>🔥 퀘스트</h4>
-            <div id="quest-list">
-                <!-- JS populated -->
-            </div>
         </div>
     </div>
 
