@@ -1,8 +1,6 @@
-requests
-python-dotenv
-rich
 SpeechRecognition
 gTTS
 pygame
-openai
-pyaudio
+python-dotenv
+rich
+google-generativeai
