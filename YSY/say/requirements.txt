@@ -1,0 +1,8 @@
+# say_miniMax.py 필수 패키지
+requests
+SpeechRecognition
+gTTS
+pygame
+rich
+python-dotenv
+PyAudio
