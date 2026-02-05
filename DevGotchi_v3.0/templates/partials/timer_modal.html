@@ -1,0 +1,22 @@
+<!-- Timer Modal -->
+<div id="timer-modal" class="modal hidden">
+    <div class="modal-content timer-theme">
+        <button class="close-modal"><i class="fas fa-home"></i></button>
+        <div class="timer-display">
+            <span id="timer-hours">00</span>:<span id="timer-minutes">00</span>:<span id="timer-seconds">00</span>
+        </div>
+        <div class="timer-controls">
+            <div class="presets">
+                <button class="preset-btn" data-time="60">+1분</button>
+                <button class="preset-btn" data-time="300">+5분</button>
+                <button class="preset-btn" data-time="600">+10분</button>
+                <button class="preset-btn" data-time="1800">+30분</button>
+            </div>
+            <div class="main-controls">
+                <button id="btn-countdown" class="control-btn green">카운트 다운</button>
+                <button id="btn-countup" class="control-btn blue">카운트 업</button>
+                <button id="btn-reset" class="control-btn red">리셋</button>
+            </div>
+        </div>
+    </div>
+</div>

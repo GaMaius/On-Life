@@ -1,0 +1,37 @@
+<!-- Stats Modal -->
+<div id="stats-modal" class="modal hidden">
+    <!-- Carousel/Slider Structure needed for 6 pages -->
+    <div class="modal-content stats-theme">
+        <button class="close-modal"><i class="fas fa-home"></i></button>
+        <div class="stats-carousel">
+            <!-- Page 1: Weekly Work Hours -->
+            <div class="stats-page active" data-page="1">
+                <h3>이번 주 업무 시간</h3>
+                <div class="chart-container" id="chart-weekly-hours">
+                    <!-- Chart Bar items injected by JS -->
+                </div>
+                <div class="stats-insight">
+                    <h4>업무결과</h4>
+                    <p>저번주보다 평균 <span class="highlight">1시간</span> 더 근무했습니다.</p>
+                </div>
+            </div>
+            <!-- Page 2: Work Time Preference -->
+            <div class="stats-page" data-page="2">
+                <h3>주요 업무 시간대</h3>
+                <div class="chart-container" id="chart-time-pref"></div>
+                <div class="stats-insight">
+                    <p>주로 <strong>09:00 - 11:00</strong>에 집중도가 높습니다.</p>
+                </div>
+            </div>
+            <!-- Additional Pages will be handled dynamically or static -->
+        </div>
+        <div class="pagination">
+            <span class="dot active" data-target="1">1</span>
+            <span class="dot" data-target="2">2</span>
+            <span class="dot" data-target="3">3</span>
+            <span class="dot" data-target="4">4</span>
+            <span class="dot" data-target="5">5</span>
+            <span class="dot" data-target="6">6</span>
+        </div>
+    </div>
+</div>

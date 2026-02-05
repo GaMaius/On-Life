@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevGotchi v3.0</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modals.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Idle Screen -->
+        <div id="idle-screen" class="screen active">
+            <!-- Header: Time & Weather -->
+            <div class="header-bar">
+                <div class="time-widget">
+                    <h1 id="clock">00:00</h1>
+                    <p id="date">1월 1일 (월)</p>
+                </div>
+                <div class="weather-widget">
+                    <div id="weather-icon">☀️</div>
+                    <div class="weather-info">
+                        <h2 id="temp">--°C</h2>
+                        <p id="weather-desc">날씨 정보 로딩중</p>
+                        <p class="weather-sub">체감 <span id="feels-like">--</span>° / <span id="min-max">--/--</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Character -->
+            <div class="character-container" id="character-container">
+                <div class="glow-effect"></div>
+                <img src="{{ url_for('static', filename='image/chick.png') }}" alt="DevGotchi" class="character-img"
+                    id="main-character">
+                <!-- Circular Menu (Hidden by default) -->
+                <div class="circular-menu" id="circular-menu">
+                    <div class="menu-item" data-action="timer" style="--i:0;"><i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="menu-item" data-action="ai" style="--i:1;"><i class="fas fa-robot"></i></div>
+                    <div class="menu-item" data-action="care" style="--i:2;"><i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="menu-item" data-action="scheduler" style="--i:3;"><i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="menu-item" data-action="stretch" style="--i:4;"><i class="fas fa-walking"></i></div>
+                    <div class="menu-item" data-action="stats" style="--i:5;"><i class="fas fa-chart-bar"></i></div>
+                </div>
+            </div>
+
+            <!-- Bottom Status -->
+            <div class="status-bar-container">
+                <button id="status-toggle" class="status-btn">자리비움</button>
+            </div>
+        </div>
+
+        <!-- Work Mode Screen (Hidden) -->
+        <div id="work-screen" class="screen">
+            <div class="work-header">
+                <div class="stats-bars">
+                    <div class="stat-row">
+                        <label>HP</label>
+                        <div class="progress-bar hp">
+                            <div class="fill" style="width: 100%;"></div>
+                        </div>
+                        <span id="hp-text">100/100</span>
+                    </div>
+                    <div class="stat-row">
+                        <label>EXP</label>
+                        <div class="progress-bar exp">
+                            <div class="fill" style="width: 75%;"></div>
+                        </div>
+                        <span id="exp-text">1500/2000</span>
+                    </div>
+                </div>
+                <div class="posture-indicator good">
+                    <i class="fas fa-check-circle"></i> 바른 자세 유지중
+                </div>
+            </div>
+
+            <div class="work-center">
+                <img src="{{ url_for('static', filename='image/chick.png') }}" alt="Focus Dev"
+                    class="character-img small">
+                <h2 id="level-text">Lv.1 데브</h2>
+            </div>
+
+            <div class="quest-panel">
+                <div class="quest-header"><i class="fas fa-fire"></i> 퀘스트</div>
+                <div class="quest-card">
+                    <h4>자세 퀘스트: 1시간 거북목 없음</h4>
+                    <p>+80 XP</p>
+                    <div class="quest-progress">
+                        <div class="fill" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-footer">
+                <button id="work-toggle" class="status-btn work">업무중</button>
+            </div>
+        </div>
+
+        <!-- Modals Container -->
+        <div id="modals-container">
+            <!-- Timer Modal -->
+            {% include 'partials/timer_modal.html' ignore missing %}
+            <!-- Stats Modal -->
+            {% include 'partials/stats_modal.html' ignore missing %}
+            <!-- Care Modal -->
+            {% include 'partials/care_modal.html' ignore missing %}
+            <!-- AI Modal -->
+            {% include 'partials/ai_modal.html' ignore missing %}
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components.js') }}"></script>
+</body>
+
+</html>

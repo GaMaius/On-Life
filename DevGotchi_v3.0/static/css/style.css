@@ -1,0 +1,274 @@
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-color: #5e5eef;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Noto Sans KR', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    /* No text selection as requested */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #000000 70%);
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Header */
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.time-widget h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    font-family: var(--font-heading);
+}
+
+.time-widget p {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+.weather-widget {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#weather-icon {
+    font-size: 3rem;
+}
+
+.weather-info h2 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.weather-desc {
+    font-size: 1.2rem;
+}
+
+.weather-sub {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Center Character */
+.character-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.glow-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.character-img {
+    width: 80%;
+    height: auto;
+    z-index: 2;
+    transition: transform 0.2s;
+    transition: opacity 0.5s ease;
+}
+
+.character-img:active {
+    transform: scale(0.95);
+}
+
+/* Circular Menu */
+.circular-menu {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    /* Let clicks pass through when closed */
+}
+
+.menu-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0;
+}
+
+.circular-menu.open .menu-item {
+    opacity: 1;
+    /* Calculated in JS or predefined classes */
+}
+
+/* Status Bar */
+.status-bar-container {
+    text-align: center;
+}
+
+.status-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+}
+
+.status-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Work Mode */
+.work-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+}
+
+.stats-bars {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-row label {
+    font-weight: 700;
+    width: 40px;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar .fill {
+    height: 100%;
+    background: var(--accent-color);
+    transition: width 0.5s;
+}
+
+.progress-bar.hp .fill {
+    background: #ff6b6b;
+}
+
+.progress-bar.exp .fill {
+    background: #feca57;
+}
+
+.work-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.work-center .character-img {
+    width: 200px;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+}
+
+.quest-panel {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    width: 300px;
+    background: rgba(20, 20, 30, 0.8);
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.quest-header {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #ff9f43;
+}
+
+.quest-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.8rem;
+    border-radius: 8px;
+}
