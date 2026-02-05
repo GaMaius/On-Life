@@ -2192,5 +2192,105 @@
     "hp": 70.0,
     "posture_score": -0.405,
     "is_drowsy": false
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:15.057358",
+    "hp": 91.6,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:15.470935",
+    "hp": 84.6,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:19.050402",
+    "hp": 84.6,
+    "posture": "bad",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:22.047142",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:25.046161",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:28.046812",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:31.046145",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-05T14:49:33.131166",
+    "session": "sess_1770260233",
+    "event_name": "quest_accept",
+    "metadata": {
+      "index": 0,
+      "success": true
+    }
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:34.046878",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-05T14:49:34.286957",
+    "session": "sess_1770260233",
+    "event_name": "quest_accept",
+    "metadata": {
+      "index": 0,
+      "success": false
+    }
+  },
+  {
+    "type": "A_Interaction",
+    "ts": "2026-02-05T14:49:34.813744",
+    "session": "sess_1770260233",
+    "event_name": "quest_accept",
+    "metadata": {
+      "index": 1,
+      "success": false
+    }
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:37.047461",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
+  },
+  {
+    "type": "B_Context",
+    "ts": "2026-02-05T14:49:39.975978",
+    "hp": 81.0,
+    "posture": "good",
+    "level": 1
   }
 ]
