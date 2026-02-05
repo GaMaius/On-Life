@@ -1,20 +1,32 @@
 {
-  "hp": 81.00848257541656,
-  "xp": 80,
-  "level": 1,
-  "happiness": 80,
-  "quests": [
-    {
-      "name": "집중 퀘스트: 25분 집중 유지",
-      "type": "focus",
-      "target_duration": 1500,
-      "reward_xp": 50,
-      "difficulty": "Normal",
-      "description": "25분 동안 집중하세요.",
-      "clear_condition": "바른 자세 + 졸음 없음 25분",
-      "progress": 8.930476427078247,
-      "is_completed": false
+    "hp": 81.00848257541656,
+    "xp": 80,
+    "level": 1,
+    "quests": [
+        {
+            "name": "집중 퀘스트: 25분 집중 유지",
+            "type": "focus",
+            "target_duration": 1500,
+            "reward_xp": 50,
+            "difficulty": "Normal",
+            "description": "25분 동안 집중하세요.",
+            "clear_condition": "바른 자세 + 졸음 없음 25분",
+            "progress": 42.53939461708069,
+            "is_completed": false
+        }
+    ],
+    "quest_streak": 0,
+    "happiness": 80,
+    "calendar": {
+        "2026-02-05": [
+            {
+                "title": "응애",
+                "color": "#cf6679"
+            },
+            {
+                "title": "응애22",
+                "color": "#cf6679"
+            }
+        ]
     }
-  ],
-  "quest_streak": 0
 }

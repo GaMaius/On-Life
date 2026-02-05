@@ -31,29 +31,49 @@ vision_lock = threading.Lock()
 current_status = "업무중" # "업무중", "자리비움", "회의중", "퇴근"
 is_work_mode = False # Toggle between Idle and Work UI
 
+# Weather Cache
+last_weather_update = 0
+cached_weather = None
+
 def get_weather():
+    global last_weather_update, cached_weather
+    now = time.time()
+    
+    # Cache for 10 minutes (600s), but ONLY if cache is valid data
+    if cached_weather and cached_weather.get("temp") != 0 and (now - last_weather_update < 600):
+        return cached_weather
+
     api_key = os.getenv("WEATHER_API_KEY")
     lat, lon = 37.5665, 126.9780 # Seoul (Hardcoded or Config)
     
     if not api_key:
+        print("[Weather] No API Key found.")
         return {"temp": 0, "condition": "No Key", "comparison": 0}
 
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=kr"
     
     try:
+        print(f"[Weather] Requesting: {url}")
         res = requests.get(url, timeout=5)
         if res.status_code == 200:
             data = res.json()
-            return {
+            weather_data = {
                 "temp": int(data['main']['temp']),
                 "condition": data['weather'][0]['description'],
                 "min": int(data['main']['temp_min']),
                 "max": int(data['main']['temp_max']),
                 "feels_like": int(data['main']['feels_like'])
             }
+            cached_weather = weather_data
+            last_weather_update = now
+            print(f"[Weather] Success: {weather_data}")
+            return weather_data
+        else:
+            print(f"[Weather] API Error: {res.status_code} - {res.text}")
     except Exception as e:
-        print(f"Weather Error: {e}")
+        print(f"[Weather] Exception: {e}")
     
+    # Return placeholder or last known bad state, but DO NOT CACHE IT logic effectively (since we check != 0 above)
     return {"temp": 0, "condition": "Error", "comparison": 0}
 
 @app.route('/')
@@ -62,17 +82,29 @@ def home():
 
 @app.route('/api/status/update', methods=['POST'])
 def update_status_btn():
-    global current_status
+    global current_status, is_work_mode
     data = request.json
-    current_status = data.get('status', current_status)
-    return jsonify({"status": current_status})
+    new_status = data.get('status')
+    if new_status:
+        current_status = new_status
+        # Logic: If 'Work', enable Work UI. Else Idle.
+        # Check stripping to ensure match
+        if current_status.strip() == "업무중":
+            is_work_mode = True
+        else:
+            is_work_mode = False
+        print(f"[Status] Updated to: {current_status} (WorkMode: {is_work_mode})")
+    return jsonify({"success": True, "status": current_status})
 
 @app.route('/api/mode/toggle', methods=['POST'])
 def toggle_mode():
     global is_work_mode
     data = request.json
+    # This might be deprecated if update_status handles it, but kept for direct toggle
     is_work_mode = data.get('work_mode', False)
     return jsonify({"work_mode": is_work_mode})
+
+
 
 @app.route('/api/gamestate')
 def get_gamestate():

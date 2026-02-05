@@ -63,10 +63,29 @@
                     <span id="posture-text">바른 자세 유지중</span>
                 </div>
 
-                <div class="quest-panel">
-                    <h4>🔥 퀘스트</h4>
-                    <div id="quest-list">
-                        <!-- JS populated -->
+                <div class="quest-container">
+                    <h3 style="color: #bb86fc; margin-bottom: 20px;">⚔️ 퀘스트</h3>
+
+                    <!-- Available Quests Section -->
+                    <div class="quest-section">
+                        <div class="quest-section-header">
+                            <span class="quest-icon">🎯</span>
+                            <span>선택 가능한 퀘스트 (<span id="available-count">0</span>개 선택)</span>
+                        </div>
+                        <div id="available-quest-list" class="quest-list">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <!-- Active Quests Section -->
+                    <div class="quest-section">
+                        <div class="quest-section-header active">
+                            <span class="quest-icon">✅</span>
+                            <span>현재 진행중인 퀘스트</span>
+                        </div>
+                        <div id="active-quest-list" class="quest-list">
+                            <!-- JS populated -->
+                        </div>
                     </div>
                 </div>
             </div>

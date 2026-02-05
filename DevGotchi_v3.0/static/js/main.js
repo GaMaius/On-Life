@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (statusBtn) {
         statusBtn.addEventListener('click', () => {
             const statuses = ["업무중", "자리비움", "회의중", "퇴근"];
-            let current = statusBtn.textContent;
+            let current = statusBtn.textContent.trim(); // Trim to avoid mismatch
             let nextIdx = (statuses.indexOf(current) + 1) % statuses.length;
             let next = statuses[nextIdx];
 
@@ -207,69 +207,117 @@ async function fetchStatus() {
 }
 
 function renderQuests(activeQuests, availableQuests) {
-    const list = document.getElementById('quest-list');
-    if (!list) return;
-    list.innerHTML = ''; // Clear
+    const availableList = document.getElementById('available-quest-list');
+    const activeList = document.getElementById('active-quest-list');
+    const availableCount = document.getElementById('available-count');
 
-    // Active Quests
-    if (activeQuests.length > 0) {
-        activeQuests.forEach(q => {
-            const item = document.createElement('div');
-            item.className = 'quest-item';
-            const pct = Math.min(100, (q.progress / q.target_duration) * 100);
+    if (!availableList || !activeList) return;
 
-            // Detail click
-            item.onclick = () => {
-                alert(`[${q.name}]\n난이도: ${q.difficulty}\n조건: ${q.clear_condition}\n설명: ${q.description}`);
-            };
+    // Clear both lists
+    availableList.innerHTML = '';
+    activeList.innerHTML = '';
 
-            item.innerHTML = `
-                <div style="display:flex; justify-content:space-between;">
-                    <strong>${q.name}</strong>
-                    <small>${Math.floor(q.progress / 60)}/${q.target_duration / 60}m</small>
-                </div>
-                <div class="progress-container" style="height: 5px; margin-top: 5px;">
-                    <div class="progress-fill" style="width: ${pct}%; background: #bb86fc;"></div>
-                </div>
-            `;
-            list.appendChild(item);
-        });
+    // Update available count
+    if (availableCount) {
+        availableCount.textContent = availableQuests ? availableQuests.length : 0;
     }
 
-    // Available Quests
-    // Always show if any available, distinct section
+    // Render Available Quests
     if (availableQuests && availableQuests.length > 0) {
-        const title = document.createElement('h5');
-        title.innerText = "📋 퀘스트 선택";
-        title.style.margin = "15px 0 5px 0";
-        title.style.borderTop = "1px solid rgba(255,255,255,0.1)";
-        title.style.paddingTop = "10px";
-        list.appendChild(title);
-
         availableQuests.forEach((q, idx) => {
-            const item = document.createElement('div');
-            item.className = 'quest-item available';
-            item.style.border = "1px dashed #777";
-            item.style.cursor = "pointer";
-            item.style.marginTop = "5px";
-            item.style.padding = "5px";
-            item.innerHTML = `
-                <div>${q.name}</div>
-                <small style="color:#aaa;">+${q.reward_xp} XP | ${q.difficulty}</small>
-            `;
-            item.onclick = (e) => {
-                e.stopPropagation();
-                if (confirm(`${q.name} 퀘스트를 수락하시겠습니까?\n보상: ${q.reward_xp} XP`)) {
-                    acceptQuest(idx);
-                }
-            };
-            list.appendChild(item);
+            const card = createQuestCard(q, idx, false);
+            availableList.appendChild(card);
+        });
+    } else {
+        availableList.innerHTML = '<div class="quest-empty">현재 선택 가능한 퀘스트가 없습니다.</div>';
+    }
+
+    // Render Active Quests
+    if (activeQuests && activeQuests.length > 0) {
+        activeQuests.forEach((q, idx) => {
+            const card = createQuestCard(q, idx, true);
+            activeList.appendChild(card);
+        });
+    } else {
+        activeList.innerHTML = '<div class="quest-empty">진행 중인 퀘스트가 없습니다.</div>';
+    }
+}
+
+function createQuestCard(quest, index, isActive) {
+    const card = document.createElement('div');
+    card.className = 'quest-card' + (isActive ? ' active' : '');
+    card.dataset.questIndex = index;
+
+    const progress = quest.progress || 0;
+    const target = quest.target_duration || 1;
+    const progressPct = Math.min(100, (progress / target) * 100);
+
+    // Difficulty badge class
+    const difficultyClass = quest.difficulty === 'Hard' ? 'hard' : 'normal';
+
+    // Format time
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return mins > 0 ? `${mins}분 ${secs}초` : `${secs}초`;
+    };
+
+    card.innerHTML = `
+        <div class="quest-card-header">
+            <div style="flex: 1;">
+                <div class="quest-title">
+                    ${isActive ? '✅' : '🎯'} ${quest.name}
+                </div>
+                <div class="quest-description">${quest.description}</div>
+                ${isActive ? '' : `<div class="quest-reward">🏆 클리어 조건: ${quest.clear_condition}</div>`}
+            </div>
+            <div class="quest-difficulty ${difficultyClass}">${quest.difficulty}</div>
+        </div>
+        
+        ${isActive ? `
+        <div class="quest-details">
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">📌</span>
+                <span class="quest-detail-text"><strong>클리어 조건:</strong> ${quest.clear_condition}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">🎯</span>
+                <span class="quest-detail-text"><strong>목표 시간:</strong> ${formatTime(target)}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">⏱️</span>
+                <span class="quest-detail-text"><strong>현재 진행:</strong> ${formatTime(Math.floor(progress))}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">🏆</span>
+                <span class="quest-detail-text"><strong>보상:</strong> ${quest.reward_xp} XP</span>
+            </div>
+            <div class="quest-progress-bar">
+                <div class="quest-progress-fill" style="width: ${progressPct}%"></div>
+                <div class="quest-progress-text">진행도: ${Math.floor(progressPct)}%</div>
+            </div>
+        </div>
+        ` : `
+        <div style="margin-top: 10px;">
+            <span class="quest-reward">💎 +${quest.reward_xp} XP</span>
+        </div>
+        `}
+    `;
+
+    // Click handler
+    if (isActive) {
+        card.addEventListener('click', () => {
+            card.classList.toggle('expanded');
+        });
+    } else {
+        card.addEventListener('click', () => {
+            if (confirm(`${quest.name} 퀘스트를 수락하시겠습니까?\n\n난이도: ${quest.difficulty}\n보상: ${quest.reward_xp} XP\n조건: ${quest.clear_condition}`)) {
+                acceptQuest(index);
+            }
         });
     }
 
-    if (activeQuests.length === 0 && (!availableQuests || availableQuests.length === 0)) {
-        list.innerHTML = "<div style='color:#777; text-align:center;'>진행 중인 퀘스트 없음</div>";
-    }
+    return card;
 }
 
 async function acceptQuest(idx) {
