@@ -83,31 +83,159 @@ function updateClock() {
     }
 }
 
+// State Tracking
+let lastLevel = null;
+
+// Init from URL
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const app = params.get('app');
+    if(app) {
+        openApp(app);
+    }
+});
+
 async function fetchStatus() {
     try {
         const res = await fetch('/api/gamestate');
         const data = await res.json();
-
+        
+        // 1. Weather
         if (data.weather) {
             const tempEl = document.getElementById('weather-temp');
-            if (tempEl) tempEl.textContent = `${data.weather.temp}°C`;
-
+            if (tempEl) tempEl.innerText = `${data.weather.temp}°C`;
             const descEl = document.getElementById('weather-desc');
             if (descEl) descEl.innerHTML = `<i class="fas fa-cloud"></i> ${data.weather.condition}`;
-
             const minmaxEl = document.getElementById('temp-minmax');
-            if (minmaxEl) minmaxEl.textContent = `${data.weather.max}°C / ${data.weather.min}°C`;
-
+            if (minmaxEl) minmaxEl.innerText = `${data.weather.max}°C / ${data.weather.min}°C`;
             const feelsEl = document.getElementById('temp-feels');
-            if (feelsEl) feelsEl.textContent = `체감온도 ${data.weather.feels_like}°C`;
+            if (feelsEl) feelsEl.innerText = `체감온도 ${data.weather.feels_like}°C`;
         }
 
+        // 2. HP / EXP / Level
         const hpVal = document.getElementById('hp-val');
-        if (hpVal) hpVal.textContent = `${Math.floor(data.hp)}/${data.max_hp}`;
-
+        if (hpVal) hpVal.innerText = `${Math.floor(data.hp)}/${data.max_hp}`;
         const hpBar = document.getElementById('hp-bar');
         if (hpBar) hpBar.style.width = `${(data.hp / data.max_hp) * 100}%`;
+        
+        document.getElementById('exp-val').innerText = `${Math.floor(data.xp)} XP`; // Show raw XP
+        // EXP bar logic can be added if we know max per level. For now just show text.
+        
+        // Level Up Check
+        if(lastLevel !== null && data.level > lastLevel) {
+            alert(`🎉 Level Up! Lv. ${data.level}`);
+        }
+        lastLevel = data.level;
 
+        // 3. Posture Alert
+        const postureInd = document.getElementById('posture-indicator');
+        const postureText = document.getElementById('posture-text');
+        
+        // Using backend duration or score
+        if(data.bad_posture_duration > 0 || data.posture_score > 20) {
+            postureInd.classList.add('bad');
+            postureInd.classList.remove('good');
+            postureInd.style.borderColor = '#ff4b2b';
+            postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
+            
+            // Text Change
+            postureText.innerText = `⚠️ 거북목 주의! (${Math.floor(data.bad_posture_duration)}s)`;
+            postureText.style.color = '#ff4b2b';
+            
+            // Screen Flash
+            document.body.style.boxShadow = "inset 0 0 50px rgba(255,0,0,0.5)";
+        } else {
+            postureInd.classList.remove('bad');
+            postureInd.classList.add('good');
+            postureInd.style.borderColor = '#00d166';
+            postureInd.style.backgroundColor = 'rgba(0, 209, 102, 0.2)';
+            postureText.innerText = "바른 자세 유지중";
+            postureText.style.color = '#00d166';
+            document.body.style.boxShadow = "none";
+        }
+
+        // 4. Quest Rendering
+        renderQuests(data.quests, data.available_quests);
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function renderQuests(activeQuests, availableQuests) {
+    const list = document.getElementById('quest-list');
+    if(!list) return;
+    list.innerHTML = ''; // Clear
+    
+    // Active Quests
+    if(activeQuests.length > 0) {
+        activeQuests.forEach(q => {
+            const item = document.createElement('div');
+            item.className = 'quest-item';
+            const pct = Math.min(100, (q.progress / q.target_duration) * 100);
+            
+            // Detail click
+            item.onclick = () => {
+                alert(`[${q.name}]\n난이도: ${q.difficulty}\n조건: ${q.clear_condition}\n설명: ${q.description}`);
+            };
+
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between;">
+                    <strong>${q.name}</strong>
+                    <small>${Math.floor(q.progress/60)}/${q.target_duration/60}m</small>
+                </div>
+                <div class="progress-container" style="height: 5px; margin-top: 5px;">
+                    <div class="progress-fill" style="width: ${pct}%; background: #bb86fc;"></div>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    }
+    
+    // Available Quests
+    // Always show if any available, distinct section
+    if(availableQuests && availableQuests.length > 0) {
+        const title = document.createElement('h5');
+        title.innerText = "📋 퀘스트 선택";
+        title.style.margin = "15px 0 5px 0";
+        title.style.borderTop = "1px solid rgba(255,255,255,0.1)";
+        title.style.paddingTop = "10px";
+        list.appendChild(title);
+        
+        availableQuests.forEach((q, idx) => {
+            const item = document.createElement('div');
+            item.className = 'quest-item available';
+            item.style.border = "1px dashed #777";
+            item.style.cursor = "pointer";
+            item.style.marginTop = "5px";
+            item.style.padding = "5px";
+            item.innerHTML = `
+                <div>${q.name}</div>
+                <small style="color:#aaa;">+${q.reward_xp} XP | ${q.difficulty}</small>
+            `;
+            item.onclick = (e) => {
+                e.stopPropagation();
+                if(confirm(`${q.name} 퀘스트를 수락하시겠습니까?\n보상: ${q.reward_xp} XP`)) {
+                    acceptQuest(idx);
+                }
+            };
+            list.appendChild(item);
+        });
+    }
+    
+    if(activeQuests.length === 0 && (!availableQuests || availableQuests.length === 0)) {
+        list.innerHTML = "<div style='color:#777; text-align:center;'>진행 중인 퀘스트 없음</div>";
+    }
+}
+
+async function acceptQuest(idx) {
+    try {
+        await fetch('/api/quest/accept', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: idx })
+        });
+        fetchStatus(); // Refresh immediately
     } catch (e) {
         console.error(e);
     }

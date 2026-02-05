@@ -33,12 +33,12 @@
             <img src="{{ url_for('static', filename='image/chick.png') }}" id="character-img" alt="Dev">
 
             <div class="circular-menu" id="circular-menu">
-                <div class="menu-item" data-action="timer"><i class="fas fa-hourglass-half"></i></div>
-                <div class="menu-item" data-action="ai"><i class="fas fa-robot"></i></div>
-                <div class="menu-item" data-action="care"><i class="fas fa-heart"></i></div>
-                <div class="menu-item" data-action="scheduler"><i class="fas fa-calendar-alt"></i></div>
-                <div class="menu-item" data-action="stretch"><i class="fas fa-running"></i></div>
-                <div class="menu-item" data-action="stats"><i class="fas fa-chart-bar"></i></div>
+                <a href="?app=timer" target="_self" class="menu-item"><i class="fas fa-hourglass-half"></i></a>
+                <a href="?app=ai" target="_self" class="menu-item"><i class="fas fa-robot"></i></a>
+                <a href="?app=care" target="_self" class="menu-item"><i class="fas fa-heart"></i></a>
+                <a href="?app=scheduler" target="_self" class="menu-item"><i class="fas fa-calendar-alt"></i></a>
+                <a href="?app=stretch" target="_self" class="menu-item"><i class="fas fa-running"></i></a>
+                <a href="?app=stats" target="_self" class="menu-item"><i class="fas fa-chart-bar"></i></a>
             </div>
         </div>
 
@@ -73,13 +73,7 @@
         <div class="quest-panel">
             <h4>🔥 퀘스트</h4>
             <div id="quest-list">
-                <div class="quest-item">
-                    <p>자세 퀘스트: 1시간 거북목 없이</p>
-                    <small>+80 XP</small>
-                    <div class="progress-container" style="height: 5px; margin-top: 5px;">
-                        <div class="progress-fill" style="width: 30%; background: #bb86fc;"></div>
-                    </div>
-                </div>
+                <!-- JS populated -->
             </div>
         </div>
     </div>
@@ -88,7 +82,7 @@
     <div id="timer-app" class="app-screen hidden">
         <div class="app-header">
             <div id="timer-clock" style="color: #aaa;">00:00:00</div>
-            <button class="home-btn" onclick="closeApp('timer-app')"><i class="fas fa-home"></i></button>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
         </div>
         <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
             <div id="timer-display" style="font-size: 8rem; font-weight: 700;">00:00:00</div>
@@ -110,11 +104,15 @@
     <div id="care-app" class="app-screen hidden" style="background: #ffeaa7; color: #333;">
         <div class="app-header">
             <h3>Dev 돌보기</h3>
-            <button class="home-btn" style="color: #333; border-color: #333;" onclick="closeApp('care-app')"><i
-                    class="fas fa-home"></i></button>
+            <a href="/" target="_self" class="home-btn" style="color: #333; border-color: #333;"><i
+                    class="fas fa-home"></i></a>
         </div>
         <div class="flex-center" style="flex-grow: 1; flex-direction: column; gap: 30px;">
-            <div style="font-size: 5rem;">🐣</div>
+            <div style="font-size: 5rem;">
+                <!-- Updated Image -->
+                <img src="{{ url_for('static', filename='image/chick.png') }}"
+                    style="width: 150px; height: 150px; object-fit: contain;">
+            </div>
             <div
                 style="width: 300px; height: 30px; background: #fff; border-radius: 15px; overflow: hidden; border: 2px solid #ffcc00;">
                 <div style="width: 80%; height: 100%; background: #ffcc00;"></div>
@@ -132,7 +130,7 @@
     <div id="ai-app" class="app-screen hidden" style="background: #2d3436;">
         <div class="app-header">
             <h3>Dev AI 비서</h3>
-            <button class="home-btn" onclick="closeApp('ai-app')"><i class="fas fa-home"></i></button>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
         </div>
         <div style="display: flex; flex-grow: 1; margin-top: 20px; gap: 20px;">
             <div style="width: 250px; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px;">
@@ -161,7 +159,7 @@
     <div id="stats-app" class="app-screen hidden">
         <div class="app-header">
             <h3 id="stats-title">통계 (1/6)</h3>
-            <button class="home-btn" onclick="closeApp('stats-app')"><i class="fas fa-home"></i></button>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
         </div>
         <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
             <h2 id="stats-content-title">업무 시간</h2>
@@ -185,7 +183,7 @@
     <div id="scheduler-app" class="app-screen hidden">
         <div class="app-header">
             <h3>일정 관리</h3>
-            <button class="home-btn" onclick="closeApp('scheduler-app')"><i class="fas fa-home"></i></button>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
         </div>
         <div class="calendar-container" style="padding: 20px;">
             <div class="calendar-header-nav">
@@ -197,6 +195,21 @@
             </div>
             <div class="calendar-grid" id="calendar-grid">
                 <!-- JS Generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stretch App -->
+    <div id="stretch-app" class="app-screen hidden">
+        <div class="app-header">
+            <h3>스트레칭 가이드</h3>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
+            <div style="font-size: 5rem; color: #ff7675;"><i class="fas fa-running"></i></div>
+            <p style="margin-top: 20px; font-size: 1.2rem;">잠시 휴식하며 몸을 풀어보세요!</p>
+            <div style="margin-top: 30px;">
+                <button class="soft-btn" onclick="timerStartStrength()">스트레칭 시작</button>
             </div>
         </div>
     </div>

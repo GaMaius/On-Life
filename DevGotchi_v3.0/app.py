@@ -80,10 +80,21 @@ def get_gamestate():
         "level": gm.level,
         "happiness": gm.happiness,
         "quests": [q.to_dict() for q in gm.quests],
+        "available_quests": [q.to_dict() for q in gm.available_quests],
         "work_mode": is_work_mode,
         "status": current_status,
-        "weather": get_weather()
+        "weather": get_weather(),
+        "posture_score": vision.last_posture if hasattr(vision, 'last_posture') else 0,
+        "bad_posture_duration": gm.bad_posture_duration
     })
+
+@app.route('/api/quest/accept', methods=['POST'])
+def accept_quest():
+    data = request.json
+    idx = data.get('index', -1)
+    if gm.accept_quest(idx):
+        return jsonify({"success": True, "message": "Quest accepted"})
+    return jsonify({"success": False, "message": "Could not accept quest"})
 
 # AI Chat Endpoint
 @app.route('/api/chat', methods=['POST'])
