@@ -71,14 +71,20 @@ def speak(text):
         console.print(f"[red]음성 에러: {e}[/red]")
 
 def listen(r, source, mode="WAKE"):
-    timeout = None if mode == "WAKE" else 5
-    phrase_limit = 5 if mode == "WAKE" else 8
+    # WAKE 모드: 웨이크 워드 인식을 위한 설정
+    # CHAT 모드: 실제 대화 인식을 위한 설정
+    if mode == "WAKE":
+        timeout = 3  # 3초 타임아웃 (None이면 무한대기로 멈출 수 있음)
+        phrase_limit = 3  # 웨이크 워드는 짧으므로 3초면 충분
+    else:
+        timeout = 7  # 대화 모드에서는 더 긴 타임아웃
+        phrase_limit = 10  # 더 긴 문장 인식 가능
+    
     try:
-        # Loop 내에서 매번 ambient_noise를 조정하면 인식이 늦어질 수 있으므로 제거하거나 필요시에만 호출
-        # r.adjust_for_ambient_noise(source, duration=0.5) 
-        
         audio = r.listen(source, timeout=timeout, phrase_time_limit=phrase_limit)
         text = r.recognize_google(audio, language="ko-KR")
+        if mode == "WAKE" and text:
+            console.print(f"[dim yellow]   [DEBUG] 인식된 텍스트: '{text}'[/dim yellow]")
         return text
     except sr.WaitTimeoutError:
         return ""
@@ -89,7 +95,7 @@ def listen(r, source, mode="WAKE"):
         console.print(f"[red]Google Speech Recognition 에러: {e}[/red]")
         return ""
     except Exception as e:
-        if mode != "WAKE": # WAKE 모드일 때는 너무 잦은 출력을 피함
+        if mode != "WAKE":  # WAKE 모드일 때는 너무 잦은 출력을 피함
             console.print(f"[dim]인식 오류: {e}[/dim]")
         return ""
 
@@ -503,8 +509,11 @@ def call_minimax_standard(user_input, history):
 
 def main(on_message=None):
     r = sr.Recognizer()
-    r.energy_threshold = 400
+    # 음성 인식 민감도 향상: 에너지 임계값을 낮춰서 더 작은 소리도 인식
+    r.energy_threshold = 250  # 기존 400에서 250으로 낮춤
     r.dynamic_energy_threshold = True
+    r.dynamic_energy_adjustment_damping = 0.15  # 더 빠른 적응
+    r.dynamic_energy_ratio = 1.3  # 배경 소음 대비 음성 인식 비율
 
     console.print(Panel("[bold cyan]👾 데브고치(MiniMax M2.1) 시스템 가동[/bold cyan]", 
                         subtitle="Standard API Mode (Timer/Weather Enabled)", border_style="cyan"))
@@ -515,14 +524,23 @@ def main(on_message=None):
         with sr.Microphone() as source:
             # 시작 시 한 번 소음 조정
             console.print("[cyan]🎤 배경 소음 측정 중...[/cyan]")
-            r.adjust_for_ambient_noise(source, duration=1)
+            r.adjust_for_ambient_noise(source, duration=1.5)  # 측정 시간 증가
             console.print(f"[cyan]✓ 측정 완료 (에너지 임계값: {int(r.energy_threshold)})[/cyan]")
             
             while True:
                 console.print("[dim white]● 대기 중...[/dim white]", end="\r")
                 wake_text = listen(r, source, mode="WAKE")
                 
-                if any(word in wake_text for word in ["데브", "고치", "데이브", "대부"]):
+                # 웨이크 워드 변형 추가: 발음이 비슷하게 인식될 수 있는 다양한 단어들
+                wake_words = [
+                    "데브", "고치", "데이브", "대부",  # 기존
+                    "데브고치", "데부", "데프", "대브", "데뷔", "대비", "대불",  # 발음 변형
+                    "개발", "고치야", "데브야", "데이비", "헤이", "야",  # 추가 변형
+                    "dev", "고찌", "대부님", "대비야", "더브", "뎁"  # 추가 변형
+                ]
+                wake_text_lower = wake_text.lower()
+                
+                if any(word in wake_text_lower for word in wake_words):
                     console.print("\n")
                     console.print(Panel(
                         Align.center("[bold yellow]✨ CALL SIGN DETECTED ✨[/bold yellow]\n[white]인식 성공: 데브고치가 대기 중입니다[/white]"),
