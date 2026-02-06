@@ -122,10 +122,12 @@ def add_voice_message(text, sender):
             "session_id": current_session_id
         })
         dm.save_chat_history(global_chat_history, current_session_id, pinned_sessions)
+current_status = "업무중" 
+is_work_mode = False 
 
 def get_weather():
     api_key = os.getenv("WEATHER_API_KEY")
-    lat, lon = 37.5665, 126.9780 # Seoul (Hardcoded or Config)
+    lat, lon = 35.0471, 127.9915 
     
     if not api_key:
         return {"temp": 0, "condition": "No Key", "comparison": 0}
@@ -137,6 +139,7 @@ def get_weather():
         if res.status_code == 200:
             data = res.json()
             return {
+            return {
                 "temp": int(data['main']['temp']),
                 "condition": data['weather'][0]['description'],
                 "min": int(data['main']['temp_min']),
@@ -144,6 +147,7 @@ def get_weather():
                 "feels_like": int(data['main']['feels_like'])
             }
     except Exception as e:
+        print(f"Weather Error: {e}")
         print(f"Weather Error: {e}")
     
     return {"temp": 0, "condition": "Error", "comparison": 0}
@@ -155,7 +159,10 @@ def home():
 @app.route('/api/status/update', methods=['POST'])
 def update_status_btn():
     global current_status
+    global current_status
     data = request.json
+    current_status = data.get('status', current_status)
+    return jsonify({"status": current_status})
     current_status = data.get('status', current_status)
     return jsonify({"status": current_status})
 
@@ -528,6 +535,9 @@ def chat():
     # -----------------------------
     # -----------------------------
 
+    user_msg = data.get('message')
+    history = data.get('history', []) 
+    
     result = {}
     event = threading.Event()
     
@@ -558,9 +568,9 @@ def chat():
         
     return jsonify(result)
 
-# Vision Streaming & Logic Loop
 def vision_loop():
     global video_capture, vision
+    global video_capture
     cap = cv2.VideoCapture(0)
     
     while True:
@@ -573,6 +583,9 @@ def vision_loop():
             score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
             is_bad = score > 20
             gm.update(is_bad, drowsy, True) 
+        score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
+        is_bad = score > 20
+        gm.update(is_bad, drowsy, True) 
         
         with vision_lock:
             global latest_frame
@@ -611,3 +624,6 @@ if __name__ == '__main__':
     print("[SYSTEM] 음성 인식(MiniMax) 스레드 시작됨")
     
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    t = threading.Thread(target=vision_loop, daemon=True)
+    t.start()
+    app.run(debug=True, port=5000, use_reloader=False)
