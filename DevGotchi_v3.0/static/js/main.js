@@ -1123,11 +1123,11 @@ window.changeStretchVideo = (duration) => {
     const videoIframe = document.getElementById('stretch-video');
     if (!videoIframe) return;
 
-    // 유튜브 스트레칭 영상 URL (실제 영상으로 교체 가능)
+    // 유튜브 스트레칭 영상 URL (embed 형식으로 변환)
     const videos = {
-        '3min': 'https://youtu.be/szCANyo6VTg?si=GSAKzy3UHGmZFsY2',  // 3분 스트레칭 예시
-        '5min': 'https://www.youtube.com/watch?v=jo0I3xTGaVU&pp=ygUY7ZqM7IKsIDXrtoQg7Iqk7Yq466CI7Lmt',  // 5분 스트레칭 예시
-        '10min': 'https://www.youtube.com/watch?v=mUnSpfItRf0&pp=ygUZ7ZqM7IKsIDEw67aEIOyKpO2KuOugiOy5rQ%3D%3D'  // 10분 스트레칭 예시
+        '3min': 'https://www.youtube.com/embed/szCANyo6VTg',  // 3분 스트레칭
+        '5min': 'https://www.youtube.com/embed/jo0I3xTGaVU',  // 5분 스트레칭
+        '10min': 'https://www.youtube.com/embed/mUnSpfItRf0'  // 10분 스트레칭
     };
 
     const url = videos[duration] || videos['3min'];
