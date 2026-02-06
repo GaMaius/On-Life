@@ -245,6 +245,33 @@ class ActivityLogger:
         self._save_data()
         print(f"[ActivityLog] 퀘스트 실패: {quest_name} ({reason})")
     
+    # ========== 타이머 로깅 ==========
+    def log_timer_event(self, event_type, duration_seconds=0):
+        """타이머 이벤트 기록 (start, complete, cancel)"""
+        now = datetime.now()
+        time_str = now.strftime("%H:%M:%S")
+        
+        event = {
+            "type": event_type,  # 'start', 'complete', 'cancel'
+            "time": time_str,
+            "duration_seconds": duration_seconds
+        }
+        
+        if "timer_usage" not in self.today_data:
+            self.today_data["timer_usage"] = []
+            
+        self.today_data["timer_usage"].append(event)
+        
+        # 세션 이벤트
+        self.session_data["events"].append({
+            "type": "timer_event",
+            "time": time_str,
+            "data": event
+        })
+        
+        self._save_data()
+        print(f"[ActivityLog] 타이머 이벤트: {event_type} ({duration_seconds}s)")
+    
     # ========== HP 변화 로깅 ==========
     def log_hp_change(self, hp_before, hp_after, reason, amount):
         """HP 변화 기록"""

@@ -71,6 +71,12 @@ class GameManager:
         
         # Quest Selection System
         self.available_quests = [] 
+        
+        # Activity Logger (Injected)
+        self.activity_logger = None
+
+    def set_activity_logger(self, logger):
+        self.activity_logger = logger 
 
     def reset_runtime_state(self):
         self.bad_posture_duration = 0
@@ -159,15 +165,17 @@ class GameManager:
                 # Instant penalty (after 3s)
                 if self.bad_posture_duration > 3:
                     damage = Config.HP_PENALTY_POSTURE_INSTANT * dt
-                    self.hp -= damage
+                    self.change_hp(-damage, "inst_posture_penalty")
                     
                 # Additional penalty: 3min+
                 if self.bad_posture_duration > 180:
-                    self.hp -= (Config.HP_PENALTY_POSTURE_3MIN / 60) * dt
+                    damage = (Config.HP_PENALTY_POSTURE_3MIN / 60) * dt
+                    self.change_hp(-damage, "long_posture_penalty")
                     
                 # Additional penalty: 7min+
                 if self.bad_posture_duration > 420:
-                    self.hp -= (Config.HP_PENALTY_POSTURE_7MIN / 60) * dt
+                    damage = (Config.HP_PENALTY_POSTURE_7MIN / 60) * dt
+                    self.change_hp(-damage, "ex_long_posture_penalty")
                     
             else:
                 # 1.2 Good Posture (Debounce Reset)
@@ -179,7 +187,7 @@ class GameManager:
                 
                 # Posture Recovery (10 min good posture)
                 if self.good_posture_duration >= 600: # 10 min
-                    self.gain_hp(Config.HP_HEAL_POSTURE_10MIN)
+                    self.change_hp(Config.HP_HEAL_POSTURE_10MIN, "good_posture_reward")
                     self.good_posture_duration = 0 
 
             # 1.2 Idle / MolCom (5 min no input/focus)
@@ -189,13 +197,13 @@ class GameManager:
                 self.idle_duration = 0
                 
             if self.idle_duration >= 300: # 5 min
-                self.hp -= Config.HP_PENALTY_IDLE_5MIN
+                self.change_hp(-Config.HP_PENALTY_IDLE_5MIN, "idle_penalty")
                 self.idle_duration = 0 
 
             # 1.3 Overwork (90 min continuous)
             self.continuous_work_duration += dt
             if self.continuous_work_duration > 5400: # 90 min
-                self.hp -= Config.HP_PENALTY_OVERWORK_90MIN
+                self.change_hp(-Config.HP_PENALTY_OVERWORK_90MIN, "overwork_penalty")
                 self.continuous_work_duration = 0 
         else:
             # In protected mode, reset bad counters
@@ -208,6 +216,8 @@ class GameManager:
             self.level = max(1, self.level - 1)
             self.hp = Config.MAX_HP / 2
             self.xp = 0 
+            if self.activity_logger:
+                self.activity_logger.log_hp_change(0, self.hp, "level_down_penalty", self.hp) 
         
         # Generator quest options if needed
         capacity = self.get_quest_capacity()
@@ -240,11 +250,15 @@ class GameManager:
         self.check_level_up()
         self.hp = max(0, min(Config.MAX_HP, self.hp))
 
+        if  len(self.available_quests) == 0:
+            self.generate_quest_options()
+            
     def get_quest_capacity(self):
         return 1  # 한 번에 1개 퀘스트만 진행 가능
 
     def generate_quest_options(self):
         """Generate 3 random quest options (1 Focus, 1 Posture, 1 Recovery)"""
+        # 퀘스트 생성 로직
         difficulty_mod = self.quest_streak 
         is_hard = difficulty_mod >= 2
         is_easy = difficulty_mod < -1
@@ -286,6 +300,8 @@ class GameManager:
             self.quests.append(selected_quest)
             self.available_quests.pop(quest_index)
             self.log_activity('accept', selected_quest.name)  # 활동 기록
+            if self.activity_logger:
+                self.activity_logger.log_quest_accepted(selected_quest.name, selected_quest.type, selected_quest.target_duration, selected_quest.reward_xp)
             self.save_game()
             return True
         return False
@@ -295,14 +311,24 @@ class GameManager:
         self.gain_xp(quest.reward_xp)
         self.quest_streak += 1
         self.log_activity('complete', quest.name)  # 활동 기록
+        if self.activity_logger:
+            self.activity_logger.log_quest_completed(quest.name, quest.type, quest.target_duration, quest.reward_xp)
         
         if quest.type == 'focus':
-            self.gain_hp(Config.HP_HEAL_FOCUS_25MIN)
+            self.change_hp(Config.HP_HEAL_FOCUS_25MIN, "quest_reward")
         elif quest.type == 'posture':
-            self.gain_hp(Config.HP_HEAL_POSTURE_10MIN)
+            self.change_hp(Config.HP_HEAL_POSTURE_10MIN, "quest_reward")
         elif quest.type == 'rest':
-            self.gain_hp(Config.HP_HEAL_REST_5MIN)
+            self.change_hp(Config.HP_HEAL_REST_5MIN, "quest_reward")
             self.continuous_work_duration = 0 
+            
+        # 퀘스트 완료 후 처리: 목록에서 제거하고 선택지 리셋
+        if quest in self.quests:
+            self.quests.remove(quest)
+        
+        # 새로운 퀘스트 선택지 즉시 생성
+        self.available_quests = []
+        self.generate_quest_options()
             
         self.save_game()
 
@@ -312,13 +338,31 @@ class GameManager:
         self.xp += amount
         self.check_level_up()
 
-    def gain_hp(self, amount):
+    # Centralized HP Change logic
+    def change_hp(self, amount, reason="unknown"):
+        before = self.hp
         self.hp += amount
-        self.hp = min(Config.MAX_HP, self.hp)
+        self.hp = max(0, min(Config.MAX_HP, self.hp))
+        after = self.hp
+        
+        if abs(after - before) > 0.1 and self.activity_logger:
+            # 잦은 변동(소수점 단위) 로깅은 activity_logger 내부적으로 처리하거나 여기서 필터링할 수 있음
+            # 일단 모든 변화를 넘기지만, activity_logger에서 너무 많은 로그를 찍지 않도록 주의
+            self.activity_logger.log_hp_change(before, after, reason, after - before)
+
+    def gain_hp(self, amount):
+        self.change_hp(amount, "heal")
 
     def check_level_up(self):
-        next_xp = Config.MAX_EXP_TABLE.get(self.level + 1)
-        if next_xp and self.xp >= next_xp:
+        # 기본 5레벨 테이블 사용, 그 이상은 레벨당 10000씩 증가하는 것으로 가정
+        base_max_xp = Config.MAX_EXP_TABLE.get(self.level + 1)
+        if not base_max_xp:
+             # 테이블에 없는 고레벨: 50000 + (level-5)*10000 
+             base_max_xp = 50000 + (self.level - 5) * 10000
+             
+        if self.xp >= base_max_xp:
+            self.xp -= base_max_xp  # 레벨업 후 초과분만 남기고 리셋
             self.level += 1
-            self.check_level_up()
+            print(f"[Game] Level Up! -> Lv.{self.level} (XP: {self.xp})")
+            self.check_level_up() # 재귀 호출로 연속 레벨업 처리
             self.save_game()

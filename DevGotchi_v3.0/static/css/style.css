@@ -305,6 +305,26 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-height: 50vh;
+    /* 화면 높이의 50%로 제한 */
+    overflow-y: auto;
+    /* 내용이 넘치면 스크롤 */
+    padding-right: 5px;
+    /* 스크롤바 여백 */
+}
+
+/* 스크롤바 스타일링 */
+.quest-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.quest-area::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.quest-area::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .hp-exp-container {

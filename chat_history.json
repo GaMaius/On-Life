@@ -61,30 +61,18 @@
       "session_id": 1
     },
     {
-      "text": "오늘 저녁 5시에 저녁 식사 일정 추가해 줘",
+      "text": "어 안녕",
       "type": "user",
-      "time": "10:44",
-      "session_id": 2
+      "time": "12:58",
+      "session_id": 3
     },
     {
-      "text": "네, 오늘 저녁 5시에 저녁 식사 일정 등록해 드릴게요! 🍽️",
+      "text": "안녕하세요! 저는 데브고치예요 😊\n\n스마트 미러의 다양한 기능을 도와드릴 수 있어요. 날씨 확인, 타이머, 일정 관리 등을 말씀만 해주시면 됩니다!\n\n무엇을 도와드릴까요?",
       "type": "ai",
-      "time": "10:44",
-      "session_id": 2
-    },
-    {
-      "text": "오늘 저녁 5시에 저녁 식사 일정 삭제해 줘",
-      "type": "user",
-      "time": "10:48",
-      "session_id": 2
-    },
-    {
-      "text": "네, 오늘 저녁 5시의 저녁 식사 일정 삭제할게요! 🗑️",
-      "type": "ai",
-      "time": "10:48",
-      "session_id": 2
+      "time": "12:58",
+      "session_id": 3
     }
   ],
-  "current_session_id": 2,
+  "current_session_id": 3,
   "pinned_sessions": []
 }

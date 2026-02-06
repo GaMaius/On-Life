@@ -1,7 +1,7 @@
 {
   "date": "2026-02-06",
   "turtle_neck": {
-    "count": 45,
+    "count": 87,
     "events": [
       {
         "time": "11:41:01",
@@ -182,15 +182,183 @@
       {
         "time": "12:14:14",
         "duration_sec": null
+      },
+      {
+        "time": "12:15:33",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:39",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:42",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:48",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:52",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:57",
+        "duration_sec": null
+      },
+      {
+        "time": "12:16:00",
+        "duration_sec": null
+      },
+      {
+        "time": "12:22:35",
+        "duration_sec": null
+      },
+      {
+        "time": "12:22:51",
+        "duration_sec": null
+      },
+      {
+        "time": "12:22:55",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:00",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:04",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:08",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:25",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:46",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:02",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:21",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:02",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:44",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:50",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:34",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:05",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:16",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:20",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:23",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:41",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:44",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:12",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:07",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:16",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:19",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:22",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:30",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:59",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:10",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:14",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:59",
+        "duration_sec": null
+      },
+      {
+        "time": "12:59:11",
+        "duration_sec": null
       }
     ],
     "hourly_freq": {
       "11": 42,
-      "12": 3
+      "12": 45
     }
   },
   "eye_closed": {
-    "count": 62,
+    "count": 144,
     "events": [
       {
         "time": "11:00:00",
@@ -439,22 +607,350 @@
       {
         "time": "12:13:08",
         "duration_sec": null
+      },
+      {
+        "time": "12:14:17",
+        "duration_sec": null
+      },
+      {
+        "time": "12:15:40",
+        "duration_sec": null
+      },
+      {
+        "time": "12:22:38",
+        "duration_sec": null
+      },
+      {
+        "time": "12:22:58",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:09",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:28",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:36",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:43",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:23:54",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:08",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:12",
+        "duration_sec": null
+      },
+      {
+        "time": "12:24:16",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:06",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:11",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:14",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:28",
+        "duration_sec": null
+      },
+      {
+        "time": "12:37:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:38:08",
+        "duration_sec": null
+      },
+      {
+        "time": "12:38:21",
+        "duration_sec": null
+      },
+      {
+        "time": "12:38:27",
+        "duration_sec": null
+      },
+      {
+        "time": "12:38:36",
+        "duration_sec": null
+      },
+      {
+        "time": "12:38:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:01",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:05",
+        "duration_sec": null
+      },
+      {
+        "time": "12:39:54",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:14",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:17",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:21",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:33",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:44",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:48",
+        "duration_sec": null
+      },
+      {
+        "time": "12:40:57",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:07",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:43",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:55",
+        "duration_sec": null
+      },
+      {
+        "time": "12:41:58",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:03",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:10",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:15",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:44",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:49",
+        "duration_sec": null
+      },
+      {
+        "time": "12:42:54",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:08",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:17",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:22",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:32",
+        "duration_sec": null
+      },
+      {
+        "time": "12:43:42",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:04",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:10",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:25",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:39",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:50",
+        "duration_sec": null
+      },
+      {
+        "time": "12:44:54",
+        "duration_sec": null
+      },
+      {
+        "time": "12:45:03",
+        "duration_sec": null
+      },
+      {
+        "time": "12:45:12",
+        "duration_sec": null
+      },
+      {
+        "time": "12:45:20",
+        "duration_sec": null
+      },
+      {
+        "time": "12:45:34",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:10",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:15",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:19",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:22",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:30",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:35",
+        "duration_sec": null
+      },
+      {
+        "time": "12:56:52",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:05",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:10",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:20",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:28",
+        "duration_sec": null
+      },
+      {
+        "time": "12:57:43",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:15",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:23",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:26",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:30",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:38",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:46",
+        "duration_sec": null
+      },
+      {
+        "time": "12:58:51",
+        "duration_sec": null
+      },
+      {
+        "time": "12:59:05",
+        "duration_sec": null
+      },
+      {
+        "time": "12:59:18",
+        "duration_sec": null
       }
     ],
     "hourly_freq": {
       "11": 50,
-      "12": 12
+      "12": 94
     }
   },
   "summary": {
-    "total_detections": 107,
-    "turtle_neck_count": 45,
-    "eye_closed_count": 62,
-    "peak_hour": "11",
-    "avg_per_hour": 53.5,
+    "total_detections": 231,
+    "turtle_neck_count": 87,
+    "eye_closed_count": 144,
+    "peak_hour": "12",
+    "avg_per_hour": 115.5,
     "hourly_distribution": {
       "11": 92,
-      "12": 15
+      "12": 139
     }
   }
 }

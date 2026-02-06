@@ -269,6 +269,7 @@ def accept_quest():
 # Singletons for logging
 posture_log_instance = PostureLogger()
 activity_log_instance = ActivityLogger()
+gm.set_activity_logger(activity_log_instance)
 
 @app.route('/api/posture/stats')
 def posture_stats():
@@ -650,11 +651,43 @@ def chat():
         
     return jsonify(result)
 
+@app.route('/api/activity/stats')
+def activity_stats():
+    """오늘의 활동 통계"""
+    stats = activity_log_instance.get_today_stats()
+    return jsonify(stats)
+
+@app.route('/api/activity/insights')
+def activity_insights():
+    """활동 인사이트"""
+    insights = activity_log_instance.get_today_insights()
+    return jsonify(insights)
+
+@app.route('/api/activity/log_timer', methods=['POST'])
+def log_timer():
+    """타이머 이벤트 로깅"""
+    data = request.json
+    event_type = data.get('type')
+    duration = data.get('duration', 0)
+    activity_log_instance.log_timer_event(event_type, duration)
+    return jsonify({"status": "success"})
+
+@app.route('/api/activity/full_log')
+def activity_full_log():
+    """오늘의 전체 활동 로그 (상세)"""
+    # Force save/update before reading to get latest in-memory events
+    activity_log_instance._save_data() 
+    return jsonify(activity_log_instance.today_data)
+
+@app.route('/stats')
+def stats_page():
+    return render_template('stats.html')
+
 def vision_loop():
     global video_capture, vision, current_posture_score, current_is_eye_closed
     cap = cv2.VideoCapture(0)
     posture_log = PostureLogger()
-    activity_log = ActivityLogger()  # 통합 로거
+    activity_log = activity_log_instance  # 전역 인스턴스 사용 (데이터 공유)
     
     # 중복 로깅 방지용 쿨다운
     last_turtle_log = 0

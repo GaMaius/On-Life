@@ -498,11 +498,85 @@ window.timerStart = (mode) => {
         state.targetTime = now + (timerSeconds * 1000);
     }
     saveTimerState(state);
+
+    // Log Timer Start
+    logTimerEvent('start', timerSeconds);
+
     runTimerLoop();
 };
 
+function logTimerEvent(type, duration) {
+    fetch('/api/activity/log_timer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: type, duration: duration })
+    }).catch(console.error);
+}
+
+window.timerPause = () => {
+    const state = getTimerState();
+    if (!state) return;
+
+    if (state.paused) {
+        // Resume
+        const now = Date.now();
+        state.paused = false;
+
+        if (state.mode === 'down') {
+            // Adjust target time by adding the duration of the pause
+            const pauseDuration = now - state.pausedAt;
+            state.targetTime += pauseDuration;
+        } else {
+            // Adjust start time to ignore the pause duration
+            const pauseDuration = now - state.pausedAt;
+            state.startAt += pauseDuration;
+        }
+        delete state.pausedAt;
+        timerRunning = true;
+        saveTimerState(state);
+        logTimerEvent('resume', timerSeconds);
+        runTimerLoop();
+        updateTimerBtn(false);
+    } else {
+        // Pause
+        state.paused = true;
+        state.pausedAt = Date.now();
+        timerRunning = false;
+        clearInterval(timerInterval);
+        saveTimerState(state);
+        logTimerEvent('pause', timerSeconds);
+        updateTimerBtn(true);
+    }
+    updateTimerDisplay(); // Refresh display
+};
+
+function updateTimerBtn(isPaused) {
+    const btn = document.getElementById('timer-pause-btn');
+    if (btn) {
+        if (isPaused) {
+            btn.innerHTML = '<i class="fas fa-play"></i> 계속';
+            btn.style.color = '#1e90ff';
+        } else {
+            btn.innerHTML = '<i class="fas fa-pause"></i> 일시정지';
+            btn.style.color = '#ff9f40';
+        }
+    }
+}
+
 function runTimerLoop() {
     if (timerInterval) clearInterval(timerInterval);
+
+    // Check pause state at start
+    const state = getTimerState();
+    if (state && state.paused) {
+        timerRunning = false;
+        updateTimerBtn(true);
+        updateTimerDisplay(); // Show current paused time
+        return;
+    } else {
+        updateTimerBtn(false);
+    }
+
     timerInterval = setInterval(() => {
         const state = getTimerState();
         if (!state) {
@@ -510,10 +584,20 @@ function runTimerLoop() {
             timerRunning = false;
             return;
         }
+
+        if (state.paused) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            return;
+        }
+
         const now = Date.now();
         if (state.mode === 'down') {
             const remaining = Math.ceil((state.targetTime - now) / 1000);
             if (remaining <= 0) {
+                // Log Timer Complete
+                logTimerEvent('complete', state.initialSeconds);
+
                 timerSeconds = 0;
                 timerRunning = false;
                 clearInterval(timerInterval);
@@ -524,6 +608,7 @@ function runTimerLoop() {
             }
             timerSeconds = remaining;
         } else {
+            // Count up
             const elapsed = Math.floor((now - state.startAt) / 1000);
             timerSeconds = state.initialSeconds + elapsed;
         }
@@ -1024,8 +1109,28 @@ window.openApp = (appId) => {
         } else if (appId === 'ai') {
             // Init chat history
             if (typeof loadChatHistory === 'function') loadChatHistory();
+        } else if (appId === 'stretch') {
+            // 기본 영상 로드
+            changeStretchVideo('3min');
         }
     } else {
         alert("기능 준비중: " + appId);
     }
+};
+
+// 스트레칭 영상 변경 함수
+window.changeStretchVideo = (duration) => {
+    const videoIframe = document.getElementById('stretch-video');
+    if (!videoIframe) return;
+
+    // 유튜브 스트레칭 영상 URL (실제 영상으로 교체 가능)
+    const videos = {
+        '3min': 'https://youtu.be/szCANyo6VTg?si=GSAKzy3UHGmZFsY2',  // 3분 스트레칭 예시
+        '5min': 'https://www.youtube.com/watch?v=jo0I3xTGaVU&pp=ygUY7ZqM7IKsIDXrtoQg7Iqk7Yq466CI7Lmt',  // 5분 스트레칭 예시
+        '10min': 'https://www.youtube.com/watch?v=mUnSpfItRf0&pp=ygUZ7ZqM7IKsIDEw67aEIOyKpO2KuOugiOy5rQ%3D%3D'  // 10분 스트레칭 예시
+    };
+
+    const url = videos[duration] || videos['3min'];
+    videoIframe.src = url + '?autoplay=1';
+    console.log(`[Stretch] 영상 변경: ${duration}`);
 };
