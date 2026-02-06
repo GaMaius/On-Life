@@ -122,17 +122,19 @@ def add_voice_message(text, sender):
             "session_id": current_session_id
         })
         dm.save_chat_history(global_chat_history, current_session_id, pinned_sessions)
-current_status = "업무중" 
-is_work_mode = False 
+
+# 초기 상태: 퇴근
+current_status = "퇴근" 
+# is_work_mode는 current_status에 따라 동적으로 결정됨
 
 def get_weather():
     """weather_test.py의 정확한 구현 (API 키는 .env에서 로드)"""
     # .env에서 API 키 로드
-    api_key = "f83c5f76153571e5cbd97d300cfdeea3"
+    api_key = os.getenv("WEATHER_API_KEY")
     
     # 서울 시청 좌표 (weather_test.py와 동일)
-    lat = 37.5665
-    lon = 126.9780
+    lat = float(os.getenv("WEATHER_LAT", "37.5665"))
+    lon = float(os.getenv("WEATHER_LON", "126.9780"))
     
     if not api_key:
         print("[Weather] No API Key found in .env (WEATHER_API_KEY)")
@@ -193,13 +195,8 @@ def update_status_btn():
     data = request.json
     current_status = data.get('status', current_status)
     return jsonify({"status": current_status})
-
-@app.route('/api/mode/toggle', methods=['POST'])
-def toggle_mode():
-    global is_work_mode
-    data = request.json
-    is_work_mode = data.get('work_mode', False)
-    return jsonify({"work_mode": is_work_mode})
+    
+# toggle_mode endpoint removed (logic unified)
 
 @app.route('/api/weather/update', methods=['POST'])
 def update_weather():
@@ -234,12 +231,26 @@ def get_gamestate():
         "level": gm.level,
         "happiness": gm.happiness,
         "quests": [q.to_dict() for q in gm.quests],
-        "work_mode": is_work_mode,
+        "available_quests": [q.to_dict() for q in gm.available_quests],
+        "work_mode": (current_status == "업무중"),
         "status": current_status,
         "weather": weather_info,
         "schedules": global_schedules,
         "pinned_sessions": list(pinned_sessions)
     })
+
+@app.route('/api/quest/accept', methods=['POST'])
+def accept_quest():
+    """퀘스트 수락 API"""
+    data = request.json
+    quest_index = data.get('index')
+    
+    if quest_index is not None:
+        accepted = gm.accept_quest(quest_index)
+        if accepted:
+            return jsonify({"status": "success", "message": "퀘스트 수락됨"})
+    
+    return jsonify({"status": "fail"}), 400
 
 @app.route('/api/voice_messages')
 def get_voice_messages():

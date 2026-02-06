@@ -28,6 +28,46 @@
             </div>
         </div>
 
+        <!-- Work Mode: HP/EXP/퀘스트 (시간/날씨 대신 표시) -->
+        <div id="work-info-section" class="hidden">
+            <!-- 자세 감지: 중앙 위쪽 -->
+            <div class="posture-status-center" id="posture-indicator">
+                <span class="status-dot">●</span>
+                <span id="posture-text">바른 자세 유지중</span>
+            </div>
+
+            <div class="work-main-row">
+                <!-- 왼쪽: HP/EXP -->
+                <div class="hp-exp-container">
+                    <div class="level-display">Lv. <span id="level-val">0</span></div>
+
+                    <div class="bar-label">
+                        <span>HP</span> <span id="hp-val">100/100</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
+                    </div>
+
+                    <div class="bar-label">
+                        <span>EXP</span> <span id="exp-val">0/100</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill exp-fill" id="exp-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- 오른쪽: 퀘스트 -->
+                <div class="quest-area">
+                    <div id="active-quest-section" class="quest-section">
+                        <div id="active-quest-list" class="quest-list"></div>
+                    </div>
+                    <div id="available-quest-section" class="quest-section">
+                        <div id="available-quest-list" class="quest-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="home-dashboard" style="margin-top: 20px; text-align: center; min-height: 50px;">
         </div>
 
@@ -46,35 +86,6 @@
 
         <div class="status-bar">
             <button id="status-btn">업무중</button>
-        </div>
-    </div>
-
-    <div id="work-overlay" class="hidden">
-        <div class="hp-exp-container">
-            <div class="bar-label">
-                <span>HP</span> <span id="hp-val">100/100</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
-            </div>
-
-            <div class="bar-label">
-                <span>EXP</span> <span id="exp-val">2000/2000</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-fill exp-fill" id="exp-bar" style="width: 50%;"></div>
-            </div>
-        </div>
-
-        <div class="posture-status" id="posture-indicator">
-            <span class="status-dot">●</span>
-            <span id="posture-text">바른 자세 유지중</span>
-        </div>
-
-        <div class="quest-panel">
-            <h4>🔥 퀘스트</h4>
-            <div id="quest-list">
-            </div>
         </div>
     </div>
 
@@ -200,17 +211,16 @@
             <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
         </div>
         <div class="flex-center" style="flex-grow: 1; flex-direction: column; padding: 20px;">
-            <div id="video-player-container" style="width: 100%; max-width: 640px; aspect-ratio: 16/9; background: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
-                <iframe id="stretch-video" width="100%" height="100%" 
-                    src="about:blank" 
-                    title="YouTube video player" frameborder="0" 
-                    style="background: black;"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            <div id="video-player-container"
+                style="width: 100%; max-width: 640px; aspect-ratio: 16/9; background: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+                <iframe id="stretch-video" width="100%" height="100%" src="about:blank" title="YouTube video player"
+                    frameborder="0" style="background: black;"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
             </div>
 
             <p style="margin-top: 20px; font-size: 1.1rem; color: #eee;">현재 컨디션에 맞는 스트레칭을 선택하세요!</p>
-            
+
             <div class="controls" style="display: flex; gap: 15px; margin-top: 10px;">
                 <button class="soft-btn" onclick="changeStretchVideo('3min')">3분 스트레칭</button>
                 <button class="soft-btn" onclick="changeStretchVideo('5min')">5분 스트레칭</button>

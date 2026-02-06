@@ -51,8 +51,24 @@ document.addEventListener('DOMContentLoaded', () => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    // 핵심: 화면 새로고침 없이 UI 업데이트 함수 호출
+                    // 즉시 UI 업데이트
                     updateStatusUI(data.status);
+
+                    // 즉시 work mode UI 토글
+                    const isWorkMode = data.status === "업무중";
+                    const topBar = document.querySelector('.top-bar');
+                    const workInfo = document.getElementById('work-info-section');
+
+                    if (isWorkMode) {
+                        if (topBar) topBar.classList.add('hidden');
+                        if (workInfo) workInfo.classList.remove('hidden');
+                    } else {
+                        if (topBar) topBar.classList.remove('hidden');
+                        if (workInfo) workInfo.classList.add('hidden');
+                    }
+
+                    // 즉시 gamestate 가져와 퀘스트 등 업데이트
+                    fetchStatus();
                     console.log("상태 변경 완료:", data.status);
                 })
                 .catch(err => console.error("상태 업데이트 실패:", err));
@@ -129,14 +145,26 @@ async function fetchStatus() {
             if (feelsEl) feelsEl.innerText = `체감온도 ${data.weather.feels_like}°C`;
         }
 
-        // 2. HP / EXP / Level 업데이트
+        // Update HP/EXP/Level UI
         const hpVal = document.getElementById('hp-val');
-        if (hpVal) hpVal.innerText = `${Math.floor(data.hp)}/${data.max_hp}`;
         const hpBar = document.getElementById('hp-bar');
-        if (hpBar) hpBar.style.width = `${(data.hp / data.max_hp) * 100}%`;
-
         const expVal = document.getElementById('exp-val');
-        if (expVal) expVal.innerText = `${Math.floor(data.xp)} XP`;
+        const expBar = document.getElementById('exp-bar');
+        const levelVal = document.getElementById('level-val');
+
+        if (hpVal && hpBar) {
+            const maxHp = data.max_hp || 100;
+            hpVal.textContent = `${Math.round(data.hp)}/${maxHp}`;
+            hpBar.style.width = `${(data.hp / maxHp) * 100}%`;
+        }
+        if (expVal && expBar) {
+            const maxExp = data.max_xp || 100;
+            expVal.textContent = `${data.xp}/${maxExp}`;
+            expBar.style.width = `${(data.xp / maxExp) * 100}%`;
+        }
+        if (levelVal) {
+            levelVal.textContent = data.level || 0;
+        }
 
         if (lastLevel !== null && data.level > lastLevel) {
             alert(`🎉 Level Up! Lv. ${data.level}`);
@@ -165,6 +193,26 @@ async function fetchStatus() {
             document.body.style.boxShadow = "none";
         }
 
+        // Work Mode UI Toggle (Replace instead of Overlay)
+        const topBar = document.querySelector('.top-bar');
+        const workInfo = document.getElementById('work-info-section');
+
+        if (data.work_mode) {
+            if (topBar && !topBar.classList.contains('hidden')) {
+                topBar.classList.add('hidden');
+            }
+            if (workInfo && workInfo.classList.contains('hidden')) {
+                workInfo.classList.remove('hidden');
+            }
+        } else {
+            if (topBar && topBar.classList.contains('hidden')) {
+                topBar.classList.remove('hidden');
+            }
+            if (workInfo && !workInfo.classList.contains('hidden')) {
+                workInfo.classList.add('hidden');
+            }
+        }
+
         renderQuests(data.quests, data.available_quests);
 
         const db = document.getElementById('home-dashboard');
@@ -190,63 +238,142 @@ async function fetchStatus() {
 }
 
 function renderQuests(activeQuests, availableQuests) {
-    const list = document.getElementById('quest-list');
-    if (!list) return;
-    list.innerHTML = '';
+    const availableList = document.getElementById('available-quest-list');
+    const activeList = document.getElementById('active-quest-list');
+    const availableSection = document.getElementById('available-quest-section');
+    const activeSection = document.getElementById('active-quest-section');
 
-    if (activeQuests.length > 0) {
-        activeQuests.forEach(q => {
-            const item = document.createElement('div');
-            item.className = 'quest-item';
-            const pct = Math.min(100, (q.progress / q.target_duration) * 100);
-            item.onclick = () => {
-                alert(`[${q.name}]\n난이도: ${q.difficulty}\n조건: ${q.clear_condition}\n설명: ${q.description}`);
-            };
-            item.innerHTML = `
-                <div style="display:flex; justify-content:space-between;">
-                    <strong>${q.name}</strong>
-                    <small>${Math.floor(q.progress / 60)}/${q.target_duration / 60}m</small>
-                </div>
-                <div class="progress-container" style="height: 5px; margin-top: 5px;">
-                    <div class="progress-fill" style="width: ${pct}%; background: #bb86fc;"></div>
-                </div>
-            `;
-            list.appendChild(item);
-        });
+    if (!availableList || !activeList) return;
+
+    // Save expanded state
+    const expandedIds = [];
+    document.querySelectorAll('.quest-card.expanded').forEach(card => {
+        expandedIds.push(card.dataset.questIndex + '-' + card.classList.contains('active'));
+    });
+
+    // Clear both lists
+    availableList.innerHTML = '';
+    activeList.innerHTML = '';
+
+    // Hide available quest section if there's an active quest
+    if (activeQuests && activeQuests.length > 0) {
+        if (availableSection && !availableSection.classList.contains('hidden')) {
+            availableSection.classList.add('hidden');
+        }
+        if (activeSection && activeSection.classList.contains('hidden')) {
+            activeSection.classList.remove('hidden');
+        }
+    } else {
+        if (availableSection && availableSection.classList.contains('hidden')) {
+            availableSection.classList.remove('hidden');
+        }
+        if (activeSection && !activeSection.classList.contains('hidden')) {
+            activeSection.classList.add('hidden');
+        }
     }
 
-    if (availableQuests && availableQuests.length > 0) {
-        const title = document.createElement('h5');
-        title.innerText = "📋 퀘스트 선택";
-        title.style.margin = "15px 0 5px 0";
-        title.style.borderTop = "1px solid rgba(255,255,255,0.1)";
-        title.style.paddingTop = "10px";
-        list.appendChild(title);
-
+    // Render Available Quests
+    if (availableQuests && availableQuests.length > 0 && (!activeQuests || activeQuests.length === 0)) {
         availableQuests.forEach((q, idx) => {
-            const item = document.createElement('div');
-            item.className = 'quest-item available';
-            item.style.border = "1px dashed #777";
-            item.style.cursor = "pointer";
-            item.style.marginTop = "5px";
-            item.style.padding = "5px";
-            item.innerHTML = `
-                <div>${q.name}</div>
-                <small style="color:#aaa;">+${q.reward_xp} XP | ${q.difficulty}</small>
-            `;
-            item.onclick = (e) => {
-                e.stopPropagation();
-                if (confirm(`${q.name} 퀘스트를 수락하시겠습니까?\n보상: ${q.reward_xp} XP`)) {
-                    acceptQuest(idx);
-                }
-            };
-            list.appendChild(item);
+            const card = createQuestCard(q, idx, false);
+            if (expandedIds.includes(idx + '-false')) {
+                card.classList.add('expanded');
+            }
+            availableList.appendChild(card);
+        });
+    } else if (!activeQuests || activeQuests.length === 0) {
+        availableList.innerHTML = '<div class="quest-empty">현재 선택 가능한 퀘스트가 없습니다.</div>';
+    }
+
+    // Render Active Quests
+    if (activeQuests && activeQuests.length > 0) {
+        activeQuests.forEach((q, idx) => {
+            const card = createQuestCard(q, idx, true);
+            if (expandedIds.includes(idx + '-true')) {
+                card.classList.add('expanded');
+            }
+            activeList.appendChild(card);
+        });
+    } else {
+        activeList.innerHTML = '<div class="quest-empty">진행 중인 퀘스트가 없습니다.</div>';
+    }
+}
+
+function createQuestCard(quest, index, isActive) {
+    const card = document.createElement('div');
+    card.className = 'quest-card' + (isActive ? ' active' : '');
+    card.dataset.questIndex = index;
+
+    const progress = quest.progress || 0;
+    const target = quest.target_duration || 1;
+    const progressPct = Math.min(100, (progress / target) * 100);
+
+    // Difficulty badge class
+    const difficultyClass = quest.difficulty === 'Hard' ? 'hard' : 'normal';
+
+    // Format time
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return mins > 0 ? `${mins}분 ${secs}초` : `${secs}초`;
+    };
+
+    card.innerHTML = `
+        <div class="quest-card-header">
+            <div style="flex: 1;">
+                <div class="quest-title">
+                    ${isActive ? '✅' : '🎯'} ${quest.name}
+                </div>
+                <div class="quest-description">${quest.description}</div>
+                ${isActive ? '' : `<div class="quest-reward">🏆 클리어 조건: ${quest.clear_condition}</div>`}
+            </div>
+            <div class="quest-difficulty ${difficultyClass}">${quest.difficulty}</div>
+        </div>
+        
+        ${isActive ? `
+        <div class="quest-details">
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">📌</span>
+                <span class="quest-detail-text"><strong>클리어 조건:</strong> ${quest.clear_condition}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">🎯</span>
+                <span class="quest-detail-text"><strong>목표 시간:</strong> ${formatTime(target)}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">⏱️</span>
+                <span class="quest-detail-text"><strong>현재 진행:</strong> ${formatTime(Math.floor(progress))}</span>
+            </div>
+            <div class="quest-detail-row">
+                <span class="quest-detail-icon">🏆</span>
+                <span class="quest-detail-text"><strong>보상:</strong> ${quest.reward_xp} XP</span>
+            </div>
+            <div class="quest-progress-bar">
+                <div class="quest-progress-fill" style="width: ${progressPct}%"></div>
+                <div class="quest-progress-text">진행도: ${Math.floor(progressPct)}%</div>
+            </div>
+        </div>
+        ` : `
+        <div style="margin-top: 10px;">
+            <span class="quest-reward">💎 +${quest.reward_xp} XP</span>
+        </div>
+        `}
+    `;
+
+    // Click handler
+    if (isActive) {
+        card.addEventListener('click', () => {
+            card.classList.toggle('expanded');
+        });
+    } else {
+        card.addEventListener('click', () => {
+            if (confirm(`${quest.name} 퀘스트를 수락하시겠습니까?\n\n난이도: ${quest.difficulty}\n보상: ${quest.reward_xp} XP\n조건: ${quest.clear_condition}`)) {
+                acceptQuest(index);
+            }
         });
     }
 
-    if (activeQuests.length === 0 && (!availableQuests || availableQuests.length === 0)) {
-        list.innerHTML = "<div style='color:#777; text-align:center;'>진행 중인 퀘스트 없음</div>";
-    }
+    return card;
 }
 
 async function acceptQuest(idx) {
@@ -256,7 +383,7 @@ async function acceptQuest(idx) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ index: idx })
         });
-        fetchStatus();
+        fetchStatus(); // Refresh immediately
     } catch (e) {
         console.error(e);
     }
