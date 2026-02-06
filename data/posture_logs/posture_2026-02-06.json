@@ -1,7 +1,7 @@
 {
   "date": "2026-02-06",
   "turtle_neck": {
-    "count": 42,
+    "count": 45,
     "events": [
       {
         "time": "11:41:01",
@@ -170,14 +170,27 @@
       {
         "time": "11:56:01",
         "duration_sec": null
+      },
+      {
+        "time": "12:12:14",
+        "duration_sec": null
+      },
+      {
+        "time": "12:14:11",
+        "duration_sec": null
+      },
+      {
+        "time": "12:14:14",
+        "duration_sec": null
       }
     ],
     "hourly_freq": {
-      "11": 42
+      "11": 42,
+      "12": 3
     }
   },
   "eye_closed": {
-    "count": 50,
+    "count": 62,
     "events": [
       {
         "time": "11:00:00",
@@ -378,20 +391,70 @@
       {
         "time": "11:56:31",
         "duration_sec": null
+      },
+      {
+        "time": "12:11:41",
+        "duration_sec": null
+      },
+      {
+        "time": "12:11:55",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:23",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:32",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:38",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:43",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:48",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:52",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:55",
+        "duration_sec": null
+      },
+      {
+        "time": "12:12:59",
+        "duration_sec": null
+      },
+      {
+        "time": "12:13:04",
+        "duration_sec": null
+      },
+      {
+        "time": "12:13:08",
+        "duration_sec": null
       }
     ],
     "hourly_freq": {
-      "11": 50
+      "11": 50,
+      "12": 12
     }
   },
   "summary": {
-    "total_detections": 92,
-    "turtle_neck_count": 42,
-    "eye_closed_count": 50,
+    "total_detections": 107,
+    "turtle_neck_count": 45,
+    "eye_closed_count": 62,
     "peak_hour": "11",
-    "avg_per_hour": 92.0,
+    "avg_per_hour": 53.5,
     "hourly_distribution": {
-      "11": 92
+      "11": 92,
+      "12": 15
     }
   }
 }

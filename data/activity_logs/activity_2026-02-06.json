@@ -1,0 +1,101 @@
+{
+  "date": "2026-02-06",
+  "sessions": [],
+  "posture_detections": {
+    "turtle_neck": {
+      "count": 3,
+      "events": [
+        {
+          "time": "12:12:14",
+          "duration_sec": null
+        },
+        {
+          "time": "12:14:11",
+          "duration_sec": null
+        },
+        {
+          "time": "12:14:14",
+          "duration_sec": null
+        }
+      ],
+      "hourly_freq": {
+        "12": 3
+      }
+    },
+    "eye_closed": {
+      "count": 12,
+      "events": [
+        {
+          "time": "12:11:41",
+          "duration_sec": null
+        },
+        {
+          "time": "12:11:55",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:23",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:32",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:38",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:43",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:48",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:52",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:55",
+          "duration_sec": null
+        },
+        {
+          "time": "12:12:59",
+          "duration_sec": null
+        },
+        {
+          "time": "12:13:04",
+          "duration_sec": null
+        },
+        {
+          "time": "12:13:08",
+          "duration_sec": null
+        }
+      ],
+      "hourly_freq": {
+        "12": 12
+      }
+    }
+  },
+  "quests": {
+    "accepted": [],
+    "completed": [],
+    "failed": []
+  },
+  "hp_changes": [],
+  "summary": {
+    "total_work_time_minutes": 0,
+    "total_detections": 15,
+    "turtle_neck_count": 3,
+    "eye_closed_count": 12,
+    "quests_completed": 0,
+    "quests_failed": 0,
+    "avg_hp": 0,
+    "peak_activity_hour": "12",
+    "hourly_distribution": {
+      "12": 15
+    }
+  }
+}
