@@ -139,15 +139,30 @@ def update_ui_function(task_type, content, target_time):
         except Exception as e:
             console.print(f"[red]타이머 설정 오류: {e}[/red]")
     elif task_type == "REMINDER":
-        console.print(f"[bold blue]📌 [UI 연동] 일정 등록 요청: '{content}' (날짜: {target_time})[/bold blue]")
+        # content는 이제 dict 형태로 받을 수 있음: {"title": ..., "time": ..., "location": ...}
+        if isinstance(content, dict):
+            title = content.get("title", "")
+            schedule_time = content.get("time", "")
+            location = content.get("location", "")
+        else:
+            title = content
+            schedule_time = ""
+            location = ""
+        
+        console.print(f"[bold blue]📌 [UI 연동] 일정 등록 요청: '{title}' (날짜: {target_time}, 시간: {schedule_time}, 장소: {location})[/bold blue]")
         try:
-            # 날짜 및 제목 파싱
+            # 날짜 파싱
             date_val = parse_reminder_time(target_time)
             console.print(f"[dim blue]   -> 파싱된 최종 날짜: {date_val}[/dim blue]")
             requests.post("http://127.0.0.1:5000/api/schedule/set", 
-                         json={"date": date_val, "title": content}, 
+                         json={
+                             "date": date_val, 
+                             "title": title,
+                             "time": schedule_time,
+                             "location": location
+                         }, 
                          timeout=3)
-            console.print(f"[bold green]✓ {date_val} 일정 '{content}' 등록 완료![/bold green]")
+            console.print(f"[bold green]✓ {date_val} 일정 '{title}' 등록 완료! (시간: {schedule_time}, 장소: {location})[/bold green]")
         except Exception as e:
             console.print(f"[red]일정 등록 오류: {e}[/red]")
     elif task_type == "SCHEDULE_DELETE":
@@ -314,7 +329,8 @@ def call_minimax_standard(user_input, history):
         "- 카운트다운: [COMMAND:TIMER:시간:DOWN]\n"
         "- 카운트업: [COMMAND:TIMER:시간:UP]\n"
         "- 타이머 종료: [COMMAND:TIMER:0:RESET]\n"
-        "- 일정 등록: [COMMAND:REMINDER:날짜:내용]\n"
+        "- 일정 등록: [COMMAND:REMINDER:날짜:시간:장소:내용] (예: [COMMAND:REMINDER:내일:14시:회의실:부서 회의])\n"
+        "  - 시간이나 장소가 없으면 빈 값으로 두세요 (예: [COMMAND:REMINDER:내일:::병원 가기])\n"
         "- 일정 삭제: [COMMAND:DELETE_REMINDER:날짜]\n"
         "🚨필독🚨: 명령어 대괄호[] 안에 '날짜', '내용', '할일', '도시명' 같은 예시 단어를 쓰면 절대 안 됩니다. \n"
         "반드시 사용자가 말한 실제 도시(예: Seoul, Busan)나 실제 내용(예: 치과 가기)을 넣으세요.\n"
@@ -400,10 +416,38 @@ def call_minimax_standard(user_input, history):
                     if month_day:
                         date_hint = f"{month_day.group(1)}월{month_day.group(2)}일"
                     
-                    # 내용은 '일정' 또는 '등록' 앞부분 전체를 사용하거나 대략 추출
-                    content_hint = user_input.replace("등록해줘", "").replace("추가해줘", "").strip()
-                    console.print(f"[bold blue]💡 키워드 감지: '{date_hint}'에 '{content_hint}' 등록 시도[/bold blue]")
-                    update_ui_function("REMINDER", content_hint, date_hint)
+                    # 시간 추출 (예: 10시, 오후 2시)
+                    time_hint = ""
+                    time_match = re.search(r'(오전|오후)?\s*(\d+)시(?:\s*(\d+)분)?', user_input)
+                    if time_match:
+                        ampm = time_match.group(1) or ""
+                        hour = time_match.group(2)
+                        minute = time_match.group(3) or "00"
+                        time_hint = f"{ampm} {hour}시 {minute}분".strip()
+                    
+                    # 장소 추출 (예: ~회의실, ~에서)
+                    location_hint = ""
+                    location_match = re.search(r'([가-힣A-Za-z0-9]+(?:회의실|사무실|카페|병원|은행|센터|실|관))(?:에서?)?', user_input)
+                    if location_match:
+                        location_hint = location_match.group(1)
+                    
+                    # 내용 추출 (나머지)
+                    content_hint = user_input
+                    for remove_word in ["일정", "등록해줘", "추가해줘", "해줘", date_hint, time_hint, location_hint]:
+                        if remove_word:
+                            content_hint = content_hint.replace(remove_word, "")
+                    content_hint = content_hint.strip()
+                    if not content_hint:
+                        content_hint = "일정"
+                    
+                    console.print(f"[bold blue]💡 키워드 감지: '{date_hint}'에 '{content_hint}' 등록 시도 (시간: {time_hint}, 장소: {location_hint})[/bold blue]")
+                    
+                    content_dict = {
+                        "title": content_hint,
+                        "time": time_hint,
+                        "location": location_hint
+                    }
+                    update_ui_function("REMINDER", content_dict, date_hint)
 
             # [추가] 일반 타이머 설정(카운트 다운)에 대한 Heuristic Fallback
             if is_timer_req and not match:
@@ -444,20 +488,56 @@ def call_minimax_standard(user_input, history):
                     
                     update_ui_function("TIMER", t_mode, t_val)
                 elif cmd_type == "REMINDER":
+                    # 확장된 형식: [COMMAND:REMINDER:날짜:시간:장소:내용]
                     date_val = cmd_data[0].strip() if len(cmd_data) > 0 else "오늘"
-                    text_val = cmd_data[1].strip() if len(cmd_data) > 1 else "업무"
+                    time_val = cmd_data[1].strip() if len(cmd_data) > 1 else ""
+                    location_val = cmd_data[2].strip() if len(cmd_data) > 2 else ""
+                    text_val = cmd_data[3].strip() if len(cmd_data) > 3 else ""
                     
-                    # [강력 수정] AI가 '날짜'나 '내용'이라는 글자를 그대로 썼을 경우 Heuristic 적용
-                    if date_val == "날짜" or text_val == "내일" or text_val == "내용" or text_val == "할일":
+                    # 이전 형식 호환 (날짜:내용만 있는 경우)
+                    if len(cmd_data) == 2:
+                        text_val = time_val
+                        time_val = ""
+                        location_val = ""
+                    
+                    # [강력 수정] AI가 플레이스홀더를 그대로 썼을 경우 Heuristic 적용
+                    if date_val in ["날짜", "일정"] or text_val in ["내용", "할일", ""]:
                         console.print("[bold red]⚠ AI가 플레이스홀더를 그대로 사용함 -> Heuristic 전환[/bold red]")
                         # 날짜 추출
                         month_day = re.search(r'(\d+)월(\d+)일', u_clean)
                         if month_day: date_val = f"{month_day.group(1)}월{month_day.group(2)}일"
                         elif "내일" in u_clean: date_val = "내일"
-                        # 내용 추출
-                        text_val = user_input.replace("등록해줘", "").replace("추가해줘", "").strip()
+                        elif "오늘" in u_clean: date_val = "오늘"
+                        
+                        # 시간 추출 (예: 10시, 오후 2시)
+                        time_match = re.search(r'(오전|오후)?\s*(\d+)시(?:\s*(\d+)분)?', user_input)
+                        if time_match:
+                            ampm = time_match.group(1) or ""
+                            hour = time_match.group(2)
+                            minute = time_match.group(3) or "00"
+                            time_val = f"{ampm} {hour}시 {minute}분".strip()
+                        
+                        # 장소 추출 (예: ~에서, ~에)
+                        location_match = re.search(r'([가-힣A-Za-z0-9]+(?:회의실|사무실|카페|병원|은행|센터|실|관))(?:에서?)?', user_input)
+                        if location_match:
+                            location_val = location_match.group(1)
+                        
+                        # 내용 추출 (나머지)
+                        text_val = user_input
+                        for remove_word in ["일정", "등록해줘", "추가해줘", "해줘", date_val, time_val, location_val]:
+                            if remove_word:
+                                text_val = text_val.replace(remove_word, "")
+                        text_val = text_val.strip()
+                        if not text_val:
+                            text_val = "일정"
                     
-                    update_ui_function("REMINDER", text_val, date_val)
+                    # content를 dict 형태로 전달
+                    content_dict = {
+                        "title": text_val,
+                        "time": time_val,
+                        "location": location_val
+                    }
+                    update_ui_function("REMINDER", content_dict, date_val)
                 elif cmd_type == "DELETE_REMINDER":
                     date_val = cmd_data[0].strip() if len(cmd_data) > 0 else "오늘"
                     if date_val == "날짜":
