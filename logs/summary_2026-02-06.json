@@ -1,0 +1,47 @@
+{
+  "date": "2026-02-06",
+  "counts": {
+    "http_in_total": 0,
+    "http_in_fail": 0,
+    "http_out_total": 0,
+    "http_out_fail": 0,
+    "llm_total": 1,
+    "llm_timeout": 0,
+    "llm_fail": 0,
+    "error_total": 0,
+    "feedback_total": 2,
+    "voice_total": 1
+  },
+  "latency_ms": {
+    "http_in_avg": 0,
+    "http_out_avg": 0,
+    "llm_avg": 7273
+  },
+  "rates": {
+    "http_in_fail_rate": 0.0,
+    "http_out_fail_rate": 0.0,
+    "llm_fail_rate": 0.0,
+    "llm_timeout_rate": 0.0
+  },
+  "llm": {
+    "unknown": {
+      "count": 1,
+      "timeout": 0,
+      "fail": 0,
+      "avg_latency_ms": 7273,
+      "avg_response_len": 0,
+      "avg_tokens_in": null,
+      "avg_tokens_out": null,
+      "avg_cost": null
+    }
+  },
+  "feedback": {
+    "avg_rating": null,
+    "rating_count": 0
+  },
+  "interactions": {
+    "timer_set_5": 4,
+    "timer_set_10": 9,
+    "timer_set_30": 7
+  }
+}

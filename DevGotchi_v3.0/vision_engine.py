@@ -3,7 +3,6 @@ import numpy as np
 import mediapipe as mp
 import os
 import sys
-from config import Config
 
 class SuppressOutput:
     def __enter__(self):

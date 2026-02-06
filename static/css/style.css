@@ -1,0 +1,668 @@
+/* style.css - Soft UI & Neumorphism */
+:root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --accent-color: #bb86fc;
+    --card-bg: #1e1e1e;
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+    --font-main: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    user-select: none;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Utils */
+.hidden {
+    display: none !important;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Neumorphism Cards */
+.soft-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    padding: 20px;
+}
+
+.soft-btn {
+    background: var(--card-bg);
+    border: none;
+    border-radius: 15px;
+    color: var(--text-color);
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.soft-btn:active {
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+    transform: scale(0.98);
+}
+
+/* Home Layout */
+#home-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.clock-widget {
+    text-align: left;
+}
+
+#clock-time {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+#clock-date {
+    font-size: 1.5rem;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+.weather-widget {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#weather-temp {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+#weather-desc {
+    font-size: 1.5rem;
+    color: #ffca28;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-details {
+    font-size: 1rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* Center Character */
+.character-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#character-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+    transition: transform 0.3s;
+}
+
+#character-img:hover {
+    transform: scale(1.05);
+}
+
+/* Circular Menu */
+.circular-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* Let clicks pass through when closed */
+    z-index: 9;
+}
+
+.circular-menu.active {
+    pointer-events: all;
+}
+
+.menu-item {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    color: var(--accent-color);
+}
+
+.circular-menu.active .menu-item {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Status Bar */
+.status-bar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#status-btn {
+    width: 300px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4caf50;
+    /* Active Green */
+    background: #1e1e1e;
+    box-shadow: inset 4px 4px 8px #0d0d0d, inset -4px -4px 8px #2f2f2f;
+    /* Presed look for display */
+    padding: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* Modals / Apps */
+.app-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeVerify 0.3s;
+}
+
+@keyframes fadeVerify {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.home-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.5rem;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Work Mode Overlay */
+#work-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    box-sizing: border-box;
+    /* Only visible when work mode active */
+}
+
+.hp-exp-container {
+    width: 300px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.progress-container {
+    height: 20px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: inset 2px 2px 5px #000;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s;
+}
+
+.hp-fill {
+    background: #ff5252;
+    width: 100%;
+    box-shadow: 0 0 10px #ff5252;
+}
+
+.exp-fill {
+    background: #ffd700;
+    width: 0%;
+    box-shadow: 0 0 10px #ffd700;
+}
+
+/* Quest Container (Work Mode) */
+.quest-container {
+    width: 450px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 25px;
+    background: rgba(30, 30, 46, 0.95);
+    border-radius: 20px;
+    border: 2px solid rgba(187, 134, 252, 0.3);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.quest-container h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 25px 0;
+}
+
+.quest-section {
+    margin-bottom: 30px;
+}
+
+.quest-section-header {
+    background: rgba(40, 40, 60, 0.8);
+    border: 2px solid rgba(100, 100, 140, 0.5);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.quest-section-header.active {
+    background: rgba(60, 180, 100, 0.15);
+    border-color: rgba(60, 180, 100, 0.4);
+    color: #4caf50;
+}
+
+.quest-icon {
+    font-size: 1.3rem;
+}
+
+.quest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Quest Card */
+.quest-card {
+    background: linear-gradient(135deg, rgba(50, 50, 70, 0.9), rgba(40, 40, 60, 0.9));
+    border: 2px solid rgba(120, 120, 180, 0.4);
+    border-radius: 15px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.quest-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(187, 134, 252, 0.6);
+    box-shadow: 0 8px 24px rgba(187, 134, 252, 0.2);
+}
+
+.quest-card.active {
+    border-color: rgba(76, 175, 80, 0.6);
+    background: linear-gradient(135deg, rgba(40, 90, 50, 0.9), rgba(30, 70, 40, 0.9));
+}
+
+.quest-card.expanded {
+    border-color: rgba(187, 134, 252, 0.8);
+}
+
+.quest-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.quest-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quest-difficulty {
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quest-difficulty.normal {
+    background: rgba(33, 150, 243, 0.3);
+    color: #42a5f5;
+    border: 1px solid rgba(33, 150, 243, 0.5);
+}
+
+.quest-difficulty.hard {
+    background: rgba(244, 67, 54, 0.3);
+    color: #ef5350;
+    border: 1px solid rgba(244, 67, 54, 0.5);
+}
+
+.quest-description {
+    font-size: 0.95rem;
+    color: #b0b0b0;
+    margin: 8px 0 12px 0;
+    line-height: 1.5;
+}
+
+.quest-reward {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #ffd700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Quest Details (Expanded) */
+.quest-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.quest-card.expanded .quest-details {
+    max-height: 400px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quest-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: rgba(20, 20, 30, 0.6);
+    border-radius: 10px;
+    border-left: 3px solid rgba(187, 134, 252, 0.5);
+}
+
+.quest-detail-icon {
+    font-size: 1.2rem;
+    min-width: 24px;
+}
+
+.quest-detail-text {
+    font-size: 0.95rem;
+    color: #d0d0d0;
+    line-height: 1.4;
+}
+
+.quest-progress-bar {
+    margin-top: 12px;
+    background: rgba(20, 20, 30, 0.8);
+    border-radius: 12px;
+    height: 24px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(100, 100, 140, 0.4);
+}
+
+.quest-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    border-radius: 12px;
+    transition: width 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.5);
+    position: relative;
+}
+
+.quest-progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+/* Empty State */
+.quest-empty {
+    text-align: center;
+    padding: 30px 20px;
+    color: #777;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.quest-panel {
+    width: 350px;
+    background: rgba(30, 30, 46, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.posture-status {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 209, 102, 0.2);
+    border: 1px solid #00d166;
+    color: #00d166;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.posture-status.bad {
+    background: rgba(255, 75, 43, 0.2);
+    border-color: #ff4b2b;
+    color: #ff4b2b;
+}
+
+/* Calendar UI */
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.calendar-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 30px repeat(auto-fill, 1fr);
+    gap: 1px;
+    background: #333;
+    border: 1px solid #333;
+    flex-grow: 1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.cal-day-header {
+    background: var(--card-bg);
+    padding: 10px;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.cal-cell {
+    background: var(--bg-color);
+    padding: 5px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cal-cell:hover {
+    background: #1e1e1e;
+}
+
+.cal-date-num {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.cal-cell.other-month {
+    opacity: 0.3;
+}
+
+.cal-cell.today .cal-date-num {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.cal-cell.today {
+    background: rgba(187, 134, 252, 0.05);
+}
+
+.cal-event {
+    background: #3d5afe;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.cal-event.type-1 {
+    background: #ff4081;
+}
+
+/* Pink */
+.cal-event.type-2 {
+    background: #7c4dff;
+}
+
+/* Purple */
+.cal-event.type-3 {
+    background: #00bcd4;
+}
+
+/* Cyan */
+
+/* Camera Visual Guides */
+.camera-container {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.camera-guide-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: rgba(255, 0, 0, 0.7); /* Red lines */
+    z-index: 5;
+    pointer-events: none;
+}

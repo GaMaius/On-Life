@@ -6,16 +6,14 @@ let timerSeconds = 0;
 let timerRunning = false;
 let isMenuOpen = false;
 let statsPage = 1;
-let lastLevel = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
     fetchStatus();
-    setInterval(fetchStatus, 1000);  // 1초마다 업데이트 (실시간 UI 반영)
+    setInterval(fetchStatus, 5000);
     checkTimerState(); // Init Timer Check
 
-    // 캐릭터 클릭 시 메뉴 열기
     const charContainer = document.getElementById('character-container');
     if (charContainer) {
         charContainer.addEventListener('click', (e) => {
@@ -26,91 +24,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 메뉴 바깥 클릭 시 닫기
     document.addEventListener('click', (e) => {
         if (isMenuOpen && !e.target.closest('.menu-item')) {
             closeMenu();
         }
     });
 
-    // 상태 버튼 토글 (업무중 -> 자리비움 -> 회의중 -> 퇴근)
+    document.addEventListener('click', (e) => {
+        if (isMenuOpen && !e.target.closest('.menu-item')) {
+            closeMenu();
+        }
+    });
+
+    // Menu click handling is now done via href links in HTML
+
     const statusBtn = document.getElementById('status-btn');
     if (statusBtn) {
         statusBtn.addEventListener('click', () => {
             const statuses = ["업무중", "자리비움", "회의중", "퇴근"];
-            let current = statusBtn.textContent.trim();
+            let current = statusBtn.textContent.trim(); // Trim to avoid mismatch
             let nextIdx = (statuses.indexOf(current) + 1) % statuses.length;
-
-            if (nextIdx === -1) nextIdx = 0;
             let next = statuses[nextIdx];
+
+            statusBtn.textContent = next;
+
+            // UI Toggle Logic
+            const idleInfo = document.getElementById('idle-info-section');
+            const workInfo = document.getElementById('work-info-section');
+
+            if (next === "업무중") {
+                if (idleInfo) idleInfo.classList.add('hidden');
+                if (workInfo) workInfo.classList.remove('hidden');
+            } else {
+                if (idleInfo) idleInfo.classList.remove('hidden');
+                if (workInfo) workInfo.classList.add('hidden');
+            }
 
             fetch('/api/status/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: next })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    // 즉시 UI 업데이트
-                    updateStatusUI(data.status);
-
-                    // 즉시 work mode UI 토글
-                    const isWorkMode = data.status === "업무중";
-                    const topBar = document.querySelector('.top-bar');
-                    const workInfo = document.getElementById('work-info-section');
-
-                    if (isWorkMode) {
-                        if (topBar) topBar.classList.add('hidden');
-                        if (workInfo) workInfo.classList.remove('hidden');
-                    } else {
-                        if (topBar) topBar.classList.remove('hidden');
-                        if (workInfo) workInfo.classList.add('hidden');
-                    }
-
-                    // 즉시 gamestate 가져와 퀘스트 등 업데이트
-                    fetchStatus();
-                    console.log("상태 변경 완료:", data.status);
-                })
-                .catch(err => console.error("상태 업데이트 실패:", err));
+            }).then(() => {
+                fetchStatus(); // Refresh data immediately
+            });
         });
     }
 
-    // 채팅 입력창 엔터키 이벤트
+    // Chat Input Enter
     const chatInput = document.getElementById('chat-input');
     if (chatInput) {
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
     }
-
-    // URL 파라미터에 따른 앱 자동 열기
-    const params = new URLSearchParams(window.location.search);
-    const app = params.get('app');
-    if (app) {
-        openApp(app);
-    }
 });
 
-// --- [추가] 상태 버튼 글자 및 색상 업데이트 함수 ---
-function updateStatusUI(status) {
-    const statusBtn = document.getElementById('status-btn');
-    if (!statusBtn) return;
-
-    statusBtn.textContent = status;
-
-    // 요청하신 색상 적용
-    const statusColors = {
-        "업무중": "#00d166",   // 초록색
-        "퇴근": "#74b9ff",     // 파란색 (Sky Blue)
-        "자리비움": "#ffcc00",  // 노란색
-        "회의중": "#ffffff"    // 흰색
-    };
-
-    statusBtn.style.color = statusColors[status] || "#ffffff";
-    statusBtn.style.fontWeight = "bold"; // 가독성을 위해 굵게 설정
-}
-
-// 시계 업데이트
 function updateClock() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' });
@@ -122,18 +90,24 @@ function updateClock() {
     }
 }
 
-// 게임 상태 페치 (날씨, 캐릭터 상태, 자세, 퀘스트, 일정)
+// State Tracking
+let lastLevel = null;
+
+// Init from URL
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const app = params.get('app');
+    if (app) {
+        openApp(app);
+    }
+});
+
 async function fetchStatus() {
     try {
         const res = await fetch('/api/gamestate');
         const data = await res.json();
 
-        // 0. 상태 버튼 동기화 (새로고침 없이 색상까지 적용)
-        if (data.status) {
-            updateStatusUI(data.status);
-        }
-
-        // 1. 날씨 정보 업데이트
+        // 1. Weather
         if (data.weather) {
             const tempEl = document.getElementById('weather-temp');
             if (tempEl) tempEl.innerText = `${data.weather.temp}°C`;
@@ -145,105 +119,72 @@ async function fetchStatus() {
             if (feelsEl) feelsEl.innerText = `체감온도 ${data.weather.feels_like}°C`;
         }
 
-        // Update HP/EXP/Level UI
+        // 1.5 Sync Status Button
+        const statusBtn = document.getElementById('status-btn');
+        if (statusBtn && data.status) {
+            statusBtn.textContent = data.status;
+        }
+
+        // 2. HP / EXP / Level
         const hpVal = document.getElementById('hp-val');
+        if (hpVal) hpVal.innerText = `${Math.floor(data.hp)}/${data.max_hp}`;
         const hpBar = document.getElementById('hp-bar');
-        const expVal = document.getElementById('exp-val');
-        const expBar = document.getElementById('exp-bar');
-        const levelVal = document.getElementById('level-val');
+        if (hpBar) hpBar.style.width = `${(data.hp / data.max_hp) * 100}%`;
 
-        if (hpVal && hpBar) {
-            const maxHp = data.max_hp || 100;
-            hpVal.textContent = `${Math.round(data.hp)}/${maxHp}`;
-            hpBar.style.width = `${(data.hp / maxHp) * 100}%`;
-        }
-        if (expVal && expBar) {
-            const maxExp = data.max_xp || 100;
-            expVal.textContent = `${data.xp}/${maxExp}`;
-            expBar.style.width = `${(data.xp / maxExp) * 100}%`;
-        }
-        if (levelVal) {
-            levelVal.textContent = data.level || 0;
-        }
+        document.getElementById('exp-val').innerText = `${Math.floor(data.xp)} XP`;
 
+        // Level Up Check
         if (lastLevel !== null && data.level > lastLevel) {
             alert(`🎉 Level Up! Lv. ${data.level}`);
         }
         lastLevel = data.level;
 
-        // 3. 자세 경고 로직 (ver1 방식으로 수정)
+        // 3. Posture Alert
         const postureInd = document.getElementById('posture-indicator');
         const postureText = document.getElementById('posture-text');
-        const statusDot = postureInd ? postureInd.querySelector('.status-dot') : null;
 
-        // posture_score와 is_eye_closed 데이터 기반으로 판정
-        const isTurtleNeck = data.posture_score && data.posture_score > 0.18;
-        const isEyeClosed = data.is_eye_closed;
-
-        // 우선순위: 눈감음 > 거북목 > 바른 자세
-        if (isEyeClosed) {
-            // 눈감음 상태
-            if (postureInd) {
-                postureInd.classList.add('bad');
-                postureInd.classList.remove('good');
-                postureInd.style.borderColor = '#ff4b2b';
-                postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
-            }
-            if (postureText) {
-                postureText.innerText = '😴 눈감음 상태입니다';
-                postureText.style.color = '#ff4b2b';
-            }
-            if (statusDot) statusDot.style.color = '#ff4b2b';
-        } else if (isTurtleNeck) {
-            // 거북목 상태
-            if (postureInd) {
-                postureInd.classList.add('bad');
-                postureInd.classList.remove('good');
-                postureInd.style.borderColor = '#ff4b2b';
-                postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
-            }
-            if (postureText) {
-                postureText.innerText = '🐢 거북목 상태입니다';
-                postureText.style.color = '#ff4b2b';
-            }
-            if (statusDot) statusDot.style.color = '#ff4b2b';
+        if (data.bad_posture_duration > 0 || data.posture_score > 20) {
+            postureInd.classList.add('bad');
+            postureInd.classList.remove('good');
+            postureInd.style.borderColor = '#ff4b2b';
+            postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
+            postureText.innerText = `⚠️ 거북목 주의! (${Math.floor(data.bad_posture_duration)}s)`;
+            postureText.style.color = '#ff4b2b';
+            document.body.style.boxShadow = "inset 0 0 50px rgba(255,0,0,0.5)";
+        } else if (data.drowsy_duration > 0) {
+            postureInd.classList.add('bad');
+            postureInd.classList.remove('good');
+            postureInd.style.borderColor = '#fdcb6e';
+            postureInd.style.backgroundColor = 'rgba(253, 203, 110, 0.2)';
+            postureText.innerText = `😴 졸음 감지! (${Math.floor(data.drowsy_duration)}s)`;
+            postureText.style.color = '#fdcb6e';
+            document.body.style.boxShadow = "inset 0 0 50px rgba(255,165,0,0.3)";
         } else {
-            // 바른 자세 유지중
-            if (postureInd) {
-                postureInd.classList.remove('bad');
-                postureInd.classList.add('good');
-                postureInd.style.borderColor = '#00d166';
-                postureInd.style.backgroundColor = 'rgba(0, 209, 102, 0.2)';
-            }
-            if (postureText) {
-                postureText.innerText = '✅ 바른 자세 유지중';
-                postureText.style.color = '#00d166';
-            }
-            if (statusDot) statusDot.style.color = '#00d166';
+            postureInd.classList.remove('bad');
+            postureInd.classList.add('good');
+            postureInd.style.borderColor = '#00d166';
+            postureInd.style.backgroundColor = 'rgba(0, 209, 102, 0.2)';
+            postureText.innerText = "바른 자세 유지중";
+            postureText.style.color = '#00d166';
+            document.body.style.boxShadow = "none";
         }
 
-        // Work Mode UI Toggle (Replace instead of Overlay)
-        const topBar = document.querySelector('.top-bar');
+        // Work Mode UI Toggle (Swappable Sections)
+        const idleInfo = document.getElementById('idle-info-section');
         const workInfo = document.getElementById('work-info-section');
 
         if (data.work_mode) {
-            if (topBar && !topBar.classList.contains('hidden')) {
-                topBar.classList.add('hidden');
-            }
-            if (workInfo && workInfo.classList.contains('hidden')) {
-                workInfo.classList.remove('hidden');
-            }
+            if (idleInfo && !idleInfo.classList.contains('hidden')) idleInfo.classList.add('hidden');
+            if (workInfo && workInfo.classList.contains('hidden')) workInfo.classList.remove('hidden');
         } else {
-            if (topBar && topBar.classList.contains('hidden')) {
-                topBar.classList.remove('hidden');
-            }
-            if (workInfo && !workInfo.classList.contains('hidden')) {
-                workInfo.classList.add('hidden');
-            }
+            if (idleInfo && idleInfo.classList.contains('hidden')) idleInfo.classList.remove('hidden');
+            if (workInfo && !workInfo.classList.contains('hidden')) workInfo.classList.add('hidden');
         }
 
+        // 4. Quest Rendering
         renderQuests(data.quests, data.available_quests);
 
+        // 5. Home Dashboard Rendering
         const db = document.getElementById('home-dashboard');
         if (db) {
             let html = '';
@@ -252,7 +193,6 @@ async function fetchStatus() {
                 const timeStr = document.getElementById('timer-display')?.textContent || "Running";
                 html += `<div style="display:inline-block; padding: 5px 15px; background: rgba(0,0,0,0.5); border-radius: 20px; color: #fff; margin: 5px;">⏱️ ${timeStr}</div>`;
             }
-
             if (data.todays_events && data.todays_events.length > 0) {
                 const count = data.todays_events.length;
                 const first = data.todays_events[0].title;
@@ -262,55 +202,33 @@ async function fetchStatus() {
         }
 
     } catch (e) {
-        console.error("fetchStatus Error:", e);
+        console.error(e);
     }
 }
 
 function renderQuests(activeQuests, availableQuests) {
     const availableList = document.getElementById('available-quest-list');
     const activeList = document.getElementById('active-quest-list');
-    const availableSection = document.getElementById('available-quest-section');
-    const activeSection = document.getElementById('active-quest-section');
+    const availableCount = document.getElementById('available-count');
 
     if (!availableList || !activeList) return;
-
-    // Save expanded state
-    const expandedIds = [];
-    document.querySelectorAll('.quest-card.expanded').forEach(card => {
-        expandedIds.push(card.dataset.questIndex + '-' + card.classList.contains('active'));
-    });
 
     // Clear both lists
     availableList.innerHTML = '';
     activeList.innerHTML = '';
 
-    // Hide available quest section if there's an active quest
-    if (activeQuests && activeQuests.length > 0) {
-        if (availableSection && !availableSection.classList.contains('hidden')) {
-            availableSection.classList.add('hidden');
-        }
-        if (activeSection && activeSection.classList.contains('hidden')) {
-            activeSection.classList.remove('hidden');
-        }
-    } else {
-        if (availableSection && availableSection.classList.contains('hidden')) {
-            availableSection.classList.remove('hidden');
-        }
-        if (activeSection && !activeSection.classList.contains('hidden')) {
-            activeSection.classList.add('hidden');
-        }
+    // Update available count
+    if (availableCount) {
+        availableCount.textContent = availableQuests ? availableQuests.length : 0;
     }
 
     // Render Available Quests
-    if (availableQuests && availableQuests.length > 0 && (!activeQuests || activeQuests.length === 0)) {
+    if (availableQuests && availableQuests.length > 0) {
         availableQuests.forEach((q, idx) => {
             const card = createQuestCard(q, idx, false);
-            if (expandedIds.includes(idx + '-false')) {
-                card.classList.add('expanded');
-            }
             availableList.appendChild(card);
         });
-    } else if (!activeQuests || activeQuests.length === 0) {
+    } else {
         availableList.innerHTML = '<div class="quest-empty">현재 선택 가능한 퀘스트가 없습니다.</div>';
     }
 
@@ -318,9 +236,6 @@ function renderQuests(activeQuests, availableQuests) {
     if (activeQuests && activeQuests.length > 0) {
         activeQuests.forEach((q, idx) => {
             const card = createQuestCard(q, idx, true);
-            if (expandedIds.includes(idx + '-true')) {
-                card.classList.add('expanded');
-            }
             activeList.appendChild(card);
         });
     } else {
@@ -450,9 +365,6 @@ function openApp(appId) {
     const appEl = document.getElementById(appId + '-app');
     if (appEl) {
         appEl.classList.remove('hidden');
-        if (appId === 'scheduler') {
-            if (typeof initCalendar === 'function') initCalendar();
-        }
     } else {
         alert("기능 준비중: " + appId);
     }
@@ -462,6 +374,7 @@ window.closeApp = (appId) => {
     document.getElementById(appId).classList.add('hidden');
 };
 
+// Timer Logic (Persistent)
 function getTimerState() {
     const saved = localStorage.getItem('devgotchi_timer');
     return saved ? JSON.parse(saved) : null;
@@ -491,18 +404,22 @@ window.timerReset = () => {
 
 window.timerStart = (mode) => {
     if (timerRunning) return;
+
     timerRunning = true;
     const now = Date.now();
     let state = { mode: mode, startAt: now, initialSeconds: timerSeconds };
+
     if (mode === 'down') {
         state.targetTime = now + (timerSeconds * 1000);
     }
+
     saveTimerState(state);
     runTimerLoop();
 };
 
 function runTimerLoop() {
     if (timerInterval) clearInterval(timerInterval);
+
     timerInterval = setInterval(() => {
         const state = getTimerState();
         if (!state) {
@@ -510,6 +427,7 @@ function runTimerLoop() {
             timerRunning = false;
             return;
         }
+
         const now = Date.now();
         if (state.mode === 'down') {
             const remaining = Math.ceil((state.targetTime - now) / 1000);
@@ -524,6 +442,7 @@ function runTimerLoop() {
             }
             timerSeconds = remaining;
         } else {
+            // Count up
             const elapsed = Math.floor((now - state.startAt) / 1000);
             timerSeconds = state.initialSeconds + elapsed;
         }
@@ -531,10 +450,12 @@ function runTimerLoop() {
     }, 1000);
 }
 
+// Check on load
 function checkTimerState() {
     const state = getTimerState();
     if (state) {
         timerRunning = true;
+        // fast forward
         const now = Date.now();
         if (state.mode === 'down') {
             timerSeconds = Math.ceil((state.targetTime - now) / 1000);
@@ -602,12 +523,15 @@ function updateTimerDisplay() {
     }
 }
 
+// AI Chat Logic
 window.sendMessage = async () => {
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
     if (!text) return;
+
     addMessage(text, 'user');
     input.value = '';
+
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
@@ -831,6 +755,7 @@ function addMessage(text, type, saveToBackend = true) {
     box.scrollTop = box.scrollHeight;
 }
 
+// Stats Logic (Pagination)
 window.nextStatsPage = () => {
     if (statsPage < 6) statsPage++;
     updateStatsPage();
@@ -844,19 +769,26 @@ window.prevStatsPage = () => {
 function updateStatsPage() {
     document.getElementById('stats-title').textContent = `통계 (${statsPage}/6)`;
     const titleObj = {
-        1: "업무 시간", 2: "업무 시간대 분석", 3: "자세/졸음 통계",
-        4: "주간 인사이트", 5: "월간 리포트", 6: "AI 종합 제안"
+        1: "업무 시간",
+        2: "업무 시간대 분석",
+        3: "자세/졸음 통계",
+        4: "주간 인사이트",
+        5: "월간 리포트",
+        6: "AI 종합 제안"
     };
     document.getElementById('stats-content-title').textContent = titleObj[statsPage] || "통계";
+    // Mock Chart Changes would go here
 }
 
+// Care Logic
 window.careAction = (type) => {
     alert("Dev가 좋아합니다! (" + type + ")");
 }
 
+// Scheduler Logic - Calendar Implementation
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
-let eventsData = {};
+let eventsData = {}; // Object: "YYYY-MM-DD" -> [{title, color}]
 
 window.initCalendar = async () => {
     await fetchCalendarEvents();
@@ -888,8 +820,12 @@ window.changeMonth = (delta) => {
 function updateCalendar() {
     const grid = document.getElementById('calendar-grid');
     if (!grid) return;
+
     document.getElementById('cal-month-year').textContent = `${currentYear}년 ${currentMonth + 1}월`;
+
     grid.innerHTML = '';
+
+    // Headers
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     days.forEach(d => {
         const dh = document.createElement('div');
@@ -897,19 +833,28 @@ function updateCalendar() {
         dh.textContent = d;
         grid.appendChild(dh);
     });
+
+    // Days Calculation
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
     const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
     const prevLastDate = new Date(currentYear, currentMonth, 0).getDate();
+
+    // Prev Month Filler
     for (let i = 0; i < firstDay; i++) {
         const cell = createCell(prevLastDate - firstDay + 1 + i, true);
         grid.appendChild(cell);
     }
+
+    // Current Month
     for (let i = 1; i <= lastDate; i++) {
         const cell = createCell(i, false);
         grid.appendChild(cell);
     }
+
+    // Next Month Filler
     const totalCells = firstDay + lastDate;
     const nextDays = (totalCells <= 35) ? 35 - totalCells : 42 - totalCells;
+
     for (let i = 1; i <= nextDays; i++) {
         const cell = document.createElement('div');
         cell.className = 'cal-cell other-month';
@@ -920,86 +865,53 @@ function updateCalendar() {
 function createCell(day, isOther) {
     const cell = document.createElement('div');
     cell.className = `cal-cell ${isOther ? 'other-month' : ''}`;
+
     const today = new Date();
     if (!isOther && day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
         cell.classList.add('today');
     }
+
     cell.innerHTML = `<div class="cal-date-num">${day}</div>`;
+
     if (!isOther) {
         const monStr = String(currentMonth + 1).padStart(2, '0');
         const dayStr = String(day).padStart(2, '0');
         const dateKey = `${currentYear}-${monStr}-${dayStr}`;
-        const todaysEvents = eventsData[dateKey] || [];
 
+        const todaysEvents = eventsData[dateKey] || [];
         todaysEvents.forEach(evt => {
             const evEl = document.createElement('div');
             evEl.className = `cal-event`;
-            // Color mapping based on type
-            const colorMap = {
-                1: '#bb86fc',
-                2: '#03dac6',
-                3: '#cf6679'
-            };
-            evEl.style.backgroundColor = colorMap[evt.type] || '#bb86fc';
+            evEl.style.backgroundColor = evt.color || '#bb86fc';
             evEl.textContent = evt.title;
             cell.appendChild(evEl);
         });
 
-        // Click handler to show event details
-        cell.addEventListener('click', () => {
-            if (todaysEvents.length > 0) {
-                // Show details of all events on this date
-                let detailsHTML = `<div style="max-width: 400px; padding: 20px; background: #1e1e2e; border-radius: 10px; color: #fff;">`;
-                detailsHTML += `<h3 style="margin-top: 0; color: #bb86fc;">${currentYear}년 ${currentMonth + 1}월 ${day}일 일정</h3>`;
+        // Add Logic
+        cell.addEventListener('click', async () => {
+            const title = prompt(`${currentMonth + 1}월 ${day}일 일정 추가:`);
+            if (title) {
+                const color = ["#bb86fc", "#03dac6", "#cf6679"][Math.floor(Math.random() * 3)];
 
-                todaysEvents.forEach((evt, idx) => {
-                    const colorMap = {
-                        1: '#bb86fc',
-                        2: '#03dac6',
-                        3: '#cf6679'
-                    };
-                    const color = colorMap[evt.type] || '#bb86fc';
-
-                    detailsHTML += `
-                        <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 4px solid ${color};">
-                            <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px;">${evt.title || '제목 없음'}</div>
-                            ${evt.time ? `<div style="margin: 5px 0; font-size: 0.9em;"><i class="fas fa-clock" style="margin-right: 5px; color: ${color};"></i> ${evt.time}</div>` : ''}
-                            ${evt.location ? `<div style="margin: 5px 0; font-size: 0.9em;"><i class="fas fa-map-marker-alt" style="margin-right: 5px; color: ${color};"></i> ${evt.location}</div>` : ''}
-                            ${evt.description ? `<div style="margin: 5px 0; font-size: 0.9em; color: #ccc;"><i class="fas fa-align-left" style="margin-right: 5px; color: ${color};"></i> ${evt.description}</div>` : ''}
-                        </div>
-                    `;
-                });
-
-                detailsHTML += `</div>`;
-
-                // Create modal overlay
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.7);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 10000;
-                `;
-                modal.innerHTML = detailsHTML;
-
-                // Close modal on click
-                modal.addEventListener('click', () => {
-                    document.body.removeChild(modal);
-                });
-
-                document.body.appendChild(modal);
-            } else {
-                // No events, show simple message
-                alert(`${currentYear}년 ${currentMonth + 1}월 ${day}일에 등록된 일정이 없습니다.`);
+                try {
+                    await fetch('/api/calendar/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date: dateKey,
+                            title: title,
+                            color: color
+                        })
+                    });
+                    await fetchCalendarEvents(); // Reload
+                    updateCalendar();
+                } catch (e) {
+                    alert("Error adding event");
+                }
             }
         });
     }
+
     return cell;
 }
 
@@ -1028,4 +940,4 @@ window.openApp = (appId) => {
     } else {
         alert("기능 준비중: " + appId);
     }
-};
+}

@@ -20,6 +20,63 @@ class BrainHandler:
         t = threading.Thread(target=self._run, args=(history, level, callback))
         t.start()
 
+    def chat_stream(self, history, level):
+        """Generates streaming response chunks"""
+        system_prompt = """
+        You are 'DevGotchi' (데브고치), an AI smart mirror companion and professional productivity manager.
+        You evolve through conversation and actively manage the user's lifestyle.
+        
+        [Persona]
+        - Name: DevGotchi (데브고치)
+        - Core Identity: 사용자의 생산성을 책임지는 전문 매니저. 
+        - Language: Korean only (Natural, clean).
+
+        [Adaptive Persona: The Spectrum]
+        Your personality shifts based on the {user_history} and current input:
+        1. [Strict Mode]: Slacking, needs discipline, or prefers efficiency.
+           - Tone: Direct, slightly cynical, "Tsundere", authoritative.
+        2. [Kind Mode]: Stressed, tired, or needs encouragement.
+           - Tone: Warm, energetic, uses supportive language (~요, ~해요).
+        3. [Gamified Mode]: Responds well to rewards/achievements.
+           - Tone: RPG Guide ("Quest", "Exp", "Buff/Debuff").
+
+        [Integration & Special Instructions]
+        - [Boot Briefing]: 사용자가 방금 컴퓨터(또는 스마트 미러)를 켰을 때, 아침의 활기찬 에너지를 전달하며 인사를 건네세요.
+        - [Motivation]: 사용자의 일정이나 현재 상태를 분석하여 업무에 몰입할 수 있도록 강력한 동기부여를 제공하세요.
+        - [News Reporting]: You may receive "[System Info] Real-time News Data: ...". 
+          - SUMMARIZE the provided news data for the user.
+          - Use a professional yet engaging tone (Anchor-like or Smart Assistant).
+        - If user asks about 'Start Timer', 'Show Stats', return JSON command in <think> or just text confirmation.
+        """
+
+        try:
+            client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+            messages = [{"role": "system", "content": system_prompt}] + history
+
+            stream = client.chat.completions.create(
+                model=MODEL,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=800,
+                stream=True
+            )
+
+            import re
+            
+            # Streaming Loop
+            buffer = ""
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    content = chunk.choices[0].delta.content
+                    # Filter out <think> tags if needed inside the stream or just yield raw
+                    # For a smart mirror, we might want to hide thoughts until finalized or just hide them in UI CSS.
+                    # For now, let's yield everything and let UI/Client handle display logic or simple cleanup if possible.
+                    yield content
+
+        except Exception as e:
+            print(f"[Brain Stream Error] {e}")
+            yield f"Error: {str(e)}"
+
     def _run(self, history, level, callback):
         system_prompt = """
         You are 'DevGotchi' (데브고치), an AI smart mirror companion and professional productivity manager.
@@ -87,7 +144,17 @@ class BrainHandler:
                 except:
                     pass
 
-            callback(clean_text, task_info, thought)
+            # ===== [MOD] Extract Usage for Metrics =====
+            usage_data = {}
+            if hasattr(response, 'usage') and response.usage:
+                usage_data = {
+                    "tokens_in": response.usage.prompt_tokens,
+                    "tokens_out": response.usage.completion_tokens,
+                    "total_tokens": response.usage.total_tokens,
+                    "cost": (response.usage.total_tokens / 1000000) * 0.5 
+                }
+
+            callback(clean_text, task_info, thought, usage_data)
 
         except Exception as e:
             print(f"[Brain Error] {e}")
