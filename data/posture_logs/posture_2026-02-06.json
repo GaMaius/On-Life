@@ -177,7 +177,7 @@
     }
   },
   "eye_closed": {
-    "count": 49,
+    "count": 50,
     "events": [
       {
         "time": "11:00:00",
@@ -374,20 +374,24 @@
       {
         "time": "11:56:17",
         "duration_sec": null
+      },
+      {
+        "time": "11:56:31",
+        "duration_sec": null
       }
     ],
     "hourly_freq": {
-      "11": 49
+      "11": 50
     }
   },
   "summary": {
-    "total_detections": 91,
+    "total_detections": 92,
     "turtle_neck_count": 42,
-    "eye_closed_count": 49,
+    "eye_closed_count": 50,
     "peak_hour": "11",
-    "avg_per_hour": 91.0,
+    "avg_per_hour": 92.0,
     "hourly_distribution": {
-      "11": 91
+      "11": 92
     }
   }
 }

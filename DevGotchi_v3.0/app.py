@@ -17,6 +17,7 @@ from vision_engine import VisionEngine
 from brain import BrainHandler
 from data_manager import DataManager
 from posture_logger import PostureLogger
+from activity_logger import ActivityLogger
 import requests
 import threading
 from say_miniMax import main as voice_main
@@ -265,8 +266,9 @@ def accept_quest():
     
     return jsonify({"status": "fail"}), 400
 
-# 자세 통계 API
+# Singletons for logging
 posture_log_instance = PostureLogger()
+activity_log_instance = ActivityLogger()
 
 @app.route('/api/posture/stats')
 def posture_stats():
@@ -652,6 +654,7 @@ def vision_loop():
     global video_capture, vision, current_posture_score, current_is_eye_closed
     cap = cv2.VideoCapture(0)
     posture_log = PostureLogger()
+    activity_log = ActivityLogger()  # 통합 로거
     
     # 중복 로깅 방지용 쿨다운
     last_turtle_log = 0
@@ -666,7 +669,7 @@ def vision_loop():
             
         if vision:
             score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
-            # Config.POSTURE_THRESHOLD (0.12) 사용
+            # Config.POSTURE_THRESHOLD (0.18) 사용
             is_bad = score > Config.POSTURE_THRESHOLD
             gm.update(is_bad, drowsy, True)
             
@@ -682,11 +685,13 @@ def vision_loop():
                 # 거북목 감지 로깅 (Config.POSTURE_THRESHOLD 사용)
                 if is_bad and (current_time - last_turtle_log) > LOG_COOLDOWN:
                     posture_log.log_turtle_neck()
+                    activity_log.log_turtle_neck()  # 통합 로깅
                     last_turtle_log = current_time
                 
                 # 눈감음 감지 로깅
                 if closed and (current_time - last_eye_log) > LOG_COOLDOWN:
                     posture_log.log_eye_closed()
+                    activity_log.log_eye_closed()  # 통합 로깅
                     last_eye_log = current_time
         
         with vision_lock:
