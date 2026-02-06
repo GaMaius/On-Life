@@ -1,0 +1,153 @@
+{
+  "date": "2026-02-06",
+  "turtle_neck": {
+    "count": 22,
+    "events": [
+      {
+        "time": "11:41:01",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:04",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:08",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:11",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:14",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:17",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:22",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:25",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:28",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:31",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:34",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:37",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:44",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:47",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:04",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:07",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:15",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:18",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:21",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:24",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:28",
+        "duration_sec": null
+      },
+      {
+        "time": "11:42:31",
+        "duration_sec": null
+      }
+    ],
+    "hourly_freq": {
+      "11": 22
+    }
+  },
+  "eye_closed": {
+    "count": 9,
+    "events": [
+      {
+        "time": "11:00:00",
+        "duration_sec": null
+      },
+      {
+        "time": "11:34:25",
+        "duration_sec": null
+      },
+      {
+        "time": "11:34:40",
+        "duration_sec": null
+      },
+      {
+        "time": "11:34:44",
+        "duration_sec": null
+      },
+      {
+        "time": "11:40:59",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:07",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:18",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:51",
+        "duration_sec": null
+      },
+      {
+        "time": "11:41:57",
+        "duration_sec": null
+      }
+    ],
+    "hourly_freq": {
+      "11": 9
+    }
+  },
+  "summary": {
+    "total_detections": 31,
+    "turtle_neck_count": 22,
+    "eye_closed_count": 9,
+    "peak_hour": "11",
+    "avg_per_hour": 31.0,
+    "hourly_distribution": {
+      "11": 31
+    }
+  }
+}

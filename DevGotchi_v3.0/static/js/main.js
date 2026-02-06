@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
     fetchStatus();
-    setInterval(fetchStatus, 5000);
+    setInterval(fetchStatus, 1000);  // 1초마다 업데이트 (실시간 UI 반영)
     checkTimerState(); // Init Timer Check
 
     // 캐릭터 클릭 시 메뉴 열기
@@ -171,26 +171,55 @@ async function fetchStatus() {
         }
         lastLevel = data.level;
 
-        // 3. 자세 경고 로직
+        // 3. 자세 경고 로직 (ver1 방식으로 수정)
         const postureInd = document.getElementById('posture-indicator');
         const postureText = document.getElementById('posture-text');
+        const statusDot = postureInd ? postureInd.querySelector('.status-dot') : null;
 
-        if (data.bad_posture_duration > 0 || data.posture_score > 20) {
-            postureInd.classList.add('bad');
-            postureInd.classList.remove('good');
-            postureInd.style.borderColor = '#ff4b2b';
-            postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
-            postureText.innerText = `⚠️ 거북목 주의! (${Math.floor(data.bad_posture_duration)}s)`;
-            postureText.style.color = '#ff4b2b';
-            document.body.style.boxShadow = "inset 0 0 50px rgba(255,0,0,0.5)";
+        // posture_score와 is_eye_closed 데이터 기반으로 판정
+        const isTurtleNeck = data.posture_score && data.posture_score > 0.18;
+        const isEyeClosed = data.is_eye_closed;
+
+        // 우선순위: 눈감음 > 거북목 > 바른 자세
+        if (isEyeClosed) {
+            // 눈감음 상태
+            if (postureInd) {
+                postureInd.classList.add('bad');
+                postureInd.classList.remove('good');
+                postureInd.style.borderColor = '#ff4b2b';
+                postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
+            }
+            if (postureText) {
+                postureText.innerText = '😴 눈감음 상태입니다';
+                postureText.style.color = '#ff4b2b';
+            }
+            if (statusDot) statusDot.style.color = '#ff4b2b';
+        } else if (isTurtleNeck) {
+            // 거북목 상태
+            if (postureInd) {
+                postureInd.classList.add('bad');
+                postureInd.classList.remove('good');
+                postureInd.style.borderColor = '#ff4b2b';
+                postureInd.style.backgroundColor = 'rgba(255, 75, 43, 0.2)';
+            }
+            if (postureText) {
+                postureText.innerText = '🐢 거북목 상태입니다';
+                postureText.style.color = '#ff4b2b';
+            }
+            if (statusDot) statusDot.style.color = '#ff4b2b';
         } else {
-            postureInd.classList.remove('bad');
-            postureInd.classList.add('good');
-            postureInd.style.borderColor = '#00d166';
-            postureInd.style.backgroundColor = 'rgba(0, 209, 102, 0.2)';
-            postureText.innerText = "바른 자세 유지중";
-            postureText.style.color = '#00d166';
-            document.body.style.boxShadow = "none";
+            // 바른 자세 유지중
+            if (postureInd) {
+                postureInd.classList.remove('bad');
+                postureInd.classList.add('good');
+                postureInd.style.borderColor = '#00d166';
+                postureInd.style.backgroundColor = 'rgba(0, 209, 102, 0.2)';
+            }
+            if (postureText) {
+                postureText.innerText = '✅ 바른 자세 유지중';
+                postureText.style.color = '#00d166';
+            }
+            if (statusDot) statusDot.style.color = '#00d166';
         }
 
         // Work Mode UI Toggle (Replace instead of Overlay)

@@ -16,6 +16,7 @@ from game_manager import GameManager
 from vision_engine import VisionEngine
 from brain import BrainHandler
 from data_manager import DataManager
+from posture_logger import PostureLogger
 import requests
 import threading
 from say_miniMax import main as voice_main
@@ -34,6 +35,11 @@ dm = DataManager()
 video_capture = None
 latest_frame = None
 vision_lock = threading.Lock()
+
+# Posture Status (for frontend UI)
+current_posture_score = 0
+current_is_eye_closed = False
+posture_status_lock = threading.Lock()
 
 # Status State
 current_status = "퇴근" # "업무중", "자리비움", "회의중", "퇴근"
@@ -224,6 +230,11 @@ def get_gamestate():
     if not weather_info:
         weather_info = get_weather()
 
+    # Get posture status
+    with posture_status_lock:
+        posture_score = current_posture_score
+        is_eye_closed = current_is_eye_closed
+    
     return jsonify({
         "hp": gm.hp,
         "max_hp": Config.MAX_HP,
@@ -236,7 +247,9 @@ def get_gamestate():
         "status": current_status,
         "weather": weather_info,
         "schedules": global_schedules,
-        "pinned_sessions": list(pinned_sessions)
+        "pinned_sessions": list(pinned_sessions),
+        "posture_score": posture_score,
+        "is_eye_closed": is_eye_closed
     })
 
 @app.route('/api/quest/accept', methods=['POST'])
@@ -251,6 +264,25 @@ def accept_quest():
             return jsonify({"status": "success", "message": "퀘스트 수락됨"})
     
     return jsonify({"status": "fail"}), 400
+
+# 자세 통계 API
+posture_log_instance = PostureLogger()
+
+@app.route('/api/posture/stats')
+def posture_stats():
+    """오늘의 자세 통계"""
+    stats = posture_log_instance.get_today_stats()
+    return jsonify(stats)
+
+@app.route('/api/posture/history')
+def posture_history():
+    """날짜별 기록 조회"""
+    date = request.args.get('date')
+    if date:
+        data = posture_log_instance.get_date_data(date)
+        return jsonify(data) if data else jsonify({"error": "No data"}), 404
+    dates = posture_log_instance.get_all_dates()
+    return jsonify({"dates": dates})
 
 @app.route('/api/voice_messages')
 def get_voice_messages():
@@ -617,8 +649,14 @@ def chat():
     return jsonify(result)
 
 def vision_loop():
-    global video_capture, vision
+    global video_capture, vision, current_posture_score, current_is_eye_closed
     cap = cv2.VideoCapture(0)
+    posture_log = PostureLogger()
+    
+    # 중복 로깅 방지용 쿨다운
+    last_turtle_log = 0
+    last_eye_log = 0
+    LOG_COOLDOWN = 3  # 3초 쿨다운
     
     while True:
         ret, frame = cap.read()
@@ -628,8 +666,28 @@ def vision_loop():
             
         if vision:
             score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
-            is_bad = score > 20
-            gm.update(is_bad, drowsy, True) 
+            # Config.POSTURE_THRESHOLD (0.12) 사용
+            is_bad = score > Config.POSTURE_THRESHOLD
+            gm.update(is_bad, drowsy, True)
+            
+            # Update global posture status for frontend
+            with posture_status_lock:
+                current_posture_score = score
+                current_is_eye_closed = closed
+            
+            # 업무중 상태일 때만 로깅
+            if current_status == "업무중":
+                current_time = time.time()
+                
+                # 거북목 감지 로깅 (Config.POSTURE_THRESHOLD 사용)
+                if is_bad and (current_time - last_turtle_log) > LOG_COOLDOWN:
+                    posture_log.log_turtle_neck()
+                    last_turtle_log = current_time
+                
+                # 눈감음 감지 로깅
+                if closed and (current_time - last_eye_log) > LOG_COOLDOWN:
+                    posture_log.log_eye_closed()
+                    last_eye_log = current_time
         
         with vision_lock:
             global latest_frame

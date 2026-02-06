@@ -27,4 +27,5 @@ class Config:
     
     # Vision Config
     EAR_THRESHOLD = 0.18
-    POSTURE_OFFSET_Y = 0.1 # Calibration
+    POSTURE_THRESHOLD = 0.18  # Turtle neck detection (완화된 기준)
+    POSTURE_OFFSET_Y = 0.05  # Calibration (ver1과 동일)
