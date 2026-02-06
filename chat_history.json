@@ -89,6 +89,18 @@
       "type": "user",
       "time": "13:30",
       "session_id": 3
+    },
+    {
+      "text": "오늘 15시 30분에 102회 식에서 부장님과 미팅 일정 등록해 줘",
+      "type": "user",
+      "time": "13:43",
+      "session_id": 3
+    },
+    {
+      "text": "네, 오늘 15시 30분에 102회 식에서 부장님과 미팅 일정 등록해 드릴게요!",
+      "type": "ai",
+      "time": "13:44",
+      "session_id": 3
     }
   ],
   "current_session_id": 3,
