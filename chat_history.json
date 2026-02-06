@@ -83,6 +83,12 @@
       "type": "ai",
       "time": "13:23",
       "session_id": 3
+    },
+    {
+      "text": "여보야 인식이 됐는데 대부가 되어",
+      "type": "user",
+      "time": "13:30",
+      "session_id": 3
     }
   ],
   "current_session_id": 3,

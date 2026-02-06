@@ -169,12 +169,7 @@ def get_weather():
         temp_min = data['main']['temp_min']        # 최저 기온
         temp_max = data['main']['temp_max']        # 최고 기온
         
-        # 콘솔 출력 (weather_test.py와 동일한 형식)
-        print(f"=== {location}의 현재 날씨 ===")
-        print(f"날씨 상태: {weather_desc}")
-        print(f"현재 기온: {temp_current}°C")
-        print(f"체감 온도: {temp_feels}°C")
-        print(f"최저/최고: {temp_min}°C / {temp_max}°C")
+        # 콘솔 출력 제거 (로그 스팸 방지)
         
         # API 응답 데이터 반환
         return {

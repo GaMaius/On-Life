@@ -81,22 +81,34 @@ def listen(r, source, mode="WAKE"):
         phrase_limit = 10  # 더 긴 문장 인식 가능
     
     try:
+        console.print(f"[dim cyan]🎤 [{mode}] 마이크 수신 대기중... (timeout={timeout}s)[/dim cyan]", end="\r")
         audio = r.listen(source, timeout=timeout, phrase_time_limit=phrase_limit)
+        
+        # 오디오 데이터 크기 확인 (마이크 입력이 있는지 체크)
+        audio_data = audio.get_raw_data()
+        audio_size = len(audio_data)
+        console.print(f"[dim green]✓ 오디오 수신됨 (크기: {audio_size} bytes)[/dim green]")
+        
+        if audio_size < 1000:
+            console.print(f"[bold yellow]⚠ [WARNING] 오디오 데이터가 너무 작습니다 ({audio_size} bytes) - 마이크 입력이 약하거나 없음[/bold yellow]")
+        
         text = r.recognize_google(audio, language="ko-KR")
-        if mode == "WAKE" and text:
-            console.print(f"[dim yellow]   [DEBUG] 인식된 텍스트: '{text}'[/dim yellow]")
+        
+        # 모든 인식된 텍스트 출력 (디버그용)
+        console.print(f"[bold cyan]🔊 [DEBUG] 인식된 음성: '{text}'[/bold cyan]")
         return text
+        
     except sr.WaitTimeoutError:
+        console.print(f"[bold yellow]⚠ [WARNING] 마이크 타임아웃 - {timeout}초 동안 음성 입력 없음[/bold yellow]")
         return ""
     except sr.UnknownValueError:
-        # 인식이 안 된 경우 조용히 빈 값 반환
+        console.print(f"[dim yellow]⚠ [WARNING] 음성을 인식할 수 없음 (소리는 감지됨, 말이 아닌 소음일 수 있음)[/dim yellow]")
         return ""
     except sr.RequestError as e:
-        console.print(f"[red]Google Speech Recognition 에러: {e}[/red]")
+        console.print(f"[bold red]❌ [ERROR] Google Speech Recognition 에러: {e}[/bold red]")
         return ""
     except Exception as e:
-        if mode != "WAKE":  # WAKE 모드일 때는 너무 잦은 출력을 피함
-            console.print(f"[dim]인식 오류: {e}[/dim]")
+        console.print(f"[bold red]❌ [ERROR] 예외 발생: {e}[/bold red]")
         return ""
 
 def update_ui_function(task_type, content, target_time):
