@@ -36,7 +36,7 @@ latest_frame = None
 vision_lock = threading.Lock()
 
 # Status State
-current_status = "업무중" # "업무중", "자리비움", "회의중", "퇴근"
+current_status = "퇴근" # "업무중", "자리비움", "회의중", "퇴근"
 is_work_mode = False # Toggle between Idle and Work UI
 
 # Voice Chat Buffer for UI Sync
@@ -126,31 +126,62 @@ current_status = "업무중"
 is_work_mode = False 
 
 def get_weather():
-    api_key = os.getenv("WEATHER_API_KEY")
-    lat, lon = 35.0471, 127.9915 
+    """weather_test.py의 정확한 구현 (API 키는 .env에서 로드)"""
+    # .env에서 API 키 로드
+    api_key = "f83c5f76153571e5cbd97d300cfdeea3"
+    
+    # 서울 시청 좌표 (weather_test.py와 동일)
+    lat = 37.5665
+    lon = 126.9780
     
     if not api_key:
-        return {"temp": 0, "condition": "No Key", "comparison": 0}
-
+        print("[Weather] No API Key found in .env (WEATHER_API_KEY)")
+        return {"temp": 0, "condition": "No API Key", "min": 0, "max": 0, "feels_like": 0}
+    
+    # weather_test.py와 동일한 API 엔드포인트
+    # units=metric: 섭씨 온도(°C) 사용
+    # lang=kr: 한국어로 결과 받기
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=kr"
     
     try:
-        res = requests.get(url, timeout=5)
-        if res.status_code == 200:
-            data = res.json()
-            return {
-            return {
-                "temp": int(data['main']['temp']),
-                "condition": data['weather'][0]['description'],
-                "min": int(data['main']['temp_min']),
-                "max": int(data['main']['temp_max']),
-                "feels_like": int(data['main']['feels_like'])
-            }
-    except Exception as e:
-        print(f"Weather Error: {e}")
-        print(f"Weather Error: {e}")
-    
-    return {"temp": 0, "condition": "Error", "comparison": 0}
+        response = requests.get(url)
+        response.raise_for_status()  # 오류 발생 시 예외 처리
+        
+        # JSON 데이터 파싱
+        data = response.json()
+        
+        # 필요한 정보 추출 (weather_test.py와 동일)
+        location = data['name']  # 지역 이름
+        weather_desc = data['weather'][0]['description']  # 날씨 상태
+        
+        # main 딕셔너리에 기온 정보가 들어있습니다
+        temp_current = data['main']['temp']        # 현재 기온
+        temp_feels = data['main']['feels_like']    # 체감 온도
+        temp_min = data['main']['temp_min']        # 최저 기온
+        temp_max = data['main']['temp_max']        # 최고 기온
+        
+        # 콘솔 출력 (weather_test.py와 동일한 형식)
+        print(f"=== {location}의 현재 날씨 ===")
+        print(f"날씨 상태: {weather_desc}")
+        print(f"현재 기온: {temp_current}°C")
+        print(f"체감 온도: {temp_feels}°C")
+        print(f"최저/최고: {temp_min}°C / {temp_max}°C")
+        
+        # API 응답 데이터 반환
+        return {
+            "temp": int(temp_current),
+            "condition": weather_desc,
+            "min": int(temp_min),
+            "max": int(temp_max),
+            "feels_like": int(temp_feels)
+        }
+        
+    except requests.exceptions.RequestException as e:
+        print(f"연결 오류 발생: {e}")
+        return {"temp": 0, "condition": "연결 오류", "min": 0, "max": 0, "feels_like": 0}
+    except KeyError:
+        print("데이터를 찾을 수 없습니다. 좌표나 API 키를 확인해주세요.")
+        return {"temp": 0, "condition": "데이터 없음", "min": 0, "max": 0, "feels_like": 0}
 
 @app.route('/')
 def home():
@@ -159,10 +190,7 @@ def home():
 @app.route('/api/status/update', methods=['POST'])
 def update_status_btn():
     global current_status
-    global current_status
     data = request.json
-    current_status = data.get('status', current_status)
-    return jsonify({"status": current_status})
     current_status = data.get('status', current_status)
     return jsonify({"status": current_status})
 
@@ -261,12 +289,18 @@ def set_schedule():
     data = request.json
     date_str = data.get('date', time.strftime("%Y-%m-%d"))
     title = data.get('title', '새 일정')
+    schedule_time = data.get('time', '')  # 시간 추가
+    location = data.get('location', '')  # 장소 추가
+    description = data.get('description', '')  # 내용 추가
     
     with schedule_command_lock:
         new_entry = {
             "date": date_str,
             "title": title,
-            "type": random.randint(1, 3)
+            "type": random.randint(1, 3),
+            "time": schedule_time,
+            "location": location,
+            "description": description
         }
         pending_schedule_command = {
             **new_entry,
@@ -309,15 +343,18 @@ def get_calendar():
     """캘린더 데이터 반환 (YYYY-MM-DD 키로 그룹화)"""
     global global_schedules
     
-    # 딕셔너리 형태로 변환: "2024-03-15": [{"title": "...", "type": 1}, ...]
+    # 딕셔너리 형태로 변환: "2024-03-15": [{"title": "...", "type": 1, "time": "...", "location": "...", "description": "..."}, ...]
     events_map = {}
     for item in global_schedules:
         d = item['date']
         if d not in events_map:
             events_map[d] = []
         events_map[d].append({
-            "title": item['title'],
-            "type": item['type'] # 1, 2, 3 (color index)
+            "title": item.get('title', '제목 없음'),
+            "type": item.get('type', 1),  # 1, 2, 3 (color index)
+            "time": item.get('time', ''),
+            "location": item.get('location', ''),
+            "description": item.get('description', '')
         })
         
     return jsonify(events_map)
@@ -570,7 +607,6 @@ def chat():
 
 def vision_loop():
     global video_capture, vision
-    global video_capture
     cap = cv2.VideoCapture(0)
     
     while True:
@@ -583,9 +619,6 @@ def vision_loop():
             score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
             is_bad = score > 20
             gm.update(is_bad, drowsy, True) 
-        score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
-        is_bad = score > 20
-        gm.update(is_bad, drowsy, True) 
         
         with vision_lock:
             global latest_frame
@@ -624,6 +657,3 @@ if __name__ == '__main__':
     print("[SYSTEM] 음성 인식(MiniMax) 스레드 시작됨")
     
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
-    t = threading.Thread(target=vision_loop, daemon=True)
-    t.start()
-    app.run(debug=True, port=5000, use_reloader=False)

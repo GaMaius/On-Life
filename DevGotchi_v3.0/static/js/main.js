@@ -774,26 +774,73 @@ function createCell(day, isOther) {
         const dayStr = String(day).padStart(2, '0');
         const dateKey = `${currentYear}-${monStr}-${dayStr}`;
         const todaysEvents = eventsData[dateKey] || [];
+
         todaysEvents.forEach(evt => {
             const evEl = document.createElement('div');
             evEl.className = `cal-event`;
-            evEl.style.backgroundColor = evt.color || '#bb86fc';
+            // Color mapping based on type
+            const colorMap = {
+                1: '#bb86fc',
+                2: '#03dac6',
+                3: '#cf6679'
+            };
+            evEl.style.backgroundColor = colorMap[evt.type] || '#bb86fc';
             evEl.textContent = evt.title;
             cell.appendChild(evEl);
         });
-        cell.addEventListener('click', async () => {
-            const title = prompt(`${currentMonth + 1}월 ${day}일 일정 추가:`);
-            if (title) {
-                const color = ["#bb86fc", "#03dac6", "#cf6679"][Math.floor(Math.random() * 3)];
-                try {
-                    await fetch('/api/calendar/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date: dateKey, title: title, color: color })
-                    });
-                    await fetchCalendarEvents();
-                    updateCalendar();
-                } catch (e) { alert("Error adding event"); }
+
+        // Click handler to show event details
+        cell.addEventListener('click', () => {
+            if (todaysEvents.length > 0) {
+                // Show details of all events on this date
+                let detailsHTML = `<div style="max-width: 400px; padding: 20px; background: #1e1e2e; border-radius: 10px; color: #fff;">`;
+                detailsHTML += `<h3 style="margin-top: 0; color: #bb86fc;">${currentYear}년 ${currentMonth + 1}월 ${day}일 일정</h3>`;
+
+                todaysEvents.forEach((evt, idx) => {
+                    const colorMap = {
+                        1: '#bb86fc',
+                        2: '#03dac6',
+                        3: '#cf6679'
+                    };
+                    const color = colorMap[evt.type] || '#bb86fc';
+
+                    detailsHTML += `
+                        <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 4px solid ${color};">
+                            <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px;">${evt.title || '제목 없음'}</div>
+                            ${evt.time ? `<div style="margin: 5px 0; font-size: 0.9em;"><i class="fas fa-clock" style="margin-right: 5px; color: ${color};"></i> ${evt.time}</div>` : ''}
+                            ${evt.location ? `<div style="margin: 5px 0; font-size: 0.9em;"><i class="fas fa-map-marker-alt" style="margin-right: 5px; color: ${color};"></i> ${evt.location}</div>` : ''}
+                            ${evt.description ? `<div style="margin: 5px 0; font-size: 0.9em; color: #ccc;"><i class="fas fa-align-left" style="margin-right: 5px; color: ${color};"></i> ${evt.description}</div>` : ''}
+                        </div>
+                    `;
+                });
+
+                detailsHTML += `</div>`;
+
+                // Create modal overlay
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                `;
+                modal.innerHTML = detailsHTML;
+
+                // Close modal on click
+                modal.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+
+                document.body.appendChild(modal);
+            } else {
+                // No events, show simple message
+                alert(`${currentYear}년 ${currentMonth + 1}월 ${day}일에 등록된 일정이 없습니다.`);
             }
         });
     }

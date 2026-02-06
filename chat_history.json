@@ -1,0 +1,66 @@
+{
+  "history": [
+    {
+      "text": "목소리가 너무 그래 오늘 5시에 저녁",
+      "type": "user",
+      "time": "09:19",
+      "session_id": 1
+    },
+    {
+      "text": "오류가 발생했습니다: login fail: Please carry the API secret key in the 'Authorization' field of the request header (1004)",
+      "type": "ai",
+      "time": "09:19",
+      "session_id": 1
+    },
+    {
+      "text": "오늘 오후 5시에 저녁 일정 추가해 줘",
+      "type": "user",
+      "time": "09:24",
+      "session_id": 1
+    },
+    {
+      "text": "오류가 발생했습니다: login fail: Please carry the API secret key in the 'Authorization' field of the request header (1004)",
+      "type": "ai",
+      "time": "09:24",
+      "session_id": 1
+    },
+    {
+      "text": "오후 5시에 저녁 일정 추가해 줘",
+      "type": "user",
+      "time": "09:35",
+      "session_id": 1
+    },
+    {
+      "text": "오류가 발생했습니다: login fail: Please carry the API secret key in the 'Authorization' field of the request header (1004)",
+      "type": "ai",
+      "time": "09:35",
+      "session_id": 1
+    },
+    {
+      "text": "오늘 저녁 5시에 저녁 일정 추가해 줘",
+      "type": "user",
+      "time": "09:39",
+      "session_id": 1
+    },
+    {
+      "text": "오류가 발생했습니다: login fail: Please carry the API secret key in the 'Authorization' field of the request header (1004)",
+      "type": "ai",
+      "time": "09:39",
+      "session_id": 1
+    },
+    {
+      "text": "오늘 저녁 5시에 일정 추가해 줘",
+      "type": "user",
+      "time": "09:42",
+      "session_id": 1
+    },
+    {
+      "text": "오늘 저녁 5시 일정을 등록해 드릴게요! 그런데 일정에 어떤 내용을 넣을까요? 😊\n\n예를 들어 \"저녁 식사\", \"미팅\", \"운동\" 같은 내용을 알려주시면 바로 등록해 드릴게요!",
+      "type": "ai",
+      "time": "09:42",
+      "session_id": 1
+    }
+  ],
+  "current_session_id": 1,
+  "pinned_sessions": []
+}
