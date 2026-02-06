@@ -82,13 +82,15 @@ class GameManager:
 
     def load_game(self):
         data = self.dm.load_user_data()
-        self.hp = data.get("hp", Config.MAX_HP)
-        self.xp = data.get("xp", 0)
-        self.level = data.get("level", 1)
+        self.hp = data.get("hp", Config.MAX_HP)  # 초기 HP = 100
+        self.xp = data.get("xp", 0)  # 초기 EXP = 0
+        self.level = data.get("level", 0)  # 최소 레벨 = 0
         self.quests = [Quest.from_dict(q) for q in data.get("quests", [])]
+        self.available_quests = [Quest.from_dict(q) for q in data.get("available_quests", [])]
         self.quest_streak = data.get("quest_streak", 0)
         self.happiness = data.get("happiness", 100)
-        self.calendar = data.get("calendar", {}) # Format: {"YYYY-MM-DD": [{"title": "t", "color": "c"}]}
+        self.calendar = data.get("calendar", {})
+        self.activity_log = data.get("activity_log", [])  # 퀘스트 활동 시간대 기록
         
         # Ensure HP is valid
         self.hp = max(0, min(Config.MAX_HP, self.hp))
@@ -99,11 +101,27 @@ class GameManager:
             "xp": self.xp,
             "level": self.level,
             "quests": [q.to_dict() for q in self.quests],
+            "available_quests": [q.to_dict() for q in self.available_quests],
             "quest_streak": self.quest_streak,
             "happiness": self.happiness,
-            "calendar": self.calendar
+            "calendar": self.calendar,
+            "activity_log": self.activity_log
         }
         self.dm.save_user_data(data)
+
+    def log_activity(self, action, quest_name=None):
+        """퀘스트 수락/완료 시간대 기록"""
+        import datetime
+        entry = {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "action": action,  # 'accept', 'complete', 'abandon'
+            "quest_name": quest_name
+        }
+        self.activity_log.append(entry)
+        # 최근 100개만 유지
+        if len(self.activity_log) > 100:
+            self.activity_log = self.activity_log[-100:]
+        self.save_game()
 
     def add_calendar_event(self, date_str, title, color):
         if date_str not in self.calendar:
@@ -223,7 +241,7 @@ class GameManager:
         self.hp = max(0, min(Config.MAX_HP, self.hp))
 
     def get_quest_capacity(self):
-        return 2 if self.level >= 3 else 1
+        return 1  # 한 번에 1개 퀘스트만 진행 가능
 
     def generate_quest_options(self):
         """Generate 3 random quest options (1 Focus, 1 Posture, 1 Recovery)"""
@@ -267,6 +285,7 @@ class GameManager:
             selected_quest = self.available_quests[quest_index]
             self.quests.append(selected_quest)
             self.available_quests.pop(quest_index)
+            self.log_activity('accept', selected_quest.name)  # 활동 기록
             self.save_game()
             return True
         return False
@@ -275,6 +294,7 @@ class GameManager:
         quest.is_completed = True
         self.gain_xp(quest.reward_xp)
         self.quest_streak += 1
+        self.log_activity('complete', quest.name)  # 활동 기록
         
         if quest.type == 'focus':
             self.gain_hp(Config.HP_HEAL_FOCUS_25MIN)

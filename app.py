@@ -1,44 +1,39 @@
 import os
-# MediaPipe 로그 숨기기 (반드시 import mediapipe 전에 설정해야 함)
-os.environ['GLOG_minloglevel'] = '3'  # 0: INFO, 1: WARNING, 2: ERROR, 3: FATAL
+# MediaPipe 로그 숨기기 - Removed as Vision is removed
+# os.environ['GLOG_minloglevel'] = '3' 
 
 from flask import Flask, render_template, Response, jsonify, request
-# import os # Removed duplicate import
-from dotenv import load_dotenv # .env 사용을 위해 추가
-from metrics_logger import MetricsLogger, MetricEvent
+from dotenv import load_dotenv 
 
-import cv2
 import threading
 import time
 import json
 import random
 from config import Config
 from game_manager import GameManager
-from vision_engine import VisionEngine
+# from vision_engine import VisionEngine # Removed
 from brain import BrainHandler
 from data_manager import DataManager
 import requests
-import threading
-from say_miniMax import main as voice_main
+from say_miniMax import main as voice_main, speak
 
 # .env 파일 로드
 load_dotenv()
 
 app = Flask(__name__)
-metrics = MetricsLogger(log_dir="logs")
 
 # Singletons A
 gm = GameManager()
-vision = None # 일단 None으로 설정하여 서버를 먼저 띄웁니다.
+# vision = None # Removed
 brain = BrainHandler()
 dm = DataManager()
-# Global State for Vision Thread
-video_capture = None
-latest_frame = None
-vision_lock = threading.Lock()
+# Global State for Vision Thread - Removed
+# video_capture = None
+# latest_frame = None
+# vision_lock = threading.Lock()
 
 # Status State
-current_status = "퇴근" # "업무중", "자리비움", "회의중", "퇴근"
+current_status = "업무중" # "업무중", "자리비움", "회의중", "퇴근"
 is_work_mode = False # Toggle between Idle and Work UI
 
 # Voice Chat Buffer for UI Sync
@@ -46,7 +41,6 @@ voice_buffer = []
 voice_buffer_lock = threading.Lock()
 
 # Persistent History for the current session
-# Persistent History loaded from data_manager
 _history_data = dm.load_chat_history()
 global_chat_history = _history_data["history"]
 current_session_id = _history_data["current_session_id"]
@@ -57,7 +51,7 @@ global_schedules = dm.load_schedules()
 history_lock = threading.Lock()
 
 # 음성 타이머 명령 저장용
-pending_timer_command = None  # {"minutes": 5, "auto_start": True}
+pending_timer_command = None  
 timer_command_lock = threading.Lock()
 
 # 음성 일정 명령 저장용
@@ -68,7 +62,7 @@ schedule_command_lock = threading.Lock()
 latest_weather_data = None
 weather_data_lock = threading.Lock()
 
-# --- 네이버 뉴스 검색 기능 추가 ---
+# --- 네이버 뉴스 검색 기능 ---
 def get_naver_news(query="오늘의 주요 뉴스"):
     """네이버 API를 사용하여 실시간 뉴스 검색"""
     client_id = os.getenv("NAVER_CLIENT_ID")
@@ -108,10 +102,7 @@ def api_get_news_raw():
 
 def add_voice_message(text, sender):
     global current_session_id
-    if not text: return # 빈 메시지 방지
-    
-    # 만약 사용자가 '뉴스'를 물어본다면 자동으로 답변 생성 (선택 사항)
-    # 이 로직은 brain.py에서 처리하게 할 수도 있지만, 여기서 직접 가로챌 수도 있습니다.
+    if not text: return 
     
     with voice_buffer_lock:
         voice_buffer.append({"text": text, "type": sender})
@@ -125,67 +116,30 @@ def add_voice_message(text, sender):
         })
         dm.save_chat_history(global_chat_history, current_session_id, pinned_sessions)
 
-# 초기 상태: 퇴근
-current_status = "퇴근" 
-# is_work_mode는 current_status에 따라 동적으로 결정됨
-
 def get_weather():
-    """weather_test.py의 정확한 구현 (API 키는 .env에서 로드)"""
-    # .env에서 API 키 로드
     api_key = os.getenv("WEATHER_API_KEY")
-    
-    # 서울 시청 좌표 (weather_test.py와 동일)
-    lat = float(os.getenv("WEATHER_LAT", "37.5665"))
-    lon = float(os.getenv("WEATHER_LON", "126.9780"))
+    lat, lon = 37.5665, 126.9780 
     
     if not api_key:
-        print("[Weather] No API Key found in .env (WEATHER_API_KEY)")
-        return {"temp": 0, "condition": "No API Key", "min": 0, "max": 0, "feels_like": 0}
-    
-    # weather_test.py와 동일한 API 엔드포인트
-    # units=metric: 섭씨 온도(°C) 사용
-    # lang=kr: 한국어로 결과 받기
+        return {"temp": 0, "condition": "No Key", "comparison": 0}
+
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=kr"
     
     try:
-        response = requests.get(url)
-        response.raise_for_status()  # 오류 발생 시 예외 처리
-        
-        # JSON 데이터 파싱
-        data = response.json()
-        
-        # 필요한 정보 추출 (weather_test.py와 동일)
-        location = data['name']  # 지역 이름
-        weather_desc = data['weather'][0]['description']  # 날씨 상태
-        
-        # main 딕셔너리에 기온 정보가 들어있습니다
-        temp_current = data['main']['temp']        # 현재 기온
-        temp_feels = data['main']['feels_like']    # 체감 온도
-        temp_min = data['main']['temp_min']        # 최저 기온
-        temp_max = data['main']['temp_max']        # 최고 기온
-        
-        # 콘솔 출력 (weather_test.py와 동일한 형식)
-        print(f"=== {location}의 현재 날씨 ===")
-        print(f"날씨 상태: {weather_desc}")
-        print(f"현재 기온: {temp_current}°C")
-        print(f"체감 온도: {temp_feels}°C")
-        print(f"최저/최고: {temp_min}°C / {temp_max}°C")
-        
-        # API 응답 데이터 반환
-        return {
-            "temp": int(temp_current),
-            "condition": weather_desc,
-            "min": int(temp_min),
-            "max": int(temp_max),
-            "feels_like": int(temp_feels)
-        }
-        
-    except requests.exceptions.RequestException as e:
-        print(f"연결 오류 발생: {e}")
-        return {"temp": 0, "condition": "연결 오류", "min": 0, "max": 0, "feels_like": 0}
-    except KeyError:
-        print("데이터를 찾을 수 없습니다. 좌표나 API 키를 확인해주세요.")
-        return {"temp": 0, "condition": "데이터 없음", "min": 0, "max": 0, "feels_like": 0}
+        res = requests.get(url, timeout=5)
+        if res.status_code == 200:
+            data = res.json()
+            return {
+                "temp": int(data['main']['temp']),
+                "condition": data['weather'][0]['description'],
+                "min": int(data['main']['temp_min']),
+                "max": int(data['main']['temp_max']),
+                "feels_like": int(data['main']['feels_like'])
+            }
+    except Exception as e:
+        print(f"Weather Error: {e}")
+    
+    return {"temp": 0, "condition": "Error", "comparison": 0}
 
 @app.route('/')
 def home():
@@ -193,12 +147,27 @@ def home():
 
 @app.route('/api/status/update', methods=['POST'])
 def update_status_btn():
-    global current_status
+    global current_status, is_work_mode
     data = request.json
     current_status = data.get('status', current_status)
-    return jsonify({"status": current_status})
     
-# toggle_mode endpoint removed (logic unified)
+    # [수정] 상태에 따라 work_mode 동기화 
+    is_work_mode = (current_status == "업무중")
+    
+    return jsonify({"status": current_status, "work_mode": is_work_mode})
+
+# Removed auto_calibrate_after_delay (Vision dependency)
+
+@app.route('/api/mode/toggle', methods=['POST'])
+def toggle_mode():
+    global is_work_mode
+    data = request.json
+    old_mode = is_work_mode
+    is_work_mode = data.get('work_mode', False)
+    
+    # Removed calibration trigger
+        
+    return jsonify({"work_mode": is_work_mode})
 
 @app.route('/api/weather/update', methods=['POST'])
 def update_weather():
@@ -233,26 +202,13 @@ def get_gamestate():
         "level": gm.level,
         "happiness": gm.happiness,
         "quests": [q.to_dict() for q in gm.quests],
-        "available_quests": [q.to_dict() for q in gm.available_quests],
-        "work_mode": (current_status == "업무중"),
+        "work_mode": is_work_mode,
         "status": current_status,
         "weather": weather_info,
         "schedules": global_schedules,
-        "pinned_sessions": list(pinned_sessions)
+        "pinned_sessions": list(pinned_sessions),
+        "is_calibrating": False # Removed vision calibration
     })
-
-@app.route('/api/quest/accept', methods=['POST'])
-def accept_quest():
-    """퀘스트 수락 API"""
-    data = request.json
-    quest_index = data.get('index')
-    
-    if quest_index is not None:
-        accepted = gm.accept_quest(quest_index)
-        if accepted:
-            return jsonify({"status": "success", "message": "퀘스트 수락됨"})
-    
-    return jsonify({"status": "fail"}), 400
 
 @app.route('/api/voice_messages')
 def get_voice_messages():
@@ -262,46 +218,9 @@ def get_voice_messages():
         voice_buffer.clear()
     return jsonify(messages)
 
-@app.route('/api/metrics/log', methods=['POST'])
-def log_metric_api():
-    """External/Voice module logging endpoint"""
-    data = request.json
-    if not data: return jsonify({"status": "fail"}), 400
-    
-    print(f"[DEBUG] Metric Log Received: {data}")
-
-    try:
-        ev = MetricEvent(
-            ts=data.get('ts', time.time()),
-            kind=data.get('kind', 'info'),
-            name=data.get('name', 'api'),
-            ok=data.get('ok', True),
-            latency_ms=data.get('latency_ms', 0),
-            meta=data.get('meta')
-        )
-        metrics.log(ev)
-        return jsonify({"status": "logged"})
-    except Exception as e:
-        print(f"[ERROR] Metric Log Failed: {e}")
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/metrics/daily')
-def get_daily_metrics():
-    """UI 시각화를 위한 일일 통계 반환"""
-    import datetime
-    today = datetime.datetime.utcnow().strftime("%Y-%m-%d")
-    summary = metrics.get_daily_summary(today)
-    
-    # [Mod] Add Historical Average for Comparison
-    global_avg = metrics.get_global_average()
-    summary["global_avg"] = global_avg
-    
-    return jsonify(summary)
-
-# 타이머 API - 음성에서 설정한 타이머를 프론트엔드로 전달
+# 타이머 API 
 @app.route('/api/timer/set', methods=['POST'])
 def set_timer():
-    """음성 명령에서 타이머 설정"""
     global pending_timer_command
     data = request.json
     minutes = data.get('minutes', 0)
@@ -321,35 +240,27 @@ def set_timer():
 
 @app.route('/api/timer/pending')
 def get_pending_timer():
-    """프론트엔드에서 폴링하여 대기중인 타이머 명령 확인"""
     global pending_timer_command
     with timer_command_lock:
         if pending_timer_command:
             cmd = pending_timer_command
-            pending_timer_command = None  # 한 번 읽으면 초기화
+            pending_timer_command = None  
             return jsonify({"has_command": True, **cmd})
         return jsonify({"has_command": False})
 
 # 일정 등록 API
 @app.route('/api/schedule/set', methods=['POST'])
 def set_schedule():
-    """음성 명령에서 일정 등록"""
     global pending_schedule_command
     data = request.json
     date_str = data.get('date', time.strftime("%Y-%m-%d"))
     title = data.get('title', '새 일정')
-    schedule_time = data.get('time', '')  # 시간 추가
-    location = data.get('location', '')  # 장소 추가
-    description = data.get('description', '')  # 내용 추가
     
     with schedule_command_lock:
         new_entry = {
             "date": date_str,
             "title": title,
-            "type": random.randint(1, 3),
-            "time": schedule_time,
-            "location": location,
-            "description": description
+            "type": random.randint(1, 3)
         }
         pending_schedule_command = {
             **new_entry,
@@ -365,7 +276,6 @@ def set_schedule():
 
 @app.route('/api/schedule/delete', methods=['POST'])
 def delete_schedule():
-    """음성 명령에서 일정 삭제"""
     global pending_schedule_command, global_schedules
     data = request.json
     date_str = data.get('date')
@@ -389,28 +299,22 @@ def delete_schedule():
 
 @app.route('/api/calendar')
 def get_calendar():
-    """캘린더 데이터 반환 (YYYY-MM-DD 키로 그룹화)"""
     global global_schedules
     
-    # 딕셔너리 형태로 변환: "2024-03-15": [{"title": "...", "type": 1, "time": "...", "location": "...", "description": "..."}, ...]
     events_map = {}
     for item in global_schedules:
         d = item['date']
         if d not in events_map:
             events_map[d] = []
         events_map[d].append({
-            "title": item.get('title', '제목 없음'),
-            "type": item.get('type', 1),  # 1, 2, 3 (color index)
-            "time": item.get('time', ''),
-            "location": item.get('location', ''),
-            "description": item.get('description', '')
+            "title": item['title'],
+            "type": item['type'] 
         })
         
     return jsonify(events_map)
 
 @app.route('/api/schedule/pending')
 def get_pending_schedule():
-    """프론트엔드에서 폴링하여 대기중인 일정 명령 확인"""
     global pending_schedule_command
     with schedule_command_lock:
         if pending_schedule_command:
@@ -419,9 +323,8 @@ def get_pending_schedule():
             return jsonify({"has_command": True, **cmd})
         return jsonify({"has_command": False})
 
-@app.route('/api/weather/update', methods=['POST'])
+@app.route('/api/weather/update_voice', methods=['POST']) # Endpoint name fix to avoid conflict if any
 def update_weather_voice():
-    """음성 명령에서 조회한 최신 날씨 정보를 수신"""
     global latest_weather_data
     data = request.json
     if not data:
@@ -442,11 +345,9 @@ def update_weather_voice():
 
 @app.route('/api/history')
 def get_history():
-    """세션별로 그룹화된 히스토리 목록과 현재 세션의 메시지 반환"""
     # 1. Group by session_id
     grouped = {}
     
-    # 세션 메타데이터 수집 (messages를 순회하며)
     for msg in global_chat_history:
         sid = msg.get('session_id')
         if not sid: continue
@@ -481,7 +382,7 @@ def get_history():
             "isActive": (sid == current_session_id)
         })
     
-    # 3. Sort: Pinned first, then Newest ID first
+    # 3. Sort
     def sort_key(item):
         return (
             0 if item['isPinned'] else 1, 
@@ -489,7 +390,7 @@ def get_history():
         )
     sidebar_list.sort(key=sort_key)
 
-    # 4. Get Current Session Messages for Main View
+    # 4. Get Current Session Messages
     current_messages = grouped.get(current_session_id, {}).get('messages', [])
 
     return jsonify({
@@ -500,7 +401,6 @@ def get_history():
 
 @app.route('/api/history/delete', methods=['POST'])
 def delete_history():
-    """특정 세션의 히스토리를 삭제"""
     global global_chat_history, pinned_sessions
     data = request.json
     session_id = data.get('session_id')
@@ -517,7 +417,6 @@ def delete_history():
 
 @app.route('/api/history/pin', methods=['POST'])
 def pin_history():
-    """특정 세션을 고정/고정해제"""
     global pinned_sessions
     data = request.json
     session_id = data.get('session_id')
@@ -582,23 +481,17 @@ def chat():
     user_msg = data.get('message', '')
     history = data.get('history', []) 
     
-    # --- 뉴스 질의 확인 로직 추가 ---
-    # --- 뉴스 질의 확인 로직 (LLM Context Injection) ---
     if "뉴스" in user_msg or "소식" in user_msg:
         print("[App] News keyword detected. Fetching Naver News...")
-        news_data = get_naver_news() # Returns string "최신 뉴스 소식입니다. ..."
+        news_data = get_naver_news() 
         
-        # LLM에게 주입할 시스템 메시지 생성
         system_injection = f"[System Info] Real-time News Data: {news_data}. Please explain this to the user."
         
-        # History에 기록 (User msg는 보여주되, System Info는 내부적으로 처리하거나 History에 포함)
-        # 여기서는 History에 포함하여 문맥 유지
         updated_history = history + [
             {"role": "user", "content": user_msg},
             {"role": "system", "content": system_injection}
         ]
         
-        # 일반 Chat 로직으로 위임 (단, history를 조작함)
         result = {}
         event = threading.Event()
         
@@ -618,12 +511,7 @@ def chat():
                 dm.save_chat_history(global_chat_history, current_session_id, pinned_sessions)
         
         return jsonify(result)
-    # -----------------------------
-    # -----------------------------
 
-    user_msg = data.get('message')
-    history = data.get('history', []) 
-    
     result = {}
     event = threading.Event()
     
@@ -654,55 +542,60 @@ def chat():
         
     return jsonify(result)
 
-def vision_loop():
-    global video_capture, vision
-    cap = cv2.VideoCapture(0)
-    
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            time.sleep(1)
-            continue
-            
-        if vision:
-            score, drowsy, smile, closed, landmarks = vision.analyze_frame(frame)
-            is_bad = score > 20
-            gm.update(is_bad, drowsy, True) 
-        
-        with vision_lock:
-            global latest_frame
-            flag, encoded_image = cv2.imencode(".jpg", frame)
-            if flag:
-                latest_frame = encoded_image.tobytes()
-        
-        time.sleep(0.03)
+# Vision Loop Removed
 
-@app.route('/video_feed')
-def video_feed():
-    def generate():
-        while True:
-            with vision_lock:
-                if latest_frame:
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + latest_frame + b'\r\n')
-            time.sleep(0.1)
-    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
+# --- 자동 브리핑 로직 ---
+def run_boot_briefing():
+    """부팅 10초 후 날씨와 일정을 분석하여 음성으로 브리핑"""
+    print("[SYSTEM] 부팅 브리핑 대기 중 (10초)...")
+    time.sleep(10)  # 시스템 안정화를 위한 10초 대기
+    
+    # 1. 오늘 날짜 및 일정 데이터 추출
+    today_str = time.strftime("%Y-%m-%d")
+    todays_events = [s['title'] for s in global_schedules if s['date'] == today_str]
+    
+    # 2. 날씨 정보 가져오기
+    weather = get_weather()
+    weather_text = f"현재 기온 {weather['temp']}도, {weather['condition']}"
+    
+    # 3. 일정 텍스트 정리
+    if todays_events:
+        event_text = f"오늘 일정: {', '.join(todays_events)}"
+    else:
+        event_text = "오늘 일정 없음"
+
+    # 4. Brain에게 위임 (프롬프트는 Brain.py에서 관리)
+    result = {}
+    event = threading.Event()
+    
+    def cb(text, task, thought):
+        result['text'] = text
+        event.set()
+
+    brain.generate_briefing(weather_text, event_text, cb)
+    event.wait(timeout=15)
+    
+    final_text = result.get('text', "시스템 준비가 완료되었습니다. 오늘도 화이팅하세요!")
+    
+    # 5. 음성 출력 및 UI 메시지 기록
+    print(f"[SYSTEM] 자동 브리핑: {final_text}")
+    speak(final_text) # TTS 출력
+    add_voice_message(final_text, "ai") # UI에 기록
 
 if __name__ == '__main__':
-    # 1. Vision Thread Start
-    if vision is None:
-        try:
-            vision = VisionEngine()
-        except Exception as e:
-            print(f"[ERROR] Vision Init Failed: {e}")
-
-    t_vision = threading.Thread(target=vision_loop, daemon=True)
-    t_vision.start()
-    print("[SYSTEM] 비전 엔진 스레드 시작됨")
+    # Vision Init Removed
+    
+    # 1. Vision Thread Removed
     
     # 2. Voice Thread Start
     t_voice = threading.Thread(target=voice_main, args=(add_voice_message,), daemon=True)
     t_voice.start()
     print("[SYSTEM] 음성 인식(MiniMax) 스레드 시작됨")
     
+    # 3. Boot Briefing Thread Start
+    t_boot = threading.Thread(target=run_boot_briefing, daemon=True)
+    t_boot.start()
+    print("[SYSTEM] 부팅 브리핑 스레드 예약됨 (10초 후)")
+
+    # 4. Flask Server Start (Blocking)
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)

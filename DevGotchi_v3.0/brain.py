@@ -7,13 +7,29 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 # .env 로드 (app.py에서 로드하겠지만 안전장치)
-load_dotenv()
+from pathlib import Path
+dotenv_path = Path(__file__).parent / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
-API_KEY = os.getenv("MINIMAX_API_KEY", "").strip()
+# 디버그: .env 파일 확인
+print(f"[Brain Debug] .env path: {dotenv_path}")
+print(f"[Brain Debug] .env exists: {dotenv_path.exists()}")
+
+# 디버그: 원본 값 확인
+raw_api_key = os.getenv("MINIMAX_API_KEY", "")
+print(f"[Brain Debug] Raw API key from env: '{raw_api_key[:50] if raw_api_key else 'EMPTY'}...'")
+
+# API 키 로드 (say_miniMax.py와 동일한 방식으로 따옴표 제거)
+API_KEY = raw_api_key.replace('"', '').replace("'", "").strip()
+print(f"[Brain Debug] Cleaned API key: '{API_KEY[:50] if API_KEY else 'EMPTY'}...'")
+
 BASE_URL = os.getenv("MINIMAX_BASE_URL", "https://api.minimax.io/v1").strip()
 MODEL = os.getenv("MINIMAX_MODEL", "MiniMax-M2.1").strip()
 
 print(f"[Brain] Logic Init. API Key present: {bool(API_KEY)}")
+print(f"[Brain] API Key length: {len(API_KEY)}")
+print(f"[Brain] Base URL: {BASE_URL}")
+print(f"[Brain] Model: {MODEL}")
 
 class BrainHandler:
     def chat(self, history, level, callback):
