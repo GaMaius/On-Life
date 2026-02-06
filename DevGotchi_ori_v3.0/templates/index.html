@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevGotchi v3.0</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Main Screen Container -->
+    <div id="home-screen">
+
+        <!-- Section A: Information Area (Swappable) -->
+        <div id="info-area-container" style="min-height: 350px;">
+
+            <!-- 1. Idle Info (Clock, Weather, Dashboard) -->
+            <div id="idle-info-section">
+                <div class="top-bar">
+                    <div class="clock-widget">
+                        <div id="clock-time">00:00</div>
+                        <div id="clock-date">2월 05일 (수)</div>
+                    </div>
+                    <div class="weather-section">
+                        <div id="weather-temp">--°C</div>
+                        <div id="weather-desc">날씨 로딩중...</div>
+                        <div class="weather-detail">
+                            <span id="temp-minmax">--/--</span>
+                            <span id="temp-feels">--</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Home Dashboard -->
+                <div id="home-dashboard" style="margin-top: 20px; text-align: center; min-height: 50px;">
+                    <!-- JS populated -->
+                </div>
+            </div>
+
+            <!-- 2. Work Info (HP, Posture, Quests) -->
+            <div id="work-info-section" class="hidden">
+                <div class="hp-exp-container">
+                    <div class="bar-label">
+                        <span>HP</span> <span id="hp-val">100/100</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%;"></div>
+                    </div>
+
+                    <div class="bar-label">
+                        <span>EXP</span> <span id="exp-val">2000/2000</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill exp-fill" id="exp-bar" style="width: 50%;"></div>
+                    </div>
+                </div>
+
+                <div class="posture-status" id="posture-indicator" style="margin: 20px 0;">
+                    <span class="status-dot">●</span>
+                    <span id="posture-text">바른 자세 유지중</span>
+                </div>
+
+                <div class="quest-container">
+                    <h3 style="color: #bb86fc; margin-bottom: 20px;">⚔️ 퀘스트</h3>
+
+                    <!-- Available Quests Section -->
+                    <div class="quest-section">
+                        <div class="quest-section-header">
+                            <span class="quest-icon">🎯</span>
+                            <span>선택 가능한 퀘스트 (<span id="available-count">0</span>개 선택)</span>
+                        </div>
+                        <div id="available-quest-list" class="quest-list">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <!-- Active Quests Section -->
+                    <div class="quest-section">
+                        <div class="quest-section-header active">
+                            <span class="quest-icon">✅</span>
+                            <span>현재 진행중인 퀘스트</span>
+                        </div>
+                        <div id="active-quest-list" class="quest-list">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="character-area" id="character-container">
+            <img src="{{ url_for('static', filename='image/chick.png') }}" id="character-img" alt="Dev">
+            <div class="circular-menu" id="circular-menu">
+                <a href="?app=timer" target="_self" class="menu-item"><i class="fas fa-hourglass-half"></i></a>
+                <a href="?app=ai" target="_self" class="menu-item"><i class="fas fa-robot"></i></a>
+                <a href="?app=care" target="_self" class="menu-item"><i class="fas fa-heart"></i></a>
+                <a href="?app=scheduler" target="_self" class="menu-item"><i class="fas fa-calendar-alt"></i></a>
+                <a href="?app=stretch" target="_self" class="menu-item"><i class="fas fa-running"></i></a>
+                <a href="?app=stats" target="_self" class="menu-item"><i class="fas fa-chart-bar"></i></a>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <button id="status-btn">자리비움</button>
+        </div>
+    </div>
+
+    <!-- Timer App -->
+    <div id="timer-app" class="app-screen hidden">
+        <div class="app-header">
+            <div id="timer-clock" style="color: #aaa;">00:00:00</div>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
+            <div id="timer-display" style="font-size: 8rem; font-weight: 700;">00:00:00</div>
+            <div class="presets" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="soft-btn" onclick="timerAdd(1)">+1분</button>
+                <button class="soft-btn" onclick="timerAdd(5)">+5분</button>
+                <button class="soft-btn" onclick="timerAdd(10)">+10분</button>
+                <button class="soft-btn" onclick="timerAdd(30)">+30분</button>
+            </div>
+            <div class="controls" style="display: flex; gap: 20px; margin-top: 40px;">
+                <button class="soft-btn" style="color: #00d166;" onclick="timerStart('down')">카운트 다운</button>
+                <button class="soft-btn" style="color: #1e90ff;" onclick="timerStart('up')">카운트 업</button>
+                <button class="soft-btn" style="color: #ff4b2b;" onclick="timerReset()">리셋</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Care App -->
+    <div id="care-app" class="app-screen hidden" style="background: #ffeaa7; color: #333;">
+        <div class="app-header">
+            <h3>Dev 돌보기</h3>
+            <a href="/" target="_self" class="home-btn" style="color: #333; border-color: #333;"><i
+                    class="fas fa-home"></i></a>
+        </div>
+        <div class="flex-center" style="flex-grow: 1; flex-direction: column; gap: 30px;">
+            <div style="font-size: 5rem;">
+                <!-- Updated Image -->
+                <img src="{{ url_for('static', filename='image/chick.png') }}"
+                    style="width: 150px; height: 150px; object-fit: contain;">
+            </div>
+            <div
+                style="width: 300px; height: 30px; background: #fff; border-radius: 15px; overflow: hidden; border: 2px solid #ffcc00;">
+                <div style="width: 80%; height: 100%; background: #ffcc00;"></div>
+            </div>
+            <div>행복도: 80%</div>
+            <div class="controls" style="display: flex; gap: 20px;">
+                <button class="soft-btn" onclick="careAction('feed')">🍚 밥주기</button>
+                <button class="soft-btn" onclick="careAction('pet')">👋 쓰다듬기</button>
+                <button class="soft-btn" onclick="careAction('clean')">🚿 씻겨주기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat App -->
+    <div id="ai-app" class="app-screen hidden" style="background: #2d3436;">
+        <div class="app-header">
+            <h3>Dev AI 비서</h3>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div style="display: flex; flex-grow: 1; margin-top: 20px; gap: 20px;">
+            <div style="width: 250px; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px;">
+                <h4>History</h4>
+                <div style="color: #aaa; font-size: 0.9rem;">
+                    <p>오늘의 일정...</p>
+                    <p>스트레칭 방법...</p>
+                </div>
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column;">
+                <div id="chat-box"
+                    style="flex-grow: 1; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; overflow-y: auto; margin-bottom: 20px;">
+                    <div style="margin-bottom: 10px;"><strong>Dev:</strong> 안녕하세요! 무엇을 도와드릴까요?</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chat-input"
+                        style="flex-grow: 1; padding: 15px; border-radius: 10px; border: none; background: #444; color: white;"
+                        placeholder="메시지를 입력하세요...">
+                    <button class="soft-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats App -->
+    <div id="stats-app" class="app-screen hidden">
+        <div class="app-header">
+            <h3 id="stats-title">통계 (1/6)</h3>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
+            <h2 id="stats-content-title">업무 시간</h2>
+            <div id="stats-chart-area"
+                style="width: 600px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 20px; display: flex; justify-content: center; align-items: flex-end; padding: 20px; gap: 20px;">
+                <!-- Mock Chart Bars -->
+                <div style="width: 40px; height: 30%; background: #bb86fc;"></div>
+                <div style="width: 40px; height: 50%; background: #bb86fc;"></div>
+                <div style="width: 40px; height: 70%; background: #bb86fc;"></div>
+                <div style="width: 40px; height: 40%; background: #bb86fc;"></div>
+                <div style="width: 40px; height: 80%; background: #bb86fc;"></div>
+            </div>
+            <div class="page-nav" style="margin-top: 40px; display: flex; gap: 20px;">
+                <button class="soft-btn" onclick="prevStatsPage()">Prev</button>
+                <button class="soft-btn" onclick="nextStatsPage()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheduler App -->
+    <div id="scheduler-app" class="app-screen hidden">
+        <div class="app-header">
+            <h3>일정 관리</h3>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="calendar-container" style="padding: 20px;">
+            <div class="calendar-header-nav">
+                <button class="soft-btn" onclick="changeMonth(-1)" style="padding: 5px 15px;"><i
+                        class="fas fa-chevron-left"></i></button>
+                <span id="cal-month-year">2026년 2월</span>
+                <button class="soft-btn" onclick="changeMonth(1)" style="padding: 5px 15px;"><i
+                        class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- JS Generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stretch App -->
+    <div id="stretch-app" class="app-screen hidden">
+        <div class="app-header">
+            <h3>스트레칭 가이드</h3>
+            <a href="/" target="_self" class="home-btn"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="flex-center" style="flex-grow: 1; flex-direction: column;">
+            <div style="font-size: 5rem; color: #ff7675;"><i class="fas fa-running"></i></div>
+            <p style="margin-top: 20px; font-size: 1.2rem;">잠시 휴식하며 몸을 풀어보세요!</p>
+            <div style="margin-top: 30px;">
+                <button class="soft-btn" onclick="timerStartStrength()">스트레칭 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
