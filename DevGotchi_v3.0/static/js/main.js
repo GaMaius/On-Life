@@ -460,17 +460,63 @@ function checkTimerState() {
         if (state.mode === 'down') {
             timerSeconds = Math.ceil((state.targetTime - now) / 1000);
         } else {
-            timerSeconds = state.initialSeconds + Math.floor((now - state.startAt) / 1000);
+            // Count up
+            const elapsed = Math.floor((now - state.startAt) / 1000);
+            timerSeconds = state.initialSeconds + elapsed;
         }
         updateTimerDisplay();
         runTimerLoop();
+    }
+
+    // Start Polling for Voice Timer Commands
+    setInterval(pollTimerCommand, 1500);
+}
+
+async function pollTimerCommand() {
+    try {
+        const res = await fetch('/api/timer/pending');
+        const data = await res.json();
+
+        if (data.has_command) {
+            console.log("[Voice Timer] Command Received:", data);
+
+            // 1. Reset first
+            timerReset();
+
+            // 2. Data Parsing
+            const mins = parseFloat(data.minutes);
+            const mode = data.mode; // 'up', 'down', 'reset'
+
+            if (mode === 'reset') {
+                // Already reset above
+                return;
+            }
+
+            // 3. Set Time
+            if (mode === 'up') {
+                // For count up, start from the specified minutes
+                timerSeconds = mins * 60;
+            } else {
+                // For count down, simple set
+                timerSeconds = mins * 60;
+            }
+            updateTimerDisplay();
+
+            // 4. Auto Start
+            if (data.auto_start) {
+                // Slight delay to ensure UI updates
+                setTimeout(() => timerStart(mode), 100);
+            }
+        }
+    } catch (e) {
+        console.error("Timer Poll Error", e);
     }
 }
 
 function updateTimerDisplay() {
     const h = Math.floor(timerSeconds / 3600);
     const m = Math.floor((timerSeconds % 3600) / 60);
-    const s = timerSeconds % 60;
+    const s = Math.floor(timerSeconds % 60); // Ensure integer
     const display = document.getElementById('timer-display');
     if (display) {
         display.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
@@ -499,12 +545,212 @@ window.sendMessage = async () => {
     }
 };
 
-function addMessage(text, type) {
+// Chat History Management
+let currentSessionId = null;
+let chatSessions = [];
+
+async function loadChatHistory() {
+    try {
+        const res = await fetch('/api/history');
+        const data = await res.json();
+
+        chatSessions = data.sidebar || [];
+        currentSessionId = data.current_session_id;
+
+        renderHistoryList();
+
+        // Load current session messages
+        if (data.current_messages && data.current_messages.length > 0) {
+            const box = document.getElementById('chat-box');
+            if (box) {
+                box.innerHTML = ''; // Clear initial message
+                data.current_messages.forEach(msg => {
+                    addMessage(msg.text, msg.type, false); // false = don't save to backend
+                });
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load chat history', e);
+    }
+
+    // Start polling for new voice messages
+    if (typeof startVoicePolling === 'function') startVoicePolling();
+}
+
+function renderHistoryList() {
+    const listEl = document.getElementById('history-list');
+    if (!listEl) return;
+
+    if (chatSessions.length === 0) {
+        listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">대화 기록이 없습니다</p>';
+        return;
+    }
+
+    listEl.innerHTML = '';
+
+    chatSessions.forEach(session => {
+        const item = document.createElement('div');
+        item.className = 'history-item' + (session.isActive ? ' active' : '');
+        item.style.cssText = `
+            padding: 10px;
+            margin-bottom: 8px;
+            background: ${session.isActive ? 'rgba(187, 134, 252, 0.2)' : 'rgba(255,255,255,0.05)'};
+            border-radius: 8px;
+            cursor: pointer;
+            border-left: 3px solid ${session.isPinned ? '#FFD700' : 'transparent'};
+            transition: all 0.2s;
+        `;
+
+        item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="flex: 1; overflow: hidden;" onclick="loadSession(${session.id})">
+                    <div style="font-size: 0.85rem; color: #aaa; margin-bottom: 3px;">
+                        ${session.isPinned ? '📌 ' : ''}${session.startTime}
+                    </div>
+                    <div style="color: #fff; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${session.preview}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 5px; margin-left: 5px;">
+                    <button onclick="event.stopPropagation(); pinSession(${session.id}, ${!session.isPinned})" 
+                            style="background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.7;"
+                            title="${session.isPinned ? '고정 해제' : '고정'}">
+                        ${session.isPinned ? '📌' : '📍'}
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteSession(${session.id})" 
+                            style="background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.7; color: #ff4b2b;"
+                            title="삭제">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        `;
+
+        listEl.appendChild(item);
+    });
+}
+
+async function loadSession(sessionId) {
+    if (sessionId === currentSessionId) return; // Already loaded
+
+    try {
+        // [New Logic] Switch session on backend
+        const res = await fetch('/api/session/switch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId })
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+            currentSessionId = sessionId;
+            await loadChatHistory(); // Reload to update active state & messages
+        } else {
+            console.error("Session switch failed:", data);
+        }
+
+    } catch (e) {
+        console.error('Failed to load session', e);
+        alert('세션 로드 실패');
+    }
+}
+
+async function createNewChat() {
+    try {
+        const res = await fetch('/api/chat/reset', { method: 'POST' });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+            currentSessionId = data.new_session_id;
+
+            // Clear chat box
+            const box = document.getElementById('chat-box');
+            if (box) {
+                box.innerHTML = '<div style="margin-bottom: 10px;"><strong>Dev:</strong> 안녕하세요! 무엇을 도와드릴까요?</div>';
+            }
+
+            // Reload history to show new session
+            await loadChatHistory();
+        }
+    } catch (e) {
+        console.error('Failed to create new chat', e);
+        alert('새 채팅 생성 실패');
+    }
+}
+
+async function pinSession(sessionId, pin) {
+    try {
+        await fetch('/api/history/pin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId, pin: pin })
+        });
+
+        await loadChatHistory(); // Reload to update UI
+    } catch (e) {
+        console.error('Failed to pin session', e);
+    }
+}
+
+async function deleteSession(sessionId) {
+    if (!confirm('이 대화를 삭제하시겠습니까?')) return;
+
+    try {
+        await fetch('/api/history/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId })
+        });
+
+        // If deleted current session, create new one
+        if (sessionId === currentSessionId) {
+            await createNewChat();
+        } else {
+            await loadChatHistory(); // Reload to update UI
+        }
+    } catch (e) {
+        console.error('Failed to delete session', e);
+        alert('세션 삭제 실패');
+    }
+}
+
+// Poll Voice Messages
+let voicePollInterval = null;
+
+function startVoicePolling() {
+    if (voicePollInterval) clearInterval(voicePollInterval);
+    voicePollInterval = setInterval(pollVoiceMessages, 2000); // 2초마다 확인
+}
+
+async function pollVoiceMessages() {
+    // 채팅창이 안 떠있으면 폴링 스킵 (리소스 절약)
     const box = document.getElementById('chat-box');
+    if (!box || document.getElementById('ai-app').classList.contains('hidden')) return;
+
+    try {
+        const res = await fetch('/api/voice_messages');
+        const messages = await res.json(); // Array of {text, type}
+
+        if (messages && messages.length > 0) {
+            messages.forEach(msg => {
+                // UI에만 추가 (이미 백엔드에는 저장됨)
+                addMessage(msg.text, msg.type, false);
+            });
+        }
+    } catch (e) {
+        console.error("Voice Poll Error", e);
+    }
+}
+
+function addMessage(text, type, saveToBackend = true) {
+    const box = document.getElementById('chat-box');
+    if (!box) return;
+
     const msg = document.createElement('div');
     msg.style.marginBottom = '10px';
-    const role = type === 'user' ? 'Me' : 'Dev';
-    msg.innerHTML = `<strong>${role}:</strong> ${text}`;
+    const role = type === 'user' ? 'Me' : (type === 'system' ? 'System' : 'Dev');
+    const color = type === 'system' ? '#aaa' : '#fff';
+    msg.innerHTML = `<strong style="color: ${color}">${role}:</strong> ${text}`;
     box.appendChild(msg);
     box.scrollTop = box.scrollHeight;
 }
@@ -547,6 +793,12 @@ let eventsData = {}; // Object: "YYYY-MM-DD" -> [{title, color}]
 window.initCalendar = async () => {
     await fetchCalendarEvents();
     updateCalendar();
+
+    // [New] Poll for updates every 3 seconds
+    setInterval(async () => {
+        await fetchCalendarEvents();
+        updateCalendar();
+    }, 3000);
 };
 
 async function fetchCalendarEvents() {
@@ -681,6 +933,9 @@ window.openApp = (appId) => {
         if (appId === 'scheduler') {
             // Init calendar logic
             if (typeof initCalendar === 'function') initCalendar();
+        } else if (appId === 'ai') {
+            // Init chat history
+            if (typeof loadChatHistory === 'function') loadChatHistory();
         }
     } else {
         alert("기능 준비중: " + appId);

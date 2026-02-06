@@ -108,3 +108,61 @@ class DataManager:
         except Exception as e:
             print(f"[Load Error] {e}")
             return None
+
+    # --- Chat History & Schedule Persistence (Added for app.py compatibility) ---
+    def load_chat_history(self):
+        """채팅 기록 및 세션 정보 로드"""
+        default_data = {
+            "history": [],
+            "current_session_id": 1,
+            "pinned_sessions": []
+        }
+        if not os.path.exists("chat_history.json"):
+            return default_data
+        
+        try:
+            with open("chat_history.json", 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # 필수 키 보장
+                for key in default_data:
+                    if key not in data:
+                        data[key] = default_data[key]
+                # pinned_sessions가 list여야 함 (app.py에서 set으로 변환)
+                if not isinstance(data.get("pinned_sessions"), list):
+                    data["pinned_sessions"] = []
+                return data
+        except Exception as e:
+            print(f"[History Load Error] {e}")
+            return default_data
+
+    def save_chat_history(self, history, current_session_id, pinned_sessions):
+        """채팅 기록 저장"""
+        try:
+            data = {
+                "history": history,
+                "current_session_id": current_session_id,
+                "pinned_sessions": list(pinned_sessions) if isinstance(pinned_sessions, set) else pinned_sessions
+            }
+            with open("chat_history.json", 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"[History Save Error] {e}")
+
+    def load_schedules(self):
+        """일정 데이터 로드"""
+        if not os.path.exists("schedules.json"):
+            return []
+        try:
+            with open("schedules.json", 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"[Schedule Load Error] {e}")
+            return []
+
+    def save_schedules(self, schedules):
+        """일정 데이터 저장"""
+        try:
+            with open("schedules.json", 'w', encoding='utf-8') as f:
+                json.dump(schedules, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"[Schedule Save Error] {e}")

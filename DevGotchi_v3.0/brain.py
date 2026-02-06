@@ -40,6 +40,11 @@ class BrainHandler:
 
         [Integration]
         - If user asks about 'Start Timer', 'Show Stats', return JSON command in <think> or just text confirmation.
+        - [News Reporting]: You may receive "[System Info] Real-time News Data: ...". 
+          - IGNORE your internal cutoff knowledge. 
+          - SUMMARIZE the provided news data for the user.
+          - Use a professional yet engaging tone (Anchor-like or Smart Assistant).
+          - e.g., "오늘의 주요 뉴스입니다. 첫 번째로..."
         """
         
         try:
