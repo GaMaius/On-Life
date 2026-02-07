@@ -171,7 +171,7 @@ def get_weather():
         
         # 콘솔 출력 제거 (로그 스팸 방지)
         
-        # API 응답 데이터 반환
+        # API 응답 데이터 반환5
         return {
             "temp": int(temp_current),
             "condition": weather_desc,

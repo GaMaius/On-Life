@@ -14,5 +14,13 @@
     "time": "15시 30분",
     "location": "장소",
     "description": ""
+  },
+  {
+    "date": "2026-02-07",
+    "title": "오후 5시에 102동 에서 부장님과 미팅  등록해 줘",
+    "type": 2,
+    "time": "오후 5시 00분",
+    "location": "회의실",
+    "description": ""
   }
 ]

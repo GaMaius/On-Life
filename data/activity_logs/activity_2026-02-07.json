@@ -1,0 +1,169 @@
+{
+  "date": "2026-02-07",
+  "sessions": [],
+  "posture_detections": {
+    "turtle_neck": {
+      "count": 11,
+      "events": [
+        {
+          "time": "02:15:11",
+          "duration_sec": null
+        },
+        {
+          "time": "02:15:17",
+          "duration_sec": null
+        },
+        {
+          "time": "02:15:20",
+          "duration_sec": null
+        },
+        {
+          "time": "02:18:56",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:05",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:08",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:20",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:23",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:54",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:12",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:21",
+          "duration_sec": null
+        }
+      ],
+      "hourly_freq": {
+        "02": 11
+      }
+    },
+    "eye_closed": {
+      "count": 18,
+      "events": [
+        {
+          "time": "02:15:11",
+          "duration_sec": null
+        },
+        {
+          "time": "02:15:23",
+          "duration_sec": null
+        },
+        {
+          "time": "02:15:32",
+          "duration_sec": null
+        },
+        {
+          "time": "02:18:51",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:01",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:05",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:08",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:13",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:28",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:35",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:39",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:42",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:49",
+          "duration_sec": null
+        },
+        {
+          "time": "02:19:57",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:04",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:12",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:15",
+          "duration_sec": null
+        },
+        {
+          "time": "02:20:18",
+          "duration_sec": null
+        }
+      ],
+      "hourly_freq": {
+        "02": 18
+      }
+    }
+  },
+  "quests": {
+    "accepted": [],
+    "completed": [],
+    "failed": []
+  },
+  "hp_changes": [],
+  "summary": {
+    "total_work_time_minutes": 0,
+    "total_detections": 29,
+    "turtle_neck_count": 11,
+    "eye_closed_count": 18,
+    "quests_completed": 0,
+    "quests_failed": 0,
+    "avg_hp": 0,
+    "peak_activity_hour": "02",
+    "hourly_distribution": {
+      "02": 29
+    }
+  },
+  "timer_usage": [
+    {
+      "type": "complete",
+      "time": "02:12:37",
+      "duration_seconds": 16800
+    },
+    {
+      "type": "start",
+      "time": "02:13:41",
+      "duration_seconds": 600
+    }
+  ]
+}
